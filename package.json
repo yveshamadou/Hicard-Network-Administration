@@ -1,0 +1,30 @@
+{
+  "name": "hicard-network-administration",
+  "version": "1.0.0",
+  "description": "Hicard Network Administration (Management)",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "hicard",
+    "network",
+    "administration",
+    "management"
+  ],
+  "author": "landry.onguene@asmafrik.com",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.20.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "http-errors": "^1.8.0",
+    "jwt-decode": "^3.0.0",
+    "mssql": "^6.2.3",
+    "path": "^0.12.7",
+    "swagger-jsdoc": "^4.3.1",
+    "swagger-ui-express": "^4.1.4"
+  }
+}
