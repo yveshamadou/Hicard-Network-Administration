@@ -67,6 +67,31 @@ class Facility {
             })
         })
     }
+
+
+    
+    static FacilityToNetwork(FacilityID, NetworkID, createdBy, IP_address, action = 'active', response) {
+        let conn = new sql.ConnectionPool(database.dbConfig)
+        let req = new sql.Request(conn)
+        conn.connect(function (err) {
+            if (err) {
+                throw err
+            }
+            req.input('FacilityID', sql.VarChar(50), FacilityID)
+            req.input('NetworkID', sql.VarChar(50), NetworkID)
+            req.input('createdBy', sql.VarChar(50), createdBy)
+            req.input('IP_address', sql.VarChar(50), IP_address)
+            req.input('action', sql.VarChar(50), action)
+            req.execute(sp.createNetworkFacility, (err, recordsets) => {
+                if (err) {
+                    throw err
+                } else {
+                    response(recordsets)
+                }
+                conn.close()
+            })
+        })
+    }
 }
 
 module.exports = Facility

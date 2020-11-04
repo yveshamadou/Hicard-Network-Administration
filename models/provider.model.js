@@ -69,6 +69,52 @@ class Provider {
             })
         })
     }
+
+    
+    static ProviderToFacility(ProviderID, FacilityID, createdBy, IP_address, action = 'active', response) {
+        let conn = new sql.ConnectionPool(database.dbConfig)
+        let req = new sql.Request(conn)
+        conn.connect(function (err) {
+            if (err) {
+                throw err
+            }
+            req.input('ProviderID', sql.VarChar(50), ProviderID)
+            req.input('FacilityID', sql.VarChar(50), FacilityID)
+            req.input('createdBy', sql.VarChar(50), createdBy)
+            req.input('IP_address', sql.VarChar(50), IP_address)
+            req.input('action', sql.VarChar(50), action)
+            req.execute(sp.createFacilityProvider, (err, recordsets) => {
+                if (err) {
+                    throw err
+                } else {
+                    response(recordsets)
+                }
+                conn.close()
+            })
+        })
+    }
+    static ProviderToNetwork(ProviderID, NetworkID, createdBy, IP_address, action = 'active', response) {
+        let conn = new sql.ConnectionPool(database.dbConfig)
+        let req = new sql.Request(conn)
+        conn.connect(function (err) {
+            if (err) {
+                throw err
+            }
+            req.input('ProviderID', sql.VarChar(50), ProviderID)
+            req.input('NetworkID', sql.VarChar(50), NetworkID)
+            req.input('createdBy', sql.VarChar(50), createdBy)
+            req.input('IP_address', sql.VarChar(50), IP_address)
+            req.input('action', sql.VarChar(50), action)
+            req.execute(sp.createNetworkProvider, (err, recordsets) => {
+                if (err) {
+                    throw err
+                } else {
+                    response(recordsets)
+                }
+                conn.close()
+            })
+        })
+    }
 }
 
 module.exports = Provider

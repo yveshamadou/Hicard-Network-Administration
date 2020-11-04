@@ -33,7 +33,6 @@ const getProviderInfos = function (action, req, res) {
         res.send(Result.setErrorResult("ProviderID must be a GUID"))
     }
 }
-
 const activeOrDeleteProvider = function (action, req, res) {
     let id = req.params.id
     if (Helper.isGuid(id)) {
@@ -48,7 +47,6 @@ const activeOrDeleteProvider = function (action, req, res) {
         res.send(Result.setErrorResult("ProviderID must be a GUID"))
     }
 }
-
 const createOrEditProvider = function (action, req, res) {
     let ProviderID = req.body.ProviderID
     let FirstName = req.body.FirstName
@@ -71,6 +69,46 @@ const createOrEditProvider = function (action, req, res) {
         res.send(Result.setErrorResult("ProviderID must be a GUID"))
     }
 }
+
+
+const ProviderToFacility = function (action, req, res) {
+    let ProviderID = req.body.ProviderID
+    let FacilityID = req.body.FacilityID
+    if (Helper.isGuid(ProviderID) && Helper.isGuid(FacilityID)) {
+        Provider.ProviderToFacility(ProviderID, FacilityID, createdBy, IP_address, action, function (response) {
+            if (response.rowsAffected[0] == 1) {
+                res.send(Result.setSuccessResult("success"))
+            } else {
+                res.send(Result.setErrorResult("This relation doesn't exist"))
+            }
+        })
+    } else {
+        let errorDescription = ""
+        Helper.isGuid(ProviderID) ? null : errorDescription += "{ProviderID must be a GUID} "
+        Helper.isGuid(FacilityID) ? null : errorDescription += "{FacilityID must be a GUID} "
+        res.send(Result.setErrorResult(errorDescription))
+    }
+}
+const ProviderToNetwork = function (action, req, res) {
+    let ProviderID = req.body.ProviderID
+    let NetworkID = req.body.NetworkID
+    if (Helper.isGuid(ProviderID) && Helper.isGuid(NetworkID)) {
+        Provider.ProviderToNetwork(ProviderID, NetworkID, createdBy, IP_address, action, function (response) {
+            if (response.rowsAffected[0] == 1) {
+                res.send(Result.setSuccessResult("success"))
+            } else {
+                res.send(Result.setErrorResult("This relation doesn't exist"))
+            }
+        })
+    } else {
+        let errorDescription = ""
+        Helper.isGuid(ProviderID) ? null : errorDescription += "{ProviderID must be a GUID} "
+        Helper.isGuid(NetworkID) ? null : errorDescription += "{NetworkID must be a GUID} "
+        res.send(Result.setErrorResult(errorDescription))
+    }
+}
+
+
 
 /**
  * @swagger
@@ -98,8 +136,8 @@ app.get('/providers/:id', function (req, res) {
  * @swagger
  * /providers/{id}/facilities:
  *  get:
- *      description: Use to get Provider's Users by id
- *      summary: Use to get Provider's Users by id
+ *      description: Use to get Provider's Facilities by id
+ *      summary: Use to get Provider's Facilities by id
  *      parameters:
  *      - name: id
  *        description: id of the Provider
@@ -258,6 +296,188 @@ app.put('/providers/', function (req, res) {
 */
 app.post('/providers/', function (req, res) {
     createOrEditProvider('create', req, res)
+})
+
+
+
+
+
+
+
+/**
+ * @swagger
+ * /providers/network/:
+ *  delete:
+ *      description: Use to remove provider to a Network
+ *      summary: Use to remove provider to a Network
+ *      requestBody:
+ *          required: true
+ *          content:
+ *           application/x-www-form-urlencoded:
+ *            schema:
+ *               type: object
+ *               required:
+ *                  - ProviderID
+ *                  - NetworkID
+ *               properties:
+ *                  ProviderID:
+ *                      type: string
+ *                  NetworkID:
+ *                      type: string
+ *      responses:
+ *          '200':
+ *              description: A successfull response
+ *      tags:
+ *          - Provider's Network
+*/
+app.delete('/providers/network/', function (req, res) {
+    ProviderToNetwork('delete', req, res)
+})
+/**
+ * @swagger
+ * /providers/network/:
+ *  post:
+ *      description: Use to join provider to a Network
+ *      summary: Use to join provider to a Network
+ *      requestBody:
+ *          required: true
+ *          content:
+ *           application/x-www-form-urlencoded:
+ *            schema:
+ *               type: object
+ *               required:
+ *                  - ProviderID
+ *                  - NetworkID
+ *               properties:
+ *                  ProviderID:
+ *                      type: string
+ *                  NetworkID:
+ *                      type: string
+ *      responses:
+ *          '200':
+ *              description: A successfull response
+ *      tags:
+ *          - Provider's Network
+*/
+app.post('/providers/network/', function (req, res) {
+    ProviderToNetwork('create', req, res)
+})
+/**
+ * @swagger
+ * /providers/network/activate:
+ *  put:
+ *      description: Use to join again provider to a Network
+ *      summary: Use to join again provider to a Network
+ *      requestBody:
+ *          required: true
+ *          content:
+ *           application/x-www-form-urlencoded:
+ *            schema:
+ *               type: object
+ *               required:
+ *                  - ProviderID
+ *                  - NetworkID
+ *               properties:
+ *                  ProviderID:
+ *                      type: string
+ *                  NetworkID:
+ *                      type: string
+ *      responses:
+ *          '200':
+ *              description: A successfull response
+ *      tags:
+ *          - Provider's Network
+*/
+app.put('/providers/network/activate', function (req, res) {
+    ProviderToNetwork('active', req, res)
+})
+
+/**
+ * @swagger
+ * /providers/facility/:
+ *  delete:
+ *      description: Use to remove provider to a Facility
+ *      summary: Use to remove provider to a Facility
+ *      requestBody:
+ *          required: true
+ *          content:
+ *           application/x-www-form-urlencoded:
+ *            schema:
+ *               type: object
+ *               required:
+ *                  - ProviderID
+ *                  - FacilityID
+ *               properties:
+ *                  ProviderID:
+ *                      type: string
+ *                  FacilityID:
+ *                      type: string
+ *      responses:
+ *          '200':
+ *              description: A successfull response
+ *      tags:
+ *          - Provider's Facility
+*/
+app.delete('/providers/facility/', function (req, res) {
+    ProviderToFacility('delete', req, res)
+})
+/**
+ * @swagger
+ * /providers/facility/:
+ *  post:
+ *      description: Use to join provider to a Facility
+ *      summary: Use to join provider to a Facility
+ *      requestBody:
+ *          required: true
+ *          content:
+ *           application/x-www-form-urlencoded:
+ *            schema:
+ *               type: object
+ *               required:
+ *                  - ProviderID
+ *                  - FacilityID
+ *               properties:
+ *                  ProviderID:
+ *                      type: string
+ *                  FacilityID:
+ *                      type: string
+ *      responses:
+ *          '200':
+ *              description: A successfull response
+ *      tags:
+ *          - Provider's Facility
+*/
+app.post('/providers/facility/', function (req, res) {
+    ProviderToFacility('create', req, res)
+})
+/**
+ * @swagger
+ * /providers/facility/activate:
+ *  put:
+ *      description: Use to join again provider to a Facility
+ *      summary: Use to join again provider to a Facility
+ *      requestBody:
+ *          required: true
+ *          content:
+ *           application/x-www-form-urlencoded:
+ *            schema:
+ *               type: object
+ *               required:
+ *                  - ProviderID
+ *                  - FacilityID
+ *               properties:
+ *                  ProviderID:
+ *                      type: string
+ *                  FacilityID:
+ *                      type: string
+ *      responses:
+ *          '200':
+ *              description: A successfull response
+ *      tags:
+ *          - Provider's Facility
+*/
+app.put('/providers/facility/activate', function (req, res) {
+    ProviderToFacility('active', req, res)
 })
 
 module.exports = app

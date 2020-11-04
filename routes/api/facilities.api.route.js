@@ -33,7 +33,6 @@ const getFacilityInfos = function (action, req, res) {
         res.send(Result.setErrorResult("FacilityID must be a GUID"))
     }
 }
-
 const activeOrDeleteFacility = function (action, req, res) {
     let id = req.params.id
     if (Helper.isGuid(id)) {
@@ -48,7 +47,6 @@ const activeOrDeleteFacility = function (action, req, res) {
         res.send(Result.setErrorResult("FacilityID must be a GUID"))
     }
 }
-
 const createOrEditFacility = function (action, req, res) {
     let FacilityID = req.body.FacilityID
     let Name = req.body.Name
@@ -67,6 +65,27 @@ const createOrEditFacility = function (action, req, res) {
         })
     } else {
         res.send(Result.setErrorResult("FacilityID must be a GUID"))
+    }
+}
+
+
+
+const FacilityToNetwork = function (action, req, res) {
+    let FacilityID = req.body.FacilityID
+    let NetworkID = req.body.NetworkID
+    if (Helper.isGuid(FacilityID) && Helper.isGuid(NetworkID)) {
+        Facility.FacilityToNetwork(FacilityID, NetworkID, createdBy, IP_address, action, function (response) {
+            if (response.rowsAffected[0] == 1) {
+                res.send(Result.setSuccessResult("success"))
+            } else {
+                res.send(Result.setErrorResult("This relation doesn't exist"))
+            }
+        })
+    } else {
+        let errorDescription = ""
+        Helper.isGuid(FacilityID) ? null : errorDescription += "{FacilityID must be a GUID} "
+        Helper.isGuid(NetworkID) ? null : errorDescription += "{NetworkID must be a GUID} "
+        res.send(Result.setErrorResult(errorDescription))
     }
 }
 
@@ -267,5 +286,100 @@ app.put('/facilities/', function (req, res) {
 app.post('/facilities/', function (req, res) {
     createOrEditFacility('create', req, res)
 })
+
+
+
+
+
+
+
+/**
+ * @swagger
+ * /facilities/network/:
+ *  delete:
+ *      description: Use to remove Facility to a Network
+ *      summary: Use to remove Facility to a Network
+ *      requestBody:
+ *          required: true
+ *          content:
+ *           application/x-www-form-urlencoded:
+ *            schema:
+ *               type: object
+ *               required:
+ *                  - FacilityID
+ *                  - NetworkID
+ *               properties:
+ *                  FacilityID:
+ *                      type: string
+ *                  NetworkID:
+ *                      type: string
+ *      responses:
+ *          '200':
+ *              description: A successfull response
+ *      tags:
+ *          - Facility's Network
+*/
+app.delete('/facilities/network/', function (req, res) {
+    FacilityToNetwork('delete', req, res)
+})
+/**
+ * @swagger
+ * /facilities/network/:
+ *  post:
+ *      description: Use to join Facility to a Network
+ *      summary: Use to join Facility to a Network
+ *      requestBody:
+ *          required: true
+ *          content:
+ *           application/x-www-form-urlencoded:
+ *            schema:
+ *               type: object
+ *               required:
+ *                  - FacilityID
+ *                  - NetworkID
+ *               properties:
+ *                  FacilityID:
+ *                      type: string
+ *                  NetworkID:
+ *                      type: string
+ *      responses:
+ *          '200':
+ *              description: A successfull response
+ *      tags:
+ *          - Facility's Network
+*/
+app.post('/facilities/network/', function (req, res) {
+    FacilityToNetwork('create', req, res)
+})
+/**
+ * @swagger
+ * /facilities/network/activate:
+ *  put: 
+ *      description: Use to join again Facility to a Network
+ *      summary: Use to join again Facility to a Network
+ *      requestBody:
+ *          required: true
+ *          content:
+ *           application/x-www-form-urlencoded:
+ *            schema:
+ *               type: object
+ *               required:
+ *                  - FacilityID
+ *                  - NetworkID
+ *               properties:
+ *                  FacilityID:
+ *                      type: string
+ *                  NetworkID:
+ *                      type: string
+ *      responses:
+ *          '200':
+ *              description: A successfull response
+ *      tags:
+ *          - Facility's Network
+*/
+app.put('/facilities/network/activate', function (req, res) {
+    FacilityToNetwork('active', req, res)
+})
+
 
 module.exports = app
