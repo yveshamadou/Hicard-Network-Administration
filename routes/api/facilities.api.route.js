@@ -4,19 +4,26 @@ const Result = require('../../models/result.model')
 const Helper = require('./api-helper')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-
+const jwt_decode = require('jwt-decode')
+const _Cookies = require('../../models/cookies.model')
+const hasToBe = require('../../middlewares/checkRole.mdlw')
 const app = express()
 
 app.use(cors())
 app.use(bodyParser.urlencoded())
 app.use(bodyParser.json())
 
-let IP_address
+
+/* Middleware: Must be Facility Administrator */
+app.use(hasToBe('facilityAdministrator'))
+const _cookies = new _Cookies()
+
+let IP_address, createdBy
 app.use((req, res, next) => {
     IP_address = req.connection.remoteAddress
+    createdBy = jwt_decode(_cookies.parseCookies(req).x_datas).UserID
     next()
 })
-const createdBy = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
 
 const getFacilityInfos = function (action, req, res) {
     let id = req.params.id
@@ -176,6 +183,15 @@ app.get('/facilities/:id/users', function (req, res) {
 app.get('/facilities/:id/networks', function (req, res) {
     getFacilityInfos('getFacilityNetwork', req, res)
 })
+
+
+
+
+
+
+/* Middleware: Must be Network Administrator */
+app.use(hasToBe('networkAdministrator'))
+
 
 /**
  * @swagger

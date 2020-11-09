@@ -4,19 +4,26 @@ const Result = require('../../models/result.model')
 const Helper = require('./api-helper')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-
+const jwt_decode = require('jwt-decode')
+const _Cookies = require('../../models/cookies.model')
+const hasToBe = require('../../middlewares/checkRole.mdlw')
 const app = express()
 
 app.use(cors())
 app.use(bodyParser.urlencoded())
 app.use(bodyParser.json())
 
-let IP_address
+
+/* Middleware: Must be User Administrator */
+app.use(hasToBe('user'))
+const _cookies = new _Cookies()
+
+let IP_address, createdBy
 app.use((req, res, next) => {
     IP_address = req.connection.remoteAddress
+    createdBy = jwt_decode(_cookies.parseCookies(req).x_datas).UserID
     next()
 })
-const createdBy = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
 
 const getUser = function (id, req, res) {
     User.getUser(id, IP_address, function (response) {
@@ -148,6 +155,12 @@ app.get('/users/:id', function (req, res) {
         res.send(Result.setErrorResult("UserID must be a GUID"))
     }
 })
+
+
+
+
+/* Middleware: Must be Facility Administrator */
+app.use(hasToBe('facilityAdministrator'))
 
 /**
  * @swagger

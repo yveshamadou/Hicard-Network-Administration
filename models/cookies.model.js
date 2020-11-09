@@ -1,4 +1,4 @@
-let config = require('../config/cookie.config')
+let config = require('../config/global.config')
 class Cookies {
     constructor() {
         this.expires = config.cookies.expires;

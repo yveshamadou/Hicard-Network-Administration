@@ -8,11 +8,11 @@ class App {
             apiKey: hicardConfig.apiKey
         })
         .then(function (response) {
-            cb(response.data);
+            cb(response.data)
         })
         .catch(function (error) {
-            console.log(error);
-        });
+            console.log(error)
+        })
     }
 }
 module.exports = App

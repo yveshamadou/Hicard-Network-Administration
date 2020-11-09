@@ -1,4 +1,5 @@
 var config = {
+    hostname: "http:localhost:2000",
     cookies: {
         expires: 1000 * 60 * 15
     },

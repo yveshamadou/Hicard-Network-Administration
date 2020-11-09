@@ -1,3 +1,5 @@
+const config = require('../../config/global.config')
+
 class Helper {
     static isGuid(value) {   
         var regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i
@@ -9,8 +11,14 @@ class Helper {
         let found = false
         let i = 0
         while (i < tab.length && !false) {
-            if (tab[i][field] == value) {
-                found = i
+            if (field) { 
+                if (tab[i][field] == value) {
+                    found = i
+                }
+            }else{
+                if (tab[i] == value) {
+                    found = i
+                }
             }
             i++
         }
@@ -25,9 +33,9 @@ class Helper {
                     title: 'Hicard Administration APIs',
                     description: 'Hicard Administration APIs Documentation',
                     contact: {
-                        name: "Amazing Developer"
+                        name: "Landry onguene"
                     },
-                    servers: ['http:localhost:2000']
+                    servers: [config.hostname]
                 }
             },
             apis: ["routes/api/*.js"],
