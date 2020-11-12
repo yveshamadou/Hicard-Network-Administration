@@ -8,7 +8,7 @@ const _cookies = new _Cookies()
 let hasToBe = (role) => {
     return hasToBe[role] || (hasToBe[role] = (req, res, next) => {
         let cookies = _cookies.parseCookies(req)
-        let token = jwt_decode(cookies.x_datas)
+        let token = cookies.x_datas ? jwt_decode(cookies.x_datas) : jwt_decode(req.headers.x_datas)
         if (token.roles[role]/*  && token.roles[role].length > 0 */) {
             next()
         }else{

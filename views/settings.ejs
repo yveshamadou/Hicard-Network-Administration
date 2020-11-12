@@ -1,0 +1,72 @@
+<%- include('partials/_header') -%>
+
+<div class="main pb-5 bg-gray" id="main">
+  <div class="container mt-4">
+    <div class="bg-white py-5" style="border-radius: 5px">
+      <div class="px-5">
+        <div class="row">
+          <div class="col-lg-3">
+            <div class="text-center">
+              <img src="./images/logo.png" class="img-rounded img-fluid border wh-170" alt="...">
+              <div class="py-4">
+                <div class="group" role="group" aria-label="Third group">
+                  <button type="button" class="btn btn-outline-primary mr-4"><i class="fa fa-edit"></i></button>
+                  <button type="button" class="btn btn-outline-primary"><i class="fas fa-trash-alt"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-9">
+            <nav>
+              <div class="onglet nav-tabs nav nav-pills" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-profile-info-tab" data-toggle="tab" href="#nav-profile-info" role="tab" aria-controls="nav-profile-info" aria-selected="true">Profile Information</a>
+                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-password" role="tab" aria-controls="nav-profile" aria-selected="false">Change Password</a>
+              </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+              <div class="tab-pane fade show active py-4" id="nav-profile-info" role="tabpanel" aria-labelledby="nav-profile-info-tab">
+                <form>
+                  <div class="form-group">
+                    <label for="FirstName">First Name</label>
+                    <input type="text" class="form-control" id="password1"  placeholder="Lee">
+                  </div>
+                  <div class="form-group">
+                    <label for="LastName">Last Name</label>
+                    <input type="text" class="form-control" id="LastName" placeholder="Brand">
+                  </div>
+                  <div class="float-right py-2 mt-3">
+                    <button type="submit" class="btn btn-primary">Save Change</button>
+                  </div>
+                </form>
+              </div>
+              <div class="tab-pane fade py-4" id="nav-password" role="tabpanel" aria-labelledby="nav-password-tab">
+                <form>
+                  <div class="form-group">
+                    <label for="password1">Current Password</label>
+                    <input type="password" class="form-control" id="password1"  placeholder="xxxxxxxxx">
+                  </div>
+                  <div class="form-group">
+                    <label for="password2">New Password</label>
+                    <input type="password" class="form-control" id="password2"  placeholder="xxxxxxxxxxx">
+                  </div>
+                  <div class="form-group">
+                    <label for="password3">Confirm New Password</label>
+                    <input type="password" class="form-control" id="password3" placeholder="xxxxxxxxxxx">
+                  </div>
+                  <div class="float-right py-2 mt-3">
+                    <button type="submit" class="btn btn-primary">Save Change</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<%- include('partials/_footer') -%>

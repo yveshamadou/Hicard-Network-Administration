@@ -1,7 +1,14 @@
 const express = require('express')
 const app = express()
-//const authenticationParams = require('../config/authentication.config')
+const config = require('../config/hicard.config')
 
+
+app.get('/login', function (req, res) {
+    res.render('login', {
+        page: "login",
+        authenticationParams: config.authenticationParams
+    })
+})
 
 app.get('/', function (req, res) {
     res.render('user_network', {
@@ -36,6 +43,12 @@ app.get('/user_facility_details', function (req, res) {
 app.get('/access', function (req, res) {
     res.render('access', {
         page: "access"
+    })
+})
+
+app.get('/settings', function (req, res) {
+    res.render('settings', {
+        page: "settings"
     })
 })
 

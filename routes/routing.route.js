@@ -24,7 +24,7 @@ const errorsRoutes = require('./errors.route')
 
 app.use(authenticationRoutes)
 
-app.use(memberIsLogged) //Middleware : From here, the member must be logged in to access the app below
+/* app.use(memberIsLogged)  *///Middleware : From here, the member must be logged in to access the app below
 
 app.use(mainRoutes)
 app.use(apiRoutes)

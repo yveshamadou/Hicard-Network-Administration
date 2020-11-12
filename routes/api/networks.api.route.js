@@ -7,6 +7,7 @@ const cors = require('cors')
 const jwt_decode = require('jwt-decode')
 const _Cookies = require('../../models/cookies.model')
 const hasToBe = require('../../middlewares/checkRole.mdlw')
+const HicardRequest = require('../../models/hicard.request.model')
 const app = express()
 
 app.use(cors())
@@ -15,23 +16,23 @@ app.use(bodyParser.json())
 
 
 /* Middleware: Must be Network Administrator */
-app.use(hasToBe('networkAdministrator'))
+/* app.use(hasToBe('networkAdministrator')) */
 const _cookies = new _Cookies()
 
-let IP_address, createdBy
+let IP_address, createdBy, hicardRequest
 app.use((req, res, next) => {
     IP_address = req.connection.remoteAddress
     createdBy = jwt_decode(_cookies.parseCookies(req).x_datas).UserID
+    hicardRequest = new HicardRequest(req)
     next()
 })
 
-
-const getNetworkInfos = function (action, req, res) {
+const getNetworkInfos = function (action, req, res, activatorDatas = false) {
     let id = req.params.id
     if (Helper.isGuid(id)) {
         Network.getNetworkInfos(id, IP_address, action, function (response) {
             if (response.recordset.length > 0) {
-                let datas = Result.setSuccessResult(response.recordset)
+                let datas = Result.setSuccessResult(activatorDatas ? activatorDatas : response.recordset)
                 res.send(datas)
             }else{
                 res.send(Result.setSuccessResult(null))
@@ -58,8 +59,8 @@ const activeOrDeleteNetwork = function (action, req, res) {
 }
 
 const createOrEditNetwork = function (action, req, res) {
-    let NetworkID = req.body.NetworkID
-    let Name = req.body.Name
+    let NetworkID = req.body.id
+    let Name = req.body.name
     if (Helper.isGuid(NetworkID)) {
         Network.createOrEditNetwork(NetworkID, Name, createdBy, IP_address, action, function (response) {
             if (response.rowsAffected[0] == 1) {
@@ -95,8 +96,16 @@ const createOrEditNetwork = function (action, req, res) {
  *      tags:
  *          - Networks
 */
-app.get('/networks/:id', hasToBe('networkAdministrator'), function (req, res) {
-    getNetworkInfos('getNetwork', req, res)
+app.get('/networks/:id', function (req, res) {
+    hicardRequest.getRequest("medicalnetworks", [req.params.id]).then((result) => {
+        if (result.data.errors.length == 0 && result.data.payload) {
+            getNetworkInfos('getNetwork', req, res, result.data.payload)
+        }else{
+            res.send(Result.setSuccessResult(null))
+        }
+    }).catch((err) => {
+        res.send(Result.setErrorResult("Something went wrong"))
+    })
 })
 
 /**
@@ -167,7 +176,7 @@ app.get('/networks/:id/facilities', function (req, res) {
 
 
 /* Middleware: Must be system Administrator */
-app.use(hasToBe('systemAdministrator'))
+/* app.use(hasToBe('systemAdministrator')) */
 
 
 /**
@@ -223,19 +232,46 @@ app.put('/networks/:id/active', function (req, res) {
  *      requestBody:
  *          required: true
  *          content:
- *           application/x-www-form-urlencoded:
+ *           application/json:
  *            schema:
  *               type: object
  *               required:
- *                  - NetworkID
- *                  - Name
+ *                  - id
+ *                  - accountNumber
+ *                  - addressLine1
+ *                  - addressLine2
+ *                  - city
+ *                  - contactName
+ *                  - description
+ *                  - emailAddress
+ *                  - faxNumber
+ *                  - mainPhoneNumber
+ *                  - name
+ *                  - postalCode
+ *                  - state
  *               properties:
- *                  NetworkID:
+ *                  id:
  *                      type: string
- *                      description: NetworkID of the Network
- *                  Name:
+ *                  accountNumber:
  *                      type: string
- *                      description: Name of the Network
+ *                  addressLine1:
+ *                      type: string
+ *                  addressLine2:
+ *                      type: string
+ *                  city:
+ *                      type: string
+ *                  contactName:
+ *                      type: string
+ *                  description:
+ *                      type: string
+ *                  emailAddress:
+ *                      type: string
+ *                  faxNumber:
+ *                      type: string
+ *                  postalCode:
+ *                      type: string
+ *                  state:
+ *                      type: string
  *      responses:
  *          '200':
  *              description: A successfull response
@@ -243,7 +279,15 @@ app.put('/networks/:id/active', function (req, res) {
  *          - Networks
 */
 app.put('/networks/', function (req, res) {
-    createOrEditNetwork('update', req, res)
+    hicardRequest.postRequest("medicalnetworks", req.body).then((result) => {
+        if (result.data.errors.length == 0 && result.data.payload) {
+            createOrEditNetwork('update', req, res)
+        }else{
+            res.send(Result.setSuccessResult(null))
+        }
+    }).catch((err) => {
+        res.send(Result.setErrorResult("Something went wrong"))
+    })
 })
 
 /**
@@ -255,19 +299,46 @@ app.put('/networks/', function (req, res) {
  *      requestBody:
  *          required: true
  *          content:
- *           application/x-www-form-urlencoded:
+ *           application/json:
  *            schema:
  *               type: object
  *               required:
- *                  - NetworkID
- *                  - Name
+ *                  - id
+ *                  - accountNumber
+ *                  - addressLine1
+ *                  - addressLine2
+ *                  - city
+ *                  - contactName
+ *                  - description
+ *                  - emailAddress
+ *                  - faxNumber
+ *                  - mainPhoneNumber
+ *                  - name
+ *                  - postalCode
+ *                  - state
  *               properties:
- *                  NetworkID:
+ *                  id:
  *                      type: string
- *                      description: NetworkID of the Network
- *                  Name:
+ *                  accountNumber:
  *                      type: string
- *                      description: Name of the Network
+ *                  addressLine1:
+ *                      type: string
+ *                  addressLine2:
+ *                      type: string
+ *                  city:
+ *                      type: string
+ *                  contactName:
+ *                      type: string
+ *                  description:
+ *                      type: string
+ *                  emailAddress:
+ *                      type: string
+ *                  faxNumber:
+ *                      type: string
+ *                  postalCode:
+ *                      type: string
+ *                  state:
+ *                      type: string
  *      responses:
  *          '200':
  *              description: A successfull response
@@ -275,7 +346,16 @@ app.put('/networks/', function (req, res) {
  *          - Networks
 */
 app.post('/networks/', function (req, res) {
-    createOrEditNetwork('create', req, res)
+    hicardRequest.putRequest("medicalnetworks", req.body).then((result) => {
+        if (result.data.errors.length == 0 && result.data.payload) {
+            req.body.id = result.data.payload
+            createOrEditNetwork('create', req, res)
+        }else{
+            res.send(Result.setSuccessResult(null))
+        }
+    }).catch((err) => {
+        res.send(Result.setErrorResult("Something went wrong"))
+    })
 })
 
 module.exports = app

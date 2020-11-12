@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Page</title>
+    <link href="http://localhost:3000/img/favicon.144x144.png" rel="apple-touch-icon" type="image/png" sizes="144x144"/>
+    <link href="http://localhost:3000/img/favicon.114x114.png" rel="apple-touch-icon" type="image/png" sizes="114x114"/>
+    <link href="http://localhost:3000/img/favicon.72x72.png" rel="apple-touch-icon" type="image/png" sizes="72x72"/>
+    <link href="http://localhost:3000/img/favicon.57x57.png" rel="apple-touch-icon" type="image/png"/>
+    <link href="http://localhost:3000/img/favicon.png" rel="icon" type="image/png"/>
+    <link href="http://localhost:3000/img/favicon.ico" rel="shortcut icon"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!--<link rel="stylesheet" href="./css/debug.css"/>-->
+
+    <link rel="stylesheet" href="./css/hi.style.css"/>
+    <link rel="stylesheet" href="./css/fontawesome/css/all.min.css"/>
+    <link rel="stylesheet" href="./css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="./css/bootstrap-grid.min.css"/>
+    <link rel="stylesheet" href="./css/app.css"/>
+    <style>   
+        .login-content{
+            margin-top: 5% !important;
+        }
+        .user_card {
+            height: 500px;
+            width: 450px;
+            margin-top: auto;
+            margin-bottom: auto;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .brand_logo_container {
+            position: relative;
+            text-align: left;
+        }
+        .brand_logo {
+            height: 120px;
+        }
+        .login_btn {
+            width: 100%;
+            background: #007ad4 !important;
+            color: white !important;
+        }
+        .login_btn:focus {
+            box-shadow: none !important;
+            outline: 0px !important;
+        }
+        .login_container {
+            padding: 0 2rem;
+        }
+        .input-group-text {
+            background: #007ad4 !important;
+            color: white !important;
+            border: 0 !important;
+            border-radius: 0.25rem 0 0 0.25rem !important;
+        }
+        .input_user,
+        .input_pass:focus {
+            box-shadow: none !important;
+            outline: 0px !important;
+        }
+        .custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+            background-color: #007ad4 !important;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <section class="login-content">
+        <div class="container h-100">
+            <div class="d-flex justify-content-center h-100">
+                <div class="user_card shadow-sm bg-white">
+                    <div class="d-flex justify-content-center">
+                        <div class="brand_logo_container">
+                            <img src="./images/logo.png" class="brand_logo img-fluid" alt="Logo">
+                        </div>
+                    </div>
+                    <div id="auth_module_inputs">
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer class="footer bg-light bottom mt-5">
+        <p class="h6 text-center">Terms / Conditions & Privacy Policy ©Copyright <span class="hi-text-red">HI</span><span class="hi-text-blue-primary">Card</span></p>
+    </footer>
+     <!--scripts js-->
+     <script src="./js/jquery-1.11.3.js"></script>
+     <script src="./js/fontawesome/js/all.min.js"></script>
+     <script src="./js/bootstrap.min.js"></script>
+     <script src="./js/login.js"></script>
+     <!-- Latest compiled and minified JavaScript -->
+     <script type="text/javascript" src="./js/jquery-ui.js"></script>
+     <script type="text/javascript" src="./js/app.js"></script>
+    <script src="https://auth_eval.asmlogic.com/js/asm_identity.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            loadProfile();
+            $asm_identity.initialize({
+                authority: "https://auth_eval.asmlogic.com",
+                clientId: "<%= authenticationParams.client_Id %>",
+                returnUrl: "<%= authenticationParams.redirect_uri %>",
+                state: "mystate_user_id",
+                enableRegistration: false,
+                registrationActivated: function () {
+                    let auth_username = $("#auth_username").addClass("form-control m-b-1 form-control icon-left email").get()
+                    $("#auth_username").remove()
+                    $(".auth_username_div")
+                    .addClass("form-group row justify-content-center")
+                    .append(
+                        $("<div>")
+                        .addClass("col-md-10 mb-3")
+                        .html("<small class='font-italic text-secgray'>Important Note: A valid email is <u>required</u> to activate your account.</small>")
+                    ).append(
+                    $("<div>")
+                        .addClass("col-md-10 mb-3")
+                        .html(auth_username)
+                    );
+
+                    $("button#auth_send_validation_code")
+                        .addClass('btn btn-primary px-4 fitc offset-md-1 mt-0')
+                        .removeClass('btn-block btn-sm')
+                        .click(function(){
+                        $('div#auth_errors_inputs').empty()
+                    })
+                    $("button#auth_verify_validation_code")
+                        .addClass('btn btn-primary px-4 fitc offset-md-1 mt-0')
+                        .removeClass('btn-block btn-sm')
+                        .click(function(){
+                        $('div#auth_errors_inputs').empty()
+                    })
+                    $("button#auth_resend_validation_code")
+                        .addClass('btn btn-primary px-4 fitc offset-md-1 mt-0')
+                        .removeClass('btn-block btn-sm')
+                        .click(function(){
+                        $('div#auth_errors_inputs').empty()
+                    })
+                    $("button#auth_register")
+                        .addClass('btn btn-primary px-4 fitc offset-md-1 mt-0')
+                        .removeClass('btn-block btn-sm')
+                        .click(function(){
+                        $('div#auth_errors_inputs').empty()
+                    })
+
+                    
+                    let auth_validation_code = $("#auth_validation_code").addClass("form-control m-b-1 form-control icon-left code").get()
+                    $("#auth_validation_code").remove()
+                    $(".auth_validation_code_div")
+                    .addClass("form-group row justify-content-center")
+                    .append(
+                    $("<div>")
+                        .addClass("col-md-10 mb-3")
+                        .html(auth_validation_code)
+                    );
+                    
+                    let auth_password = $("#auth_password").addClass("form-control m-b-1 form-control icon-left unlock").get()
+                    
+                    $(".auth_password_div")
+                    .addClass("form-group row justify-content-center ml-3")
+                    .append(
+                    $("<div>")
+                        .addClass("col-md-11 mb-3")
+                        .html(auth_password)
+                    );
+                    let auth_password_confirm = $("#auth_password_confirm").addClass("form-control m-b-1 form-control icon-left unlock").get()
+                    
+                    $(".auth_password_confirm_div")
+                    .addClass("form-group row justify-content-center ml-3")
+                    .append(
+                    $("<div>")
+                        .addClass("col-md-11 mb-3")
+                        .html(auth_password_confirm)
+                    );
+                }
+            }).then(() => {
+                $asm_identity.renderLogin().then(() => {
+                    //add additional classes to HTML generated objects here
+                    let auth_username_input = $("#auth_username_input").addClass("form-control m-b-1 form-control icon-left email").get()
+                    $("#auth_username_input").remove()
+                    $(".auth_username_div")
+                    .addClass("form-group row justify-content-center").append(
+                        $("<div>")
+                        .addClass("col-md-10 mb-3")
+                        .html(auth_username_input)
+                    );
+
+                    $("input#auth_username").addClass("form-control");
+
+
+                    let auth_password_input = $("#auth_password_input").addClass("form-control m-b-1 form-control icon-left unlock").get()
+                    $("#auth_password_input").remove()
+                    $(".auth_password_div")
+                    .addClass("form-group row justify-content-center")
+                    .css('margin-bottom','0px')
+                    .append(
+                        $("<div>")
+                            .addClass("col-md-10 mb-3")
+                            .html(auth_password_input)
+                    );
+
+                    $('.auth_forgot_password_msg a').css('font-size', 'small');
+                    let auth_forgot_password_msg = $('.auth_forgot_password_msg').html()
+                    $("#auth_forgot_password_div").addClass("m-b-1");
+                    $('.auth_forgot_password_msg').replaceWith(
+                        $('<div>')
+                            .addClass('auth_password_div form-group row justify-content-center')
+                            .append(
+                                $("<div>")
+                                    .addClass("col-md-10")
+                                    .html("<small class='auth_forgot_password_msg float-right'>" + auth_forgot_password_msg + "</small>")
+                            )
+                    );
+                    
+
+                    $("#auth_submit_button").addClass("btn btn-sm btn-block btn-inline btn-primary-outline");
+                    $(".auth_register_div").attr({'style':'position:relative;'}).addClass('text-center');
+
+                    $("button#auth_submit_button")
+                        .addClass('btn btn-primary px-4 fitc offset-md-1 mt-0')
+                        .removeClass('btn-block btn-sm')
+                        .click(function(){
+                        $('div#auth_errors_inputs').empty()
+                    })
+
+                    $('small.auth_register_msg').addClass('offset-md-1 text-center').before('<br>')
+                });
+                
+            }).catch(() => {
+                //process initialization error
+            });
+            
+        });
+    </script>
+   
+</body>
+</html>

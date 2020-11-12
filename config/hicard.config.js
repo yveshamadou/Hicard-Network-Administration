@@ -10,13 +10,23 @@ var hicardConfig = {
         }
     },
 
-
+    authenticationParams: {
+        client_Id:"3e868d54-71e6-41a4-808d-f29a509292ba",
+        redirect_uri:"http://localhost:5000/authentication",
+        response_type:"id_token",
+        scope:"open_id",
+        version: "v1",
+        baseUrl: "https://auth_eval.asmlogic.com/api",
+    },
     
     getAPIs: {
-        memberGet: "/members",
+        medicalnetworks: "medicalnetworks",
     },
     postAPIs: {
-        /* memberGet: "/member/verify", */
+        medicalnetworks: "medicalnetworks",
+    },
+    putAPIs: {
+        medicalnetworks: "medicalnetworks",
     },
 }
 
