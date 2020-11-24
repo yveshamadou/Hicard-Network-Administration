@@ -10,11 +10,11 @@ const hicardConfig = require('../config/hicard.config');
 const app = express()
 const m_cookies = new M_Cookies()
 
-/**app.get('/logout', function (req, res) {
-    m_cookies.deleteCookie(res, 'memberGuid')
-    m_cookies.deleteCookie(res, 'token')
+app.get('/logout', function (req, res) {
+    m_cookies.deleteCookie(res, 'securityToken')
+    m_cookies.deleteCookie(res, 'ACCESS_TOKEN')
     res.redirect('/login')
-})**/
+});
 
 
 

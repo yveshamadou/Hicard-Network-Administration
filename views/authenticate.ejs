@@ -1,0 +1,17 @@
+<%- include('partials/_header') -%>
+
+    <div class="container main">
+        <div class="text-center loader">
+            <div class="spinner-border text-primary" style="height: 7rem; width: 7rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <br>
+            <span>Loading...</span>
+        </div>
+    </div>
+    <script>
+        let baseUrl = "<%= baseUrl %>";
+    </script>
+    <script defer src="/js/controllers/authentication.controller.js" type="module"></script>
+
+<%- include('partials/_footer') -%>

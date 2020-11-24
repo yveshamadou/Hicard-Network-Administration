@@ -7,29 +7,36 @@
         <nav class="linkcategory breadcrumb p-0 m-0">
           <ol class="breadcrumb m-0 p-0">
             <li class="breadcrumb-item">
-              <a class="hi-text-blue-primary fw-normal" href="#">Member User</a>
+              <a class="hi-text-blue-primary fw-normal" href="/user_network">Network</a>
             </li>
             <li class="breadcrumb-item">
-              <a class="hi-text-blue-primary fw-normal" href="#">Franklin Zall</a>
+              <a class="hi-text-blue-primary fw-normal name-network" href=""></a>
             </li>
           </ol>
         </nav>
       </div>
       <div class="navbar-nav py-3 px-0 container-action-file">
         <ul class="nav action-file flex-column flex-sm-row px-0">
-          <li class="nav-item ">
-            <a class="nav-link btn bg-light px-3" href="#"> <i class="fas fa-plus"></i> Add facility</a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link btn bg-light px-3" href="#"> <i class="far fa-file-excel"></i> Import Excel</a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link btn bg-light px-3" href="#"> <i class="far fa-file-pdf"></i> Import PDF</a>
-          </li>
+            <% if (roles) { %> 
+              <% if (roles == "super") { %>
+                <li class="nav-item ">
+                  <a class="nav-link btn bg-light px-3 add-facility-btn" href="#"> <i class="fas fa-plus mr-1"></i> Add Facility</a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link btn bg-light px-3 add-provider-btn" href="#"> <i class="fas fa-plus mr-1"></i> Add Provider</a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link btn bg-light px-3 add-user-btn" href="#"> <i class="fas fa-plus mr-1"></i> Add User</a>
+                </li>
+                <!-- <li class="nav-item ">
+                  <a class="nav-link btn bg-light px-3" href="#"> <i class="far fa-file-excel"></i> Import Excel</a>
+                </li> -->
+              <% } %> 
+          <% } %> 
           <li class="nav-item" style="padding-right: 0">
             <form class="form-inline d-flex justify-content-center md-form form-sm">
               <div class="form-group form-search">
-                  <input class="form-control" type="text" placeholder="Search"
+                  <input class="form-control search"  type="text" placeholder="Search"
                     aria-label="Search">
                   <div class="search-icon">
                     <i class="fas fa-search" aria-hidden="true"></i>
@@ -41,109 +48,64 @@
       </div>
     </nav>
   </div>
-  <div class="container mt-4">
+  <div class="container mt-4 mb-5">
     <div class="bg-white py-3" style="border-radius: 5px">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-2">
-            <div class="img text-center">
-              <img src="./images/logo.png" class="img-fluid" width="200px" alt="no-image">
-            </div>
-          </div>
-          <div class="col-md-3 col-sm-6 flex-sm-column mt-2">
-            <div class="d-flex">
-              <div class="col px-1 info-basic">Network:</div>
-              <div class="col px-1 info-data">Franklin Network</div>
-            </div>
-            <div class="d-flex">
-              <div class="col px-1 info-basic">Mail address:</div>
-              <div class="col px-1 info-data">Franklin@exem.com</div>
-            </div>
-            <div class="d-flex ">
-              <div class="col px-1 info-basic">Phone Number:</div>
-              <div class="col px-1 info-data">+14(0)145 547 12</div>
-            </div>
-            <div class="d-flex ">
-              <div class="col px-1 info-basic">Description:</div>
-              <div class="col px-1 info-data">test</div>
-            </div>
-          </div>
-          <div class="col-md-3 col-sm-6 flex-sm-column mt-2">
-            <div class="d-flex">
-              <div class="col  info-basic">City:</div>
-              <div class="col info-data">New-York</div>
-            </div>
-            <div class="d-flex">
-              <div class="col px-1 info-basic">State:</div>
-              <div class="col px-1 info-data">USA</div>
-            </div>
-            <div class="d-flex ">
-              <div class="col px-1 info-basic">Website:</div>
-              <div class="col px-1 info-data">www.hicard.com</div>
-            </div>
-          </div>
-          <div class="col-md-4 flex-sm-column mt-2">
-            <div class="row">
-              <div class="col-9">
-                <div class="d-flex flex-row">
-                  <div class=" info-basic">Address 1:</div>
-                  <div class="info-data">Ipsum has been</div>
-                </div>
-                <div class="d-flex flex-row">
-                  <div class="info-basic">Address 2:</div>
-                  <div class="info-data">47 845 547 12</div>
-                </div>
-                <div class="d-flex flex-row">
-                  <div class="info-basic">Postal Code:</div>
-                  <div class="info-data">Ipsum has been</div>
-                </div>
-                <div class="d-flex flex-row">
-                  <div class="info-basic">Merely To:</div>
-                  <div class="info-data">47 845 547 12</div>
-                </div>
-                <div class="d-flex flex-row">
-                  <div class="info-basic">Objective:</div>
-                  <div class="info-data">Ipsum has been</div>
-                </div>
-              </div>
-              <div class="col-3">
-                <div class="button-group">
-                  <div class="mt-2">
-                    <a href="#" class="p-1 btn btn-outline-primary w-100 fs-small" data-toggle="modal" data-target="#facilityNameModal"><i class="fas fa-edit"></i> Edit</a>
-                  </div>
-                  <div class="mt-2">
-                    <a href="#" class="p-1 btn btn-outline-primary w-100 fs-small"><i class="fas fa-trash-alt"></i> Delete</a>
-                  </div>
-                  <div class="mt-2">
-                    <a href="#" class="p-1 btn btn-outline-primary w-100 fs-small"><i class="fas fa-edit"></i> Lock</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="container list" id="network-content">
+        <div class="row" id="info-network-card">
       </div>
     </div>
 
       <div class="border-bottom mt-3">
         <ul class="onglet nav-tabs nav nav-pills mx-4" id="myTab" role="tablist">
           <li class="nav-item ">
-            <a class="nav-link active px-3" aria-selected="true" aria-controls="content01" data-toggle="tab" id="content01-tab" href="#content01">Facility</a>
+            <a class="nav-link active px-3" aria-selected="true" aria-controls="facilities" data-toggle="tab" id="facilities-tab" href="#facilities">Facilities</a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link px-3" aria-selected="false" aria-controls="content02" data-toggle="tab" id="content02-tab" href="#content02">Provider</a>
+            <a class="nav-link px-3" aria-selected="false" aria-controls="providers" data-toggle="tab" id="providers-tab" href="#providers">Providers</a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link px-3" aria-selected="false" aria-controls="users" data-toggle="tab" id="users-tab" href="#users">Users</a>
           </li>
         </ul>
         <div class="container-main">
           <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="content01" role="tabpanel" aria-labelledby="content01-tab">
+            <div class="tab-pane fade show active" id="facilities" role="tabpanel" aria-labelledby="facilities-tab">
               <div id="contain-content01">
                 <ul class="nav justify-content-end">
                   <li class="nav-item p-3">
-                    <a class="nav-link btn btn-outline-primary px-3" href="#" style="font-size: 0.75rem;"> <i class="fas fa-plus"></i> Add Network</a>
+                    <a class="nav-link btn btn-outline-primary px-3 add-facility-btn" href="#" style="font-size: 0.75rem;"> <i class="fas fa-plus"></i> Add Facility</a>
                   </li>
                 </ul>
                 <div class="container">
                   <div style="border-radius: 5px!important;" class="overflow-lg-x shadow-sm">
+                    <table class="table table-stripped m-0 provider-table" style="min-width: 768px">
+                      <thead>
+                        <tr style="color: #1A4F73!important;">
+                          <th scope="col" class="text-center" style="width: 130px">Avatar</th>
+                          <th scope="col" style="width: 150px" >Name</th>
+                          <th scope="col" >City</th>
+                          <th scope="col" >Email address</th>
+                          <th scope="col">Address Line</th>
+                          <th scope="col" style="width: 80px"></th>
+                          <th scope="col" style="width: 80px">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody id="tbody-facilities-list">
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="providers" role="tabpanel" arial-labelledby="providers-tab">
+              <div id="contain-content02">
+                <ul class="nav justify-content-end">
+                  <li class="nav-item p-3">
+                    <a class="nav-link btn btn-outline-primary hi-text-blue-primary px-3" href="#" style="font-size: 0.75rem"> <i class="fas fa-plus"></i> Add User</a>
+                  </li>
+                </ul>
+                <div class="container">
+                  <div style="border-radius: 5px!important" class="shadow-sm overflow-lg-x">
                     <table class="table table-stripped m-0 provider-table" style="min-width: 768px">
                       <thead>
                         <tr style="color: #1A4F73!important;">
@@ -215,7 +177,7 @@
                 </div>
               </div>
             </div>
-            <div class="tab-pane fade" id="content02" role="tabpanel" arial-labelledby="content02-tab">
+            <div class="tab-pane fade" id="users" role="tabpanel" arial-labelledby="users-tab">
               <div id="contain-content02">
                 <ul class="nav justify-content-end">
                   <li class="nav-item p-3">
@@ -601,4 +563,13 @@
     </div>
   </div>
 </div>
+
+<script>
+        
+  let baseUrl = "<%= baseUrl %>"
+  let RX = "<%= roles %>"
+    
+</script>
+
+<script defer src="./js/controllers/userNetworkDetails.controller.js" type="module"></script>
 <%- include('partials/_footer') -%>

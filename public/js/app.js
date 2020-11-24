@@ -1,5 +1,6 @@
 (function ($) {
   $(document).ready(()=>{
+  
     // slide contain content01 content02 user and content03 with fadeIn fadeout
     $("#content01").on('click', (e) => {
       e&&e.preventDefault();

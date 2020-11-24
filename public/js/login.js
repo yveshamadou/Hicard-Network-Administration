@@ -7,6 +7,7 @@
  * A not existing key in localstorage return null
  *
  */
+
 function getLocalProfile(callback){
     var profileImgSrc      = localStorage.getItem("PROFILE_IMG_SRC");
     var profileName        = localStorage.getItem("PROFILE_NAME");

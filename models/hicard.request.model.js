@@ -1,16 +1,18 @@
 const axios = require('axios').default
 const api = require('../config/hicard.config')
 const M_Cookies = require('../models/cookies.model')
-const { param } = require('../routes/api.route')
+const jwt_decode = require('jwt-decode');
 
 const cookies = new M_Cookies()
+
 
 class HicardRequest{
     constructor(req) {
         let cookies_list = cookies.parseCookies(req)
         //Setting securityToken as Default in the axios headers 
-        axios.defaults.headers.common['securityToken'] = cookies_list.securityToken
+        axios.defaults.headers['Authorization'] = 'Bearer '+cookies_list.ACCESS_TOKEN
     }
+    
     
     getRequest(method, params = false) {
         return new Promise((resolve, reject) => {
@@ -63,13 +65,35 @@ class HicardRequest{
                 })
         })
     }
+    
+    postRequestWithParams(method,params = null, datas) {
+        return new Promise((resolve, reject) => {
+            if (api.postAPIs[method] == undefined) {
+                reject(new Error("404: This URL doesn't exist"))
+            }
+            
+            let url = api.baseUrl + '/' + api.postAPIs[method] + '/'+params.id+'/networks/'+params.networkID+''
+
+            axios.post(url, datas)
+                .then(function (response) {
+                    if (response.data.errors.length > 0) {
+                        reject(response)
+                    } else {
+                        resolve(response)
+                    }
+                })
+                .catch(function (error) {
+                    reject(error.response)
+                })
+        })
+    }
 
     putRequest(method, datas) {
         return new Promise((resolve, reject) => {
             if (api.putAPIs[method] == undefined) {
                 reject(new Error("404: This URL doesn't exist"))
             }
-            let url = api.baseUrl + '/' + api.getAPIs[method]
+            let url = api.baseUrl + '/' + api.putAPIs[method]
 
             axios.put(url, datas)
                 .then(function (response) {

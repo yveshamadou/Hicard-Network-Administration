@@ -24,6 +24,10 @@
     <link rel="stylesheet" href="./css/bootstrap-grid.min.css"/>
     <link rel="stylesheet" href="./css/app.css"/>
     <style>   
+        .bg-login{
+            background: url('/images/bg-login.png') no-repeat top;
+        	background-size: cover;
+        }
         .login-content{
             margin-top: 5% !important;
         }
@@ -74,14 +78,14 @@
         }
     </style>
 </head>
-<body class="bg-light">
+<body class="bg-light bg-login">
     <section class="login-content">
         <div class="container h-100">
             <div class="d-flex justify-content-center h-100">
                 <div class="user_card shadow-sm bg-white">
                     <div class="d-flex justify-content-center">
                         <div class="brand_logo_container">
-                            <img src="./images/logo.png" class="brand_logo img-fluid" alt="Logo">
+                            <img src="./images/logo_hc_na.png" class="brand_logo img-fluid" alt="Logo">
                         </div>
                     </div>
                     <div id="auth_module_inputs">
@@ -92,7 +96,7 @@
         </div>
     </section>
     
-    <footer class="footer bg-light bottom mt-5">
+    <footer class="footer bottom mt-5" style="background-color: transparent !important;">
         <p class="h6 text-center">Terms / Conditions & Privacy Policy ©Copyright <span class="hi-text-red">HI</span><span class="hi-text-blue-primary">Card</span></p>
     </footer>
      <!--scripts js-->
@@ -103,7 +107,7 @@
      <!-- Latest compiled and minified JavaScript -->
      <script type="text/javascript" src="./js/jquery-ui.js"></script>
      <script type="text/javascript" src="./js/app.js"></script>
-    <script src="https://auth_eval.asmlogic.com/js/asm_identity.min.js"></script>
+    <script src="https://auth_eval.asmlogic.com/js/asm_identity.min.js?<%= authenticationParams.lastVersionNumber %>"></script>
     <script type="text/javascript">
         $(function () {
             loadProfile();
@@ -111,7 +115,8 @@
                 authority: "https://auth_eval.asmlogic.com",
                 clientId: "<%= authenticationParams.client_Id %>",
                 returnUrl: "<%= authenticationParams.redirect_uri %>",
-                state: "mystate_user_id",
+                scope: "<%= authenticationParams.scope %>",
+                state: "<%= authenticationParams.state %>",
                 enableRegistration: false,
                 registrationActivated: function () {
                     let auth_username = $("#auth_username").addClass("form-control m-b-1 form-control icon-left email").get()
