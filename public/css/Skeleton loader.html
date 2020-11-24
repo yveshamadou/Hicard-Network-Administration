@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)https://www.grafikart.fr/demo/JS/Skeleton/index.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./Skeleton loader_files/tailwind.min.css" rel="stylesheet">
+    <title>Document</title>
+    <script defer="">
+class Skeleton extends HTMLElement{constructor(){super();this.root=this.attachShadow({mode:"open"})}size(t,e){if(t){if(t.match(/^[0-9]+$/))t+="px";return t}else if(e)return"100%";return"auto"}connectedCallback(){const t="\\00a0";const e=this.getAttribute("placeholder")||t;const n=this.getAttribute("rounded");const i=this.size(this.getAttribute("width"),e===t);const s=this.size(this.getAttribute("height"));const o=parseInt(this.getAttribute("lines")||0,10);let r="<span></span>";if(o>1)for(let t=1;t<o;t++)r+="<span></span>";this.root.innerHTML=`\r\n    <style>\r\n      :host {\r\n        display: block;\r\n      }\r\n      div {\r\n        display: flex;\r\n        flex-direction: column;\r\n        align-items: flex-start;\r\n      }\r\n      span {\r\n        position: relative;\r\n        width: ${i};\r\n        height: ${s};\r\n        display: block;\r\n        border-radius: ${null!==n?"50%":"4px"};\r\n        background-color: var(--skeleton, #0000001C);\r\n        overflow: hidden;\r\n        transform: ${e!==t||o>0?"scale(1, 0.6)":"none"};\r\n      }\r\n      ${o?`\r\n      span:last-child {\r\n        width: ${20+60*Math.random()+"%"}\r\n      }`:""}\r\n      span::before {\r\n        content: '${e}';\r\n        opacity: 0;\r\n      }\r\n      span::after {\r\n        content:'';\r\n        position: absolute;\r\n        top: 0;\r\n        left: 0; \r\n        right: 0;\r\n        bottom: 0;\r\n        animation: waves 1.6s linear .5s infinite;\r\n        transform: translateX(-100%);\r\n        background: linear-gradient(90deg, transparent, var(--skeleton-wave, rgba(0,0,0,0.06)), transparent);\r\n      }\r\n      @keyframes waves {\r\n        0% {\r\n          transform: translateX(-100%);\r\n        }\r\n        60% {\r\n          transform: translateX(100%);\r\n        }\r\n        100% {\r\n          transform: translateX(100%);\r\n        }\r\n      }\r\n    </style>\r\n    <div>${r}</div>\r\n    `}};
+
+      customElements.define('skeleton-box', Skeleton)
+    </script>
+  </head>
+
+  <body>
+    <div style="width: 500px; margin: 100px;">
+      <div class="md:flex">
+        <div class="md:flex-shrink-0">
+          <img class="rounded-lg md:w-56" src="./Skeleton loader_files/photo-1556740738-b6a63e27c4df" alt="Woman paying for a purchase">
+        </div>
+        <div class="mt-4 md:mt-0 md:ml-6">
+          <div class="uppercase tracking-wide text-sm text-indigo-600 font-bold">
+            Marketing
+          </div>
+          <a href="https://www.grafikart.fr/demo/JS/Skeleton/index.html#" class="block mt-1 text-lg leading-tight font-semibold text-gray-900 hover:underline">Finding customers for your new business</a>
+          <p class="mt-2 text-gray-600">
+            Getting a new business off the ground is a lot of hard work. Here
+            are five ideas you can use to find your first customers.
+          </p>
+        </div>
+      </div>
+      <div class="md:flex mt-4">
+        <div class="md:flex-shrink-0">
+          <skeleton-box width="224" height="150"></skeleton-box>
+        </div>
+        <div class="mt-4 md:mt-0 md:ml-6 w-full">
+          <div class="uppercase tracking-wide text-sm text-indigo-600 font-bold">
+            <skeleton-box placeholder="Marketing"></skeleton-box>
+          </div>
+          <div class="block mt-1 text-lg leading-tight font-semibold text-gray-900 hover:underline">
+            <skeleton-box lines="2"></skeleton-box>
+          </div>
+          <p class="mt-2 text-gray-600">
+            <skeleton-box lines="4"></skeleton-box>
+          </p>
+        </div>
+      </div>
+      <div class="md:flex mt-4">
+        <div class="md:flex-shrink-0">
+          <skeleton-box width="224" height="150"></skeleton-box>
+        </div>
+        <div class="mt-4 md:mt-0 md:ml-6 w-full">
+          <div class="uppercase tracking-wide text-sm text-indigo-600 font-bold">
+            <skeleton-box placeholder="Marketing"></skeleton-box>
+          </div>
+          <div class="block mt-1 text-lg leading-tight font-semibold text-gray-900 hover:underline">
+            <skeleton-box lines="2"></skeleton-box>
+          </div>
+          <p class="mt-2 text-gray-600">
+            <skeleton-box lines="4"></skeleton-box>
+          </p>
+        </div>
+      </div>
+      <div class="md:flex mt-4">
+        <div class="md:flex-shrink-0">
+          <skeleton-box width="224" height="150"></skeleton-box>
+        </div>
+        <div class="mt-4 md:mt-0 md:ml-6 w-full">
+          <div class="uppercase tracking-wide text-sm text-indigo-600 font-bold">
+            <skeleton-box placeholder="Marketing"></skeleton-box>
+          </div>
+          <div class="block mt-1 text-lg leading-tight font-semibold text-gray-900 hover:underline">
+            <skeleton-box lines="2"></skeleton-box>
+          </div>
+          <p class="mt-2 text-gray-600">
+            <skeleton-box lines="4"></skeleton-box>
+          </p>
+        </div>
+      </div>
+    </div>
+  
+
+</body></html>

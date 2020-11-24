@@ -152,7 +152,7 @@ export function facilityNetwork(token, url) {
             
             body += '<div class="d-flex"> '
             body += '<fieldset class="col-lg-12 mb-3"> '
-            body += '<legend>Generale Informations</legend>'
+            body += '<legend class="px-2 py-2">Generale Informations</legend>'
             body += '<div class="row">'
             
             body += '<div class="col-lg-12">'
@@ -205,7 +205,7 @@ export function facilityNetwork(token, url) {
             
             body += '<div class="d-flex"> '
             body += '<fieldset class="col-lg-6"> '
-            body += '<legend>Location </legend>'
+            body += '<legend class="px-2 py-2">Location </legend>'
             body += '<div class="row">'
             
             body += '<div class="col-lg-6">'
@@ -237,7 +237,7 @@ export function facilityNetwork(token, url) {
             body += '</fieldset>'
             
             body += '<fieldset class="col-lg-6"> '
-            body += '<legend>Address </legend>'
+            body += '<legend class="px-2 py-2">Address </legend>'
             body += '<div class="row">'
             
             body += '<div class="col-lg-6">'

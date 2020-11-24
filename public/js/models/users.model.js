@@ -235,7 +235,7 @@ export function usersNetwork(token, url, url2) {
             
             body += '<div class="d-flex"> '
             body += '<fieldset class="col-lg-12 mb-3"> '
-            body += '<legend>Generale Informations</legend>'
+            body += '<legend class="px-2 py-2">Generale Informations</legend>'
             body += '<div class="row">'
             
             body += '<div class="col-lg-12">'
@@ -284,7 +284,7 @@ export function usersNetwork(token, url, url2) {
             
             body += '<div class="d-flex"> '
             body += '<fieldset class="col-lg-12 mb-3"> '
-            body += '<legend>Associate To Network</legend>'
+            body += '<legend class="px-2 py-2">Associate To Network</legend>'
             body += '<div class="row">'
             
             body += '<div class="col-lg-12">'
@@ -330,7 +330,7 @@ export function usersNetwork(token, url, url2) {
             
             body += '<div class="d-flex"> '
             body += '<fieldset class="col-lg-12 mb-3"> '
-            body += '<legend>Generale Informations</legend>'
+            body += '<legend class="px-2 py-2">Generale Informations</legend>'
             body += '<div class="row">'
             
             body += '<div class="col-lg-12">'

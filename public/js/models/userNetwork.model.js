@@ -75,6 +75,20 @@ export function userNetwork(token, url) {
         })
     }
     
+    this.getUsersByNetworkGuid = function (id){
+        return new Promise((resolve, reject) => {
+            this.client.users(id).then((result) => {
+                resolve(result)
+            }).catch((err) => {
+                console.log(err);
+                reject(err)
+                
+                
+            })
+        
+        })
+    }
+    
     this.getNetworkApi = function (id){
         return new Promise((resolve, reject) => {
             this.client.medicalnetworks4(id).then((result) => {
@@ -344,7 +358,7 @@ export function userNetwork(token, url) {
             
             body += '<div class="d-flex"> '
             body += '<fieldset class="col-lg-12 mb-3"> '
-            body += '<legend>Generale Informations</legend>'
+            body += '<legend class="px-2 py-2">Generale Informations</legend>'
             body += '<div class="row">'
             
             body += '<div class="col-lg-6">'
@@ -390,7 +404,7 @@ export function userNetwork(token, url) {
             
             body += '<div class="d-flex"> '
             body += '<fieldset class="col-lg-6"> '
-            body += '<legend>Location </legend>'
+            body += '<legend class="px-2 py-2">Location </legend>'
             body += '<div class="row">'
             
             body += '<div class="col-lg-6">'
@@ -416,7 +430,7 @@ export function userNetwork(token, url) {
             body += '</fieldset>'
             
             body += '<fieldset class="col-lg-6"> '
-            body += '<legend>Address </legend>'
+            body += '<legend class="px-2 py-2">Address </legend>'
             body += '<div class="row">'
             
             body += '<div class="col-lg-6">'
@@ -473,7 +487,7 @@ export function userNetwork(token, url) {
                     
                     body += '<div class="d-flex"> '
                     body += '<fieldset class="col-lg-12 mb-3"> '
-                    body += '<legend>Generale Informations</legend>'
+                    body += '<legend class="px-2 py-2">Generale Informations</legend>'
                     body += '<div class="row">'
                     
                     body += '<div class="col-lg-6">'
@@ -520,7 +534,7 @@ export function userNetwork(token, url) {
                     
                     body += '<div class="d-flex"> '
                     body += '<fieldset class="col-lg-6"> '
-                    body += '<legend>Location </legend>'
+                    body += '<legend class="px-2 py-2">Location </legend>'
                     body += '<div class="row">'
                     
                     body += '<div class="col-lg-6">'
@@ -546,7 +560,7 @@ export function userNetwork(token, url) {
                     body += '</fieldset>'
                     
                     body += '<fieldset class="col-lg-6"> '
-                    body += '<legend>Address </legend>'
+                    body += '<legend class="px-2 py-2">Address </legend>'
                     body += '<div class="row">'
                     
                     body += '<div class="col-lg-6">'
@@ -613,7 +627,8 @@ export function userNetwork(token, url) {
     
     this.setNetworkCard = function(idName){
         let id = helper.getParameterByName('N')
-        $('#'+idName).empty().append('<p class="loader-network-info text-center col-lg-12"><i class="fa fa-spinner text-center  fa-spin fa-4x"></i></p>')
+       if (id != null && id != undefined && id != '') {
+        $('#'+idName).empty().append('<div class="loader-network-info text-center col-lg-12"> <skeleton-box lines="4"></skeleton-box></div>')
         this.getNetworkApi(id).then((result) => {
             if (result.errors.length > 0) {
                 $('#'+idName)
@@ -662,14 +677,18 @@ export function userNetwork(token, url) {
                 this.showModalUpdateNetwork()
                 this.showModalCreateNetwork()
                 this.setAllFacilityByNetworkID(data.id)
+                this.setUsersByNetworkID(data.id)
             }
         }).catch((err) => {
             console.log(err);
         })
+       } else {
+           $('#main').empty().append('<div class="main container"><div class="text-center text-danger">the identifier of this network is not correct. Please return to the previous page.<p><a href="/user_network">Go Back</a></p></div></div>')
+       }
     }
     
     this.setAllFacilityByNetworkID = function(id){
-        $('#tbody-facilities-list').empty().prepend('<tr class="loader-facility-tbody"><td colspan="8" class="text-center"><i class="fa fa-spinner fa-spin "></i></td></tr>')
+        $('#tbody-facilities-list').empty().prepend('<tr class="loader-facility-tbody"><td colspan="8" class="text-center"><skeleton-box lines="1"></skeleton-box></i></td></tr>')
         this.getAllFacilityByNetworkGuid(id).then((result) => {
             if (result.errors.length > 0) {
                 $('#tbody-facilities-list')
@@ -696,6 +715,40 @@ export function userNetwork(token, url) {
         }).catch((err) => {
             console.log(err);
         })
+    }
+    
+    this.setUsersByNetworkID = function(id){
+        $('#tbody-users-list').empty().prepend('<tr class="loader-users-tbody"><td colspan="8" class="text-center"><skeleton-box lines="1"></skeleton-box></i></td></tr>')
+        this.getUsersByNetworkGuid(id).then((result) => {
+            if (result.errors.length > 0) {
+                $('#tbody-users-list')
+                .find('.loader-users-tbody').remove()
+                .append('<tr><td colspan="8"><p class="text-center">Something Wrong!</p></td></tr>')
+            } else {
+                $('#tbody-users-list')
+                .find('.loader-users-tbody').remove()
+                if (result.payload.length > 0 || result.payload != null) {
+                    result.payload.forEach(data => {
+                        $('#tbody-users-list')
+                        .append(
+                            $('<tr/>')
+                            .attr({'id':data.id})
+                            .append(
+                                $('<th/>')
+                                .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
+                            )
+                            .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.role+'</td><td class="eye-tab"><a href="/user_facility_details?N='+helper.getParameterByName('N')+'&F='+data.id+'" class="view-facility"><i class="fas fa-eye"></i> View</a></td><td class="act-tab"><a class="lock-facility"><i class="fas fa-trash-alt"></i> Lock</a></td>')
+                        )
+                    });
+                }else{
+                    $('#tbody-users-list').empty()
+                    .append('<tr><td colspan="7"><p class="text-center">No hospital found !</p></td></tr>')
+                }
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+        
     }
     
     
