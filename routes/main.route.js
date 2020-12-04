@@ -27,7 +27,7 @@ app.get('/', function (req, res,next) {
         } else if (jwt_decode(cookies_list.ACCESS_TOKEN).hc_na_role  == "NetworkAdministrator") {
             res.redirect("/user_network")
         } else if (jwt_decode(cookies_list.ACCESS_TOKEN).hc_na_role  == "FacilityAdministrator") {
-           res.redirect("/user_provider_details" )
+           res.redirect("/user_facility" )
         }else {
            res.redirect("/logout")
         }
@@ -129,7 +129,7 @@ app.get('/user_facility_details', function (req, res) {
     })
 })
 
-app.get('/user_provider', function (req, res) {
+/* app.get('/user_provider', function (req, res) {
     let cookies = m_cookies.parseCookies(req)
     role = jwt_decode(cookies.ACCESS_TOKEN).hc_na_role
     
@@ -164,7 +164,7 @@ app.get('/access', function (req, res) {
         baseUrl2 : config.authenticationParams.baseUrl2,
         roles : (role == "SystemAdministrator" ? "super" : "network")
     })
-})
+}) */
 
 app.get('/settings', function (req, res) {
     let cookies = m_cookies.parseCookies(req)
@@ -256,7 +256,7 @@ app.post('/create_users', function (req, res) {
     }
     security.postRequest('postUrl','security', 'newApplicationUser', requestData)
     .then((result) => {
-        console.log(result);
+        console.log(result.data);
         if (result.data.errors == null) {
             res.render('errors/404', {
                 page: "errors/404",
@@ -281,6 +281,7 @@ app.post('/create_users', function (req, res) {
                     "role": body.usersRoles,
                     "name": body.usersFirstName + " "+ body.usersLastName
                 }
+                console.log(createDatas);
                 hicard.putRequest('medicalnetworkusers', createDatas)
                 .then((datas) => {
                     console.log(datas.data);
@@ -296,11 +297,13 @@ app.post('/create_users', function (req, res) {
                         let params = {
                             id : datas.data.payload,
                             networkID : body.usersNetworkGuid,
+                            facilityID : ""
                         }
                         hicard.postRequestWithParams('medicalnetworkusersAssociatesToNetwork',params, {"role": body.usersRoles})
                         .then((associate) => {
                             console.log('associate');
                             console.log(associate.data);
+                            console.log(body.usersFacilityGuid);
                                 if (associate.data.errors.length > 0) {
                                     res.render('errors/errors', {
                                         page: "errors/errors",
@@ -309,13 +312,48 @@ app.post('/create_users', function (req, res) {
                                     })
                                 } else {
                                     console.log('associate success');
-                                    console.log(associate.data.payload);
-                                    res.locals.success = "Succesfull"
-                                    res.redirect(body.currentUrl)
+                                    if (body.usersFacilityGuid != 'undefined' && body.usersFacilityGuid != undefined) {
+                                        let dat = {
+                                            id : datas.data.payload,
+                                            facilityID : (body.usersFacilityGuid == undefined ? "" : body.usersFacilityGuid)
+                                        }
+                                        hicard.postRequestWithParams('medicalnetworkusersAssociatesToNetwork',dat, {"role": body.usersRoles})
+                                        .then((associateF) => {
+                                            console.log('associateF');
+                                            console.log(associateF.data);
+                                                if (associateF.data.errors.length > 0) {
+                                                    res.render('errors/errors', {
+                                                        page: "errors/errors",
+                                                        errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
+                                                        previousUrl : body.currentUrl
+                                                    })
+                                                } else {
+                                                    console.log('associate success');
+                                                    console.log(associateF.data.payload);
+                                                    res.locals.success = "Succesfull"
+                                                    res.redirect(body.currentUrl)
+                                                }
+                                            
+                                        }).catch((err2) => {
+                                            console.log('err.data22222');
+                                            console.log(err.data.errors);
+                                            res.render('errors/errors', {
+                                                page: "errors/errors",
+                                                errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
+                                                previousUrl : body.currentUrl
+                                            })
+                                        })
+                                    } else {
+                                        console.log('associate success');
+                                        console.log(associate.data.payload);
+                                        res.locals.success = "Succesfull"
+                                        res.redirect(body.currentUrl)
+                                    }
                                 }
                             
                         }).catch((err) => {
                             console.log('err.data');
+                            console.log(err.data.errors);
                             res.render('errors/errors', {
                                 page: "errors/errors",
                                 errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",

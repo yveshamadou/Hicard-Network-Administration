@@ -9,16 +9,12 @@ let provider = new providerNetwork($.cookie("ACCESS_TOKEN"), baseUrl)
 let users = new usersNetwork($.cookie("ACCESS_TOKEN"), baseUrl, url2)
 
 let load = function (){
-    if (RX == "super") {
-        facility.showModalCreateFacility('.add-facility-btn')
-        provider.showModalCreateProvider('.add-provider-btn')
-    }else{
-        facility.showModalCreateFacility('.add-facility-btn')
+    if (RX == "super" || RX == "network" || RX == "facility") {
         provider.showModalCreateProvider('.add-provider-btn')
         users.showModalCreateUsers('.add-user-btn')
     }
-    network.setNetworkCard('info-network-card')
-    users.showModalCreateUsers('.add-user-btn')
+    
+    facility.setFacilityCard('info-facility-card')
     
     
 }

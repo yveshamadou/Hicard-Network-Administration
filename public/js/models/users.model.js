@@ -3,6 +3,8 @@ import { Client2 } from './AsmSecurityAPI.js';
 import {utils} from '../helpers/utils.js'
 import {setToken} from './http.js'
 import {userNetwork} from './userNetwork.model.js'
+import { facilityNetwork } from './facility.model.js';
+import { providerNetwork } from './provider.model.js';
 
 new setToken ($.cookie("ACCESS_TOKEN"))
 let helper = new utils()
@@ -31,6 +33,20 @@ export function usersNetwork(token, url, url2) {
     this.getUsersApi = function (id){
         return new Promise((resolve, reject) => {
             this.client.users2(id).then((result) => {
+                resolve(result)
+            }).catch((err) => {
+                console.log(err);
+                reject(err)
+                
+                
+            })
+        
+        })
+    }
+    
+    this.getAllFacilitiesByUserID = function (id){
+        return new Promise((resolve, reject) => {
+            this.client.users(id).then((result) => {
                 resolve(result)
             }).catch((err) => {
                 console.log(err);
@@ -160,8 +176,11 @@ export function usersNetwork(token, url, url2) {
                         "name": $('#usersFirstName').val() + $('#usersLastName').val()
                     }
                     let networkGuid = $('#usersNetworkGuid').val();
+                    let facilityGuid = $('#usersFacilityGuid').val();
                     //helper.toastr('success','top-full-width',1000, "Create user "+datas.name+" with succesfull.")
-                    $('#form-create-users').attr({'method':'post', 'action':'/create_users'}).append('<input type="hidden" id="currentUrl" name="currentUrl" value="'+window.location.href+'" class="form-control" >').submit()
+                    $('#form-create-users').attr({'method':'POST', 'action':'/create_users'})
+                    .append('<input type="hidden" id="currentUrl" name="currentUrl" value="'+window.location.href+'" class="form-control" > <input type="hidden" name="usersNetworkGuid" value="'+networkGuid+'" class="form-control" > <input type="hidden" name="usersFacilityGuid" value="'+facilityGuid+'" class="form-control" >')
+                    .submit()
                     
                }
             })
@@ -239,11 +258,11 @@ export function usersNetwork(token, url, url2) {
             body += '<div class="row">'
             
             body += '<div class="col-lg-12">'
-            body += '<label for="usersRoles" class="fs-small2 w-100 fw-medium">Role :'
+            body += '<label for="usersRoles" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>Role :'
             body += '<select id="usersRoles" name="usersRoles" class="custom-select required">'
             body += '<option value="" selected disabled>Choose a role</option>'
-            body += '<option value="SystemAdministrator" >System Administrator</option>'
-            body += '<option value="NetworkAdministrator" >Network Administrator</option>'
+            body += '<option value="SystemAdministrator" >HiCard System Administrator</option>'
+            body += '<option value="NetworkAdministrator" >Contract Administrator</option>'
             body += '<option value="FacilityAdministrator" >Facility Administrator</option>'
             body += '<option value="User" >User</option>'
             body += '</select>'
@@ -251,30 +270,26 @@ export function usersNetwork(token, url, url2) {
             body += '</div>'
             
             body += '<div class="col-lg-6">'
-            body += '<label for="usersFirstName" class="fs-small2 fw-medium w-100 font-weight-bold">First Name : '
+            body += '<label for="usersFirstName" class="fs-small2 fw-medium w-100 font-weight-bold"><t class="text-danger">*</t>First Name : '
             body += '<input type="text" id="usersFirstName" name="usersFirstName" class="form-control required" >  '
             body += '<small class="form-text"></small></label>'
             body += '</div>'
             
             body += '<div class="col-lg-6">'
-            body += '<label for="usersLastName" class="fs-small2 fw-medium w-100 font-weight-bold">Last Name : '
+            body += '<label for="usersLastName" class="fs-small2 fw-medium w-100 font-weight-bold"><t class="text-danger">*</t>Last Name : '
             body += '<input type="text" id="usersLastName" name="usersLastName" class="form-control required" >  '
             body += '<small class="form-text"></small></label>'
             body += '</div>'
             
             body += '<div class="col-lg-6">'
-            body += '<label for="usersEmail" class="fs-small2 fw-medium w-100">Email Address :'
+            body += '<label for="usersEmail" class="fs-small2 fw-medium w-100"><t class="text-danger">*</t>Email Address :'
             body += '<input type="text" id="usersEmail" name="usersEmail" class="form-control required" placeholder="Email Address">'
             body += '<small class="form-text"></small></label>'
             body += '</div>'
             
             body += '<div class="col-lg-6">'
-            body += '<label for="usersGender" class="fs-small2 w-100 fw-medium">Gender :'
-            body += '<select id="usersGender" name="usersGender" class="custom-select required">'
-            body += '<option value="" selected disabled>Choose a gender</option>'
-            body += '<option value="M" >Male</option>'
-            body += '<option value="F" >Female</option>'
-            body += '</select>'
+            body += '<label for="usersPhone" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>Phone Number :'
+            body += '<input type="text" id="usersPhone" name="usersPhone" class="form-control required" placeholder="Phone Number">'
             body += '<small class="form-text"></small></label>'
             body += '</div>'
             
@@ -284,11 +299,11 @@ export function usersNetwork(token, url, url2) {
             
             body += '<div class="d-flex"> '
             body += '<fieldset class="col-lg-12 mb-3"> '
-            body += '<legend class="px-2 py-2">Associate To Network</legend>'
+            body += '<legend class="px-2 py-2">Associate To Contract</legend>'
             body += '<div class="row">'
             
             body += '<div class="col-lg-12">'
-            body += '<label for="usersNetworkGuid" class="fs-small2 w-100 fw-medium">Network :'
+            body += '<label for="usersNetworkGuid" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>Contract :'
             body += '<select id="usersNetworkGuid" name="usersNetworkGuid" class="custom-select required">'
             body += '</select>'
             body += '<small class="form-text"></small></label>'
@@ -298,11 +313,29 @@ export function usersNetwork(token, url, url2) {
             body += '</fieldset>'
             body += '</div>'
             
+            if (helper.getParameterByName('F')) {
+                body += '<div class="d-flex"> '
+                body += '<fieldset class="col-lg-12 mb-3"> '
+                body += '<legend class="px-2 py-2">Associate To Facility</legend>'
+                body += '<div class="row">'
+                
+                body += '<div class="col-lg-12">'
+                body += '<label for="usersFacilityGuid" class="fs-small2 w-100 fw-medium">Facility :'
+                body += '<select id="usersFacilityGuid" name="usersFacilityGuid" class="custom-select required">'
+                body += '</select>'
+                body += '<small class="form-text"></small></label>'
+                body += '</div>'
+                
+                body += '</div>'
+                body += '</fieldset>'
+                body += '</div>'
+            }
+            
             body += '</form>'
             
             let footer = '<button id="btn-save-users-form"  class="btn btn-primary">Save</button>';
             
-            $('body').append(helper.createModal('modal-create-users', "Create a New Users", body, footer , 'lg'));
+            $('body').append(helper.createModal('modal-create-users', "Create a New User", body, footer , 'lg'));
             $('#modal-create-users').modal('show')
             
             $('#modal-create-users').on('hide.bs.modal', function (e) {
@@ -314,6 +347,10 @@ export function usersNetwork(token, url, url2) {
             
             save.saveUsersModal('create')
             save.setAllNetwork("usersNetworkGuid")
+            if (helper.getParameterByName('F')) {
+                let provider = new providerNetwork(token, url)
+                provider.setAllFacility('usersFacilityGuid', helper.getParameterByName('F'))
+            }
         });
         
         
@@ -422,8 +459,8 @@ export function usersNetwork(token, url, url2) {
     this.setAllNetwork = function(id){
         $('#'+id).attr({'disabled':'disabled'}).parent().prepend('<i class="fa fa-spinner fa-spin select-loader-network"></i>')
         let network = new userNetwork(token, url)
-        if (helper.getParameterByName('id')) {
-            network.getNetworkApi(helper.getParameterByName('id'))
+        if (helper.getParameterByName('N')) {
+            network.getNetworkApi(helper.getParameterByName('N'))
             .then((result) => {
                 if (result.errors.length > 0) {
                     $('#'+id).attr({'style':'border-color :red !important'}).parent().append('<small class="text-center text-danger">We are unable to authenticate your network identifier. Please go back to the network list then try again</small>')
@@ -433,7 +470,6 @@ export function usersNetwork(token, url, url2) {
                     $('#'+id).val(result.payload.id).change() 
                 }
                 $('#'+id).parent().find('.select-loader-network').remove()
-                $('#'+id).removeAttr('disabled')
             }).catch((err) => {
                 console.log(err);
                 $('#'+id).parent().find('.select-loader-network').remove()

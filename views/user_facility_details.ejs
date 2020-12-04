@@ -1,5 +1,6 @@
 <%- include('partials/_header') -%>
 
+
 <div class="main pb-5 bg-gray" id="main">
   <div class="container import-file">
     <nav class="navbar flex-column flex-sm-row p-0 h-100">
@@ -7,36 +8,29 @@
         <nav class="linkcategory breadcrumb p-0 m-0">
           <ol class="breadcrumb m-0 p-0">
             <li class="breadcrumb-item">
-              <a class="hi-text-blue-primary fw-normal" href="#">Facilities</a>
+              <a class="hi-text-blue-primary fw-normal" onclick="window.history.back()" href="javascript:void(0)">Facilities</a>
             </li>
             <li class="breadcrumb-item">
-              <a class="hi-text-blue-primary fw-normal" href="#">Franklin Zall</a>
+              <a class="hi-text-blue-primary fw-normal name-facility" href="#"></a>
             </li>
           </ol>
         </nav>
       </div>
       <div class="navbar-nav py-3 px-0 container-action-file">
         <ul class="nav action-file flex-column flex-sm-row px-0">
-          <li class="nav-item ">
-            <a class="nav-link btn bg-light px-3" href="#"> <i class="fas fa-plus"></i> Add facility</a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link btn bg-light px-3" href="#"> <i class="far fa-file-excel"></i> Import Excel</a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link btn bg-light px-3" href="#"> <i class="far fa-file-pdf"></i> Import PDF</a>
-          </li>
-          <li class="nav-item" style="padding-right: 0">
-            <form class="form-inline d-flex justify-content-center md-form form-sm">
-              <div class="form-group form-search">
-                  <input class="form-control" type="text" placeholder="Search"
-                    aria-label="Search">
-                  <div class="search-icon">
-                    <i class="fas fa-search" aria-hidden="true"></i>
-                  </div>
-              </div>
-            </form>
-          </li>
+          <% if (roles) { %> 
+            <% if (roles == "super" || roles == "network") { %>
+              <li class="nav-item ">
+                <a class="nav-link btn bg-light px-3 add-provider-btn" href="javascript:void(0)"> <i class="fas fa-plus mr-1"></i> Add Provider</a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link btn bg-light px-3 add-user-btn" href="javascript:void(0)"> <i class="fas fa-plus mr-1"></i> Add User</a>
+              </li>
+              <!-- <li class="nav-item ">
+                <a class="nav-link btn bg-light px-3" href="#"> <i class="far fa-file-excel"></i> Import Excel</a>
+              </li> -->
+            <% } %> 
+        <% } %> 
         </ul>
       </div>
     </nav>
@@ -44,109 +38,28 @@
   <div class="container mt-4">
     <div class="bg-white py-3" style="border-radius: 5px">
       <div class="container">
-        <div class="row">
-          <div class="col-md-2">
-            <div class="img text-center">
-              <img src="./images/logo.png" class="img-fluid" width="200px" alt="no-image">
-            </div>
-          </div>
-          <div class="col-md-3 col-sm-6 flex-sm-column mt-2">
-            <div class="d-flex">
-              <div class="col px-1 info-basic">Network:</div>
-              <div class="col px-1 info-data">Franklin Network</div>
-            </div>
-            <div class="d-flex">
-              <div class="col px-1 info-basic">Mail address:</div>
-              <div class="col px-1 info-data">Franklin@exem.com</div>
-            </div>
-            <div class="d-flex ">
-              <div class="col px-1 info-basic">Phone Number:</div>
-              <div class="col px-1 info-data">+14(0)145 547 12</div>
-            </div>
-            <div class="d-flex ">
-              <div class="col px-1 info-basic">Description:</div>
-              <div class="col px-1 info-data">test</div>
-            </div>
-          </div>
-          <div class="col-md-3 col-sm-6 flex-sm-column mt-2">
-            <div class="d-flex">
-              <div class="col  info-basic">City:</div>
-              <div class="col info-data">New-York</div>
-            </div>
-            <div class="d-flex">
-              <div class="col px-1 info-basic">State:</div>
-              <div class="col px-1 info-data">USA</div>
-            </div>
-            <div class="d-flex ">
-              <div class="col px-1 info-basic">Website:</div>
-              <div class="col px-1 info-data">www.hicard.com</div>
-            </div>
-          </div>
-          <div class="col-md-4 flex-sm-column mt-2">
-            <div class="row">
-              <div class="col-9">
-                <div class="d-flex flex-row">
-                  <div class=" info-basic">Address 1:</div>
-                  <div class="info-data">Ipsum has been</div>
-                </div>
-                <div class="d-flex flex-row">
-                  <div class="info-basic">Address 2:</div>
-                  <div class="info-data">47 845 547 12</div>
-                </div>
-                <div class="d-flex flex-row">
-                  <div class="info-basic">Postal Code:</div>
-                  <div class="info-data">Ipsum has been</div>
-                </div>
-                <div class="d-flex flex-row">
-                  <div class="info-basic">Merely To:</div>
-                  <div class="info-data">47 845 547 12</div>
-                </div>
-                <div class="d-flex flex-row">
-                  <div class="info-basic">Objective:</div>
-                  <div class="info-data">Ipsum has been</div>
-                </div>
-              </div>
-              <div class="col-3">
-                <div class="button-group">
-                  <div class="mt-2">
-                    <a href="#" class="p-1 btn btn-outline-primary w-100 fs-small" data-toggle="modal" data-target="#serviceModal"><i class="fas fa-edit"></i> Edit</a>
-                  </div>
-                  <div class="mt-2">
-                    <a href="#" class="p-1 btn btn-outline-primary w-100 fs-small"><i class="fas fa-trash-alt"></i> Delete</a>
-                  </div>
-                  <div class="mt-2">
-                    <a href="#" class="p-1 btn btn-outline-primary w-100 fs-small"><i class="fas fa-edit"></i> Lock</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="row" id="info-facility-card">
       </div>
     </div>
 
       <div class="border-bottom mt-3">
         <ul class="onglet nav-tabs nav nav-pills mx-4" id="myTab" role="tablist">
           <li class="nav-item ">
-            <a class="nav-link active px-3" aria-selected="true" aria-controls="content01" data-toggle="tab" id="content01-tab" href="#content01">Provider</a>
+            <a class="nav-link active px-3" aria-selected="true" aria-controls="providers" data-toggle="tab" id="providers-tab" href="#providers">Providers</a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link px-3" aria-selected="false" aria-controls="content02" data-toggle="tab" id="content02-tab" href="#content02">Other User</a>
+            <a class="nav-link px-3" aria-selected="false" aria-controls="users" data-toggle="tab" id="users-tab" href="#users">Users</a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link px-3" aria-selected="false" aria-controls="content03" data-toggle="tab" id="content03-tab" href="#content03">Network</a>
+            <a class="nav-link px-3" aria-selected="false" aria-controls="network" data-toggle="tab" id="network-tab" href="#network">Network</a>
           </li>
         </ul>
         <div class="container-main">
           <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="content01" role="tabpanel" aria-labelledby="content01-tab">
+            <div class="tab-pane fade show active" id="providers" role="tabpanel" aria-labelledby="providers-tab">
               <div id="contain-content01">
-                <ul class="nav justify-content-end">
-                  <li class="nav-item p-3">
-                    <a href="#" class="nav-link btn btn-outline-primary px-3" data-toggle="modal" data-target="#editModal" style="font-size: 0.75rem;"><i class="fas fa-plus"></i> Add Network </a>
-                  </li>
-                </ul>
                 <div class="container">
-                  <div style="border-radius: 5px!important;" class="overflow-lg-x shadow-sm">
+                  <div style="border-radius: 5px!important;" class="overflow-lg-x shadow-sm my-3">
                     <table class="table table-stripped m-0 provider-table" style="min-width: 768px">
                       <thead>
                         <tr style="color: #1A4F73!important;">
@@ -154,158 +67,55 @@
                           <th scope="col" style="width: 150px" >Name</th>
                           <th scope="col" >City</th>
                           <th scope="col" >Email address</th>
-                          <th scope="col">Addres 1</th>
+                          <th scope="col">Address Line</th>
                           <th scope="col" style="width: 80px"></th>
                           <th scope="col" style="width: 80px">Action</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        <tr>
-                          <th scope="row" class="text-center">
-                            <div class="m-auto img-rounded">
-                              <img src="./images/experience.png" class="img-fluid" alt="no-image">
-                            </div>
-                          </th>
-                          <td class="name-tab">Aeilekly Restet</td>
-                          <td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">New-York</div>USA</div></div></td>
-                          <td class="text-tab">brendon@gmail.com</td>
-                          <td class="text-tab">brendon</td>
-                          <td class="eye-tab"><i class="fas fa-eye"></i> View</td>
-                          <td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</td>
-                        </tr>
-                        <tr>
-                          <th scope="row" class="text-center">
-                            <div class="m-auto img-rounded">
-                              <img src="./images/register.png" class="img-fluid" alt="no-image">
-                            </div>
-                          </th>
-                          <td class="name-tab">Weekly Best</td>
-                          <td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">New-York</div>USA</div></div></td>
-                          <td class="text-tab">brendon@gmail.com</td>
-                          <td class="text-tab">Park Avenu</td>
-                          <td class="eye-tab"><i class="fas fa-eye"></i> View</td>
-                          <td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</td>
-                        </tr>
-                        <tr>
-                          <th scope="row" class="text-center">
-                            <div class="m-auto img-rounded">
-                              <img src="./images/search.png" class="img-fluid" alt="no-image">
-                            </div>
-                          </th>
-                          <td class="name-tab">Printing and Ty</td>
-                          <td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">New-York</div>USA</div></div></td>
-                          <td class="text-tab">brendon@gmail.com</td>
-                          <td class="text-tab">Park Avenu</td>
-                          <td class="eye-tab"><i class="fas fa-eye"></i> View</td>
-                          <td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</td>
-                        </tr>
-                        <tr>
-                          <th scope="row" class="text-center">
-                            <div class="m-auto img-rounded">
-                              <img src="./images/logo-mob.png" class="img-fluid" alt="no-image">
-                            </div>
-                          </th>
-                          <td class="name-tab">Simply Dummy</td>
-                          <td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">New-York</div>USA</div></div></td>
-                          <td class="text-tab">brendon@gmail.com</td>
-                          <td class="text-tab">Park Avenu</td>
-                          <td class="eye-tab"><i class="fas fa-eye"></i> View</td>
-                          <td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</td>
-                        </tr>
+                      <tbody id="tbody-providers-list">
+                      
                       </tbody>
                     </table>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="tab-pane fade" id="content02" role="tabpanel" arial-labelledby="content02-tab">
+            <div class="tab-pane fade" id="users" role="tabpanel" arial-labelledby="users-tab">
               <div id="contain-content02">
-                <ul class="nav justify-content-end">
+                <!-- <ul class="nav justify-content-end">
                   <li class="nav-item p-3">
                     <a href="#" class="nav-link btn btn-outline-primary px-3" data-toggle="modal" data-target="#serviceModal" style="font-size: 0.75rem;"><i class="fas fa-plus"></i> Add User</a>
                   </li>
-                </ul>
+                </ul> -->
                 <div class="container">
-                  <div style="border-radius: 5px!important" class="shadow-sm overflow-lg-x">
+                  <div style="border-radius: 5px!important" class="shadow-sm overflow-lg-x my-3">
                     <table class="table table-stripped m-0 provider-table" style="min-width: 768px">
                       <thead>
                         <tr style="color: #1A4F73!important;">
                           <th scope="col" class="text-center" style="width: 130px">Avatar</th>
-                          <th scope="col" style="width: 150px" >Name</th>
-                          <th scope="col" >City</th>
+                          <th scope="col" >Name</th>
                           <th scope="col" >Email address</th>
-                          <th scope="col">Addres 1</th>
-                          <th scope="col" style="width: 80px"></th>
-                          <th scope="col" style="width: 80px">Action</th>
+                          <th scope="col">Role</th>
+                          <th scope="col" ></th>
+                          <th scope="col" style="width: 130px">Action</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        <tr>
-                          <th scope="row" class="text-center">
-                            <div class="m-auto img-rounded">
-                              <img src="./images/experience.png" class="img-fluid" alt="no-image">
-                            </div>
-                          </th>
-                          <td class="name-tab">Aeilekly Restet</td>
-                          <td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">New-York</div>USA</div></div></td>
-                          <td class="text-tab">brendon@gmail.com</td>
-                          <td class="text-tab">brendon</td>
-                          <td class="eye-tab"><i class="fas fa-eye"></i> View</td>
-                          <td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</td>
-                        </tr>
-                        <tr>
-                          <th scope="row" class="text-center">
-                            <div class="m-auto img-rounded">
-                              <img src="./images/register.png" class="img-fluid" alt="no-image">
-                            </div>
-                          </th>
-                          <td class="name-tab">Weekly Best</td>
-                          <td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">New-York</div>USA</div></div></td>
-                          <td class="text-tab">brendon@gmail.com</td>
-                          <td class="text-tab">Park Avenu</td>
-                          <td class="eye-tab"><i class="fas fa-eye"></i> View</td>
-                          <td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</td>
-                        </tr>
-                        <tr>
-                          <th scope="row" class="text-center">
-                            <div class="m-auto img-rounded">
-                              <img src="./images/search.png" class="img-fluid" alt="no-image">
-                            </div>
-                          </th>
-                          <td class="name-tab">Printing and Ty</td>
-                          <td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">New-York</div>USA</div></div></td>
-                          <td class="text-tab">brendon@gmail.com</td>
-                          <td class="text-tab">Park Avenu</td>
-                          <td class="eye-tab"><i class="fas fa-eye"></i> View</td>
-                          <td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</td>
-                        </tr>
-                        <tr>
-                          <th scope="row" class="text-center">
-                            <div class="m-auto img-rounded">
-                              <img src="./images/logo-mob.png" class="img-fluid" alt="no-image">
-                            </div>
-                          </th>
-                          <td class="name-tab">Simply Dummy</td>
-                          <td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">New-York</div>USA</div></div></td>
-                          <td class="text-tab">brendon@gmail.com</td>
-                          <td class="text-tab">Park Avenu</td>
-                          <td class="eye-tab"><i class="fas fa-eye"></i> View</td>
-                          <td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</td>
-                        </tr>
+                      <tbody id="tbody-users-list">
+                        
                       </tbody>
                     </table>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="tab-pane fade" id="content03" role="tabpanel" arial-labelledby="content03-tab">
+            <div class="tab-pane fade" id="network" role="tabpanel" arial-labelledby="network-tab">
               <div id="contain-content03">
                 <div class="container py-3 px-4">
                   <div class="w-100 p-3 shadow-sm">
                     <div class="d-profile w-100 px-3">
                       <div  class="overflow-lg-x">
                         <table class="table m-3 info-profile-table" style="min-width: 768px">
-                          <tbody>
+                          <tbody id="tbody-network-list">
                             <tr>
                               <th scope="row" class="fs-small" rowspan="2" width="100">
                                 <div class="img-profile" style="border-radius: 50%; background-color: #7AF3AF; width: 100px; height: 100px">
@@ -347,371 +157,16 @@
   </div>
 </div>
 
-
-<div class="modal fade show-facility" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-  <div class="modal-dialog m-0-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel" >Facility Name - Edit</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true"><i class="fas fa-times"></i></span>
-        </button>
-      </div>
-      <div class="modal-body" style="padding-right:0;padding-left:0">
-        <div class="">
-          <form class="formFacitlity" action="index.html" method="post">
-            <div class="alert alert-primary" style="border-radius: 0;width:100%" role="alert">
-              Basic Information
-            </div>
-            <div class="d-sm-flex flex-wrap px-4 justify-content-md-start justify-content-between">
-              <div class="form-group col-sm-4">
-                <label for="formGroupInput">Network Name</label>
-                <input type="text" class="form-control" id="formGroupInput" placeholder="Example input placeholder">
-              </div>
-              <div class="form-group col-sm-4">
-                <label for="formGroupInput2">Mail Address</label>
-                <input type="text" class="form-control" id="formGroupInput2" placeholder="Another input placeholder">
-              </div>
-              <div class="form-group col-sm-4">
-                <label for="formGroupInput2">Phone number</label>
-                <input type="text" class="form-control" id="formGroupInput2" placeholder="+14(0)145 547 12">
-              </div>
-              <div class="form-group col-sm-4">
-                  <label for="validationTooltip04">City</label>
-                  <select class="custom-select" id="cityselect">
-                    <option selected disabled value="">New-York</option>
-                    <option>...</option>
-                  </select>
-              </div>
-              <div class="form-group col-sm-4">
-                  <label for="validationTooltip04">State</label>
-                  <select class="custom-select" id="stateselect">
-                    <option selected disabled value="">USA</option>
-                    <option>...</option>
-                  </select>
-              </div>
-              <div class="form-group col-sm-4">
-                <label for="formGroupInput2">Website</label>
-                <input type="text" class="form-control" id="formGroupInput2" placeholder="www.hicard.com">
-              </div>
-            </div>
-            <div class="alert alert-primary" style="border-radius: 0;width:100%" role="alert">
-              Address Information
-            </div>
-            <div class="d-sm-flex flex-wrap justify-content-md-start justify-content-between px-4">
-              <div class="form-group col-sm-4">
-                <label for="formGroupInput">address 1</label>
-                <input type="text" class="form-control" id="formGroupInput" placeholder="Example input placeholder">
-              </div>
-              <div class="form-group col-sm-4">
-                <label for="formGroupInput2">Address 2</label>
-                <input type="text" class="form-control" id="formGroupInput2" placeholder="Another input placeholder">
-              </div>
-              <div class="form-group col-sm-4">
-                <label for="formGroupInput2">Postal Code</label>
-                <input type="text" class="form-control" id="formGroupInput2" placeholder="Another input placeholder">
-              </div>
-              <div class="form-group col-sm-4">
-                <label for="formGroupInput">Merely To</label>
-                <input type="text" class="form-control" id="formGroupInput" placeholder="Example input placeholder">
-              </div>
-              <div class="form-group col-sm-4">
-                <label for="formGroupInput2">Objective</label>
-                <input type="text" class="form-control" id="formGroupInput2" placeholder="Another input placeholder">
-              </div>
-
-            </div>
-            <div class="form-group col-sm-12 px-4">
-              <label for="validationTextarea">Textarea</label>
-              <textarea class="form-control " id="validationTextarea" placeholder=" example textarea"></textarea>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-              <button type="submit" class="btn btn-primary">Save change</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
-<div class="modal fade show-facility" id="member" tabindex="-1" aria-labelledby="memberLabel" aria-hidden="true">
-  <div class="modal-dialog m-0-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="memberLabel" >Member User List</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true"><i class="fas fa-times"></i></span>
-        </button>
-      </div>
-      <div class="modal-body" style="padding-right:0;padding-left:0">
-        <form>
-          <ul class="nav justify-content-end">
-            <li class="nav-item">
-              <div class="form-group form-search">
-                  <input class="form-control form-control-sm" type="text" placeholder="Search"
-                    aria-label="Search">
-                  <div class="search-icon">
-                    <i class="fas fa-search" aria-hidden="true"></i>
-                  </div>
-              </div>
-            </li>
-            <li class="nav-item">
-              <div class="form-group form-search">
-                  <input class="form-control form-control-sm" type="text" placeholder="Search"
-                    aria-label="Search">
-                  <div class="search-icon">
-                    <i class="fas fa-search" aria-hidden="true"></i>
-                  </div>
-              </div>
-            </li>
-          </ul>
-      </form>
-      </div>
-      <div class="modal-body">
-        <div style="border-radius: 5px!important" class="shadow-sm overflow-lg-x">
-          <table class="table table-stripped m-0 provider-table">
-            <thead>
-              <tr style="color: #1A4F73!important;">
-                <th scope="col" class="text-center" style="width: 130px">Avatar</th>
-                <th scope="col" style="width: 150px" >Name</th>
-                <th scope="col" >City</th>
-                <th scope="col" style="width: 80px">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row" class="text-center">
-                  <div class="m-auto img-rounded">
-                    <img src="./images/experience.png" class="img-fluid" alt="no-image">
-                  </div>
-                </th>
-                <td class="name-tab">Aeilekly Restet</td>
-                <td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">New-York</div>USA</div></div></td>
-                <td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</td>
-              </tr>
-              <tr>
-                <th scope="row" class="text-center">
-                  <div class="m-auto img-rounded">
-                    <img src="./images/register.png" class="img-fluid" alt="no-image">
-                  </div>
-                </th>
-                <td class="name-tab">Weekly Best</td>
-                <td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">New-York</div>USA</div></div></td>
-                <td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</td>
-              </tr>
-              <tr>
-                <th scope="row" class="text-center">
-                  <div class="m-auto img-rounded">
-                    <img src="./images/search.png" class="img-fluid" alt="no-image">
-                  </div>
-                </th>
-                <td class="name-tab">Printing and Ty</td>
-                <td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">New-York</div>USA</div></div></td>
-                <td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</td>
-              </tr>
-              <tr>
-                <th scope="row" class="text-center">
-                  <div class="m-auto img-rounded">
-                    <img src="./images/logo-mob.png" class="img-fluid" alt="no-image">
-                  </div>
-                </th>
-                <td class="name-tab">Simply Dummy</td>
-                <td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">New-York</div>USA</div></div></td>
-                <td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save change</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<script>
+        
+  let baseUrl = "<%= baseUrl %>"
+  let url2 = "<%= baseUrl2 %>"
+  let RX = "<%= roles %>"
+    
+</script>
 
-<div class="modal fade show-facility" id="facilityNameModal" tabindex="-1" aria-labelledby="facilityNameModalLabel" aria-hidden="true">
-  <div class="modal-dialog m-0-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="facilityNameModalLabel" >Facility Name</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true"><i class="fas fa-times"></i></span>
-        </button>
-      </div>
-      <div class="modal-body" style="padding-right:0;padding-left:0">
-        <div class="d-sm-flex container-fil justify-content-around">
-          <div class="mb-3">
-            <div class="img text-center m-auto align-center" style="border-radius: 50%!important; width: 100px; height: 100px; object-fit: cover">
-              <img src="./images/register.png" class="img-fluid" width="200px" alt="no-image">
-            </div>
-          </div>
-          <div class="d-sm-flex flex-sm-column mx-2">
-            <div class="d-flex">
-              <div class="col px-1 info-basic">Network:</div>
-              <div class="col px-1 info-data">Franklin Network</div>
-            </div>
-            <div class="d-flex">
-              <div class="col px-1 info-basic">Mail address:</div>
-              <div class="col px-1 info-data">Franklin@exem.com</div>
-            </div>
-            <div class="d-flex ">
-              <div class="col px-1 info-basic">Phone Number:</div>
-              <div class="col px-1 info-data">+14(0)145 547 12</div>
-            </div>
-            <div class="d-flex ">
-              <div class="col px-1 info-basic">Description:</div>
-              <div class="col px-1 info-data">test</div>
-            </div>
-          </div>
-          <div class="d-sm-flex flex-sm-column mx-2">
-            <div class="d-flex">
-              <div class="col  info-basic">City:</div>
-              <div class="col info-data">New-York</div>
-            </div>
-            <div class="d-flex">
-              <div class="col px-1 info-basic">State:</div>
-              <div class="col px-1 info-data">USA</div>
-            </div>
-            <div class="d-flex ">
-              <div class="col px-1 info-basic">Website:</div>
-              <div class="col px-1 info-data">www.hicard.com</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-body">
-        <div style="border-radius: 5px!important" class="shadow-sm overflow-auto">
-          <table class="table table-stripped m-0 provider-table">
-            <thead>
-              <tr style="color: #1A4F73!important;">
-                <th scope="col" class="text-center" style="width: 130px">Avatar</th>
-                <th scope="col" style="width: 150px" >Name</th>
-                <th scope="col" >City</th>
-                <th scope="col" style="width: 80px">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row" class="text-center">
-                  <div class="m-auto img-rounded">
-                    <img src="./images/experience.png" class="img-fluid" alt="no-image">
-                  </div>
-                </th>
-                <td class="name-tab">Aeilekly Restet</td>
-                <td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">New-York</div>USA</div></div></td>
-                <td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</td>
-              </tr>
-              <tr>
-                <th scope="row" class="text-center">
-                  <div class="m-auto img-rounded">
-                    <img src="./images/register.png" class="img-fluid" alt="no-image">
-                  </div>
-                </th>
-                <td class="name-tab">Weekly Best</td>
-                <td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">New-York</div>USA</div></div></td>
-                <td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</td>
-              </tr>
-              <tr>
-                <th scope="row" class="text-center">
-                  <div class="m-auto img-rounded">
-                    <img src="./images/search.png" class="img-fluid" alt="no-image">
-                  </div>
-                </th>
-                <td class="name-tab">Printing and Ty</td>
-                <td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">New-York</div>USA</div></div></td>
-                <td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</td>
-              </tr>
-              <tr>
-                <th scope="row" class="text-center">
-                  <div class="m-auto img-rounded">
-                    <img src="./images/logo-mob.png" class="img-fluid" alt="no-image">
-                  </div>
-                </th>
-                <td class="name-tab">Simply Dummy</td>
-                <td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">New-York</div>USA</div></div></td>
-                <td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save change</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade show-facility" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
-  <div class="modal-dialog m-0-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="serviceModalLabel" >Servicing provider information</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true"><i class="fas fa-times"></i></span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="">
-          <form class="formFacitlity">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="formGroupInput">Network Name</label>
-                  <input type="text" class="form-control" id="formGroupInput" placeholder="Example input placeholder">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="formGroupInput">Network Name</label>
-                  <input type="text" class="form-control" id="formGroupInput" placeholder="Example input placeholder">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="formGroupInput2">Mail Address</label>
-                  <input type="text" class="form-control" id="formGroupInput2" placeholder="Another input placeholder">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="formGroupInput2">Mail Address</label>
-                  <input type="text" class="form-control" id="formGroupInput2" placeholder="Another input placeholder">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="formGroupInput2">Phone number</label>
-                  <input type="text" class="form-control" id="formGroupInput2" placeholder="+14(0)145 547 12">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="formGroupInput">Network Name</label>
-                  <input type="text" class="form-control" id="formGroupInput" placeholder="Example input placeholder">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="formGroupInput2">Phone number</label>
-                  <input type="text" class="form-control" id="formGroupInput2" placeholder="+14(0)145 547 12">
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary pull-right">Save Changes</button>
-      </div>
-      </div>
-    </div>
-  </div>
-</div>
+<script defer src="./js/controllers/userFacilityDetails.controller.js" type="module"></script>
 
 <%- include('partials/_footer') -%>

@@ -191,12 +191,12 @@ figure figcaption{
   font-weight: 400 !important;
   color: #707070;
 }
-.HI-footer{
+/* .HI-footer{
   position: fixed;
   bottom: 0px !important;
   height:70px;
   width: 100%;
-}
+}*/
 .HI-footer>p{
   line-height: 70px;
   vertical-align: middle!important;
@@ -569,4 +569,22 @@ legend
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #c4c4c4;
+}
+
+body{ 
+  min-height: 100vh; 
+  margin: 0; 
+  
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+header{ 
+  min-height:50px;
+  background:lightcyan; 
+}
+
+footer{ 
+  min-height:50px; 
+  background:PapayaWhip; 
 }

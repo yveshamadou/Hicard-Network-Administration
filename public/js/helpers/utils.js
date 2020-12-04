@@ -23,7 +23,7 @@ export  function utils(){
         
     }
     
-    this.createModal = function (id,title, body,footer, w= 'md'){
+    this.createModal = function (id,title, body,footer = "", w= 'md'){
     
         let modal = '<div class="modal fade bd-example-modal-lg" id="'+id+'" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">'
         modal += '<div class="modal-dialog modal-'+w+'">'
@@ -35,12 +35,19 @@ export  function utils(){
         modal += '<div class="modal-body">'
         modal += body
         modal += '</div>'
-        modal += '<div class="modal-footer">'
-        modal += footer
-        modal += '</div>'
-        modal += '</div>'
-        modal += '</div>'
-        modal += '</div>'
+        if (footer == "none") {
+            modal += '</div>'
+            modal += '</div>'
+            modal += '</div>'
+        }else {
+            modal += '<div class="modal-footer">'
+            modal += footer
+            modal += '</div>'
+            modal += '</div>'
+            modal += '</div>'
+            modal += '</div>'
+        }
+        
         return modal;
     }
     
@@ -67,7 +74,6 @@ export  function utils(){
                 $(this).attr({'style': 'border-color: #dc3545 !important'})
                 $(this).parent().find('small').addClass('text-danger').text('required')
             }else{
-                errors = []
                 $(this).removeAttr('style')
                 $(this).parent().find('small').empty()
             }
@@ -79,7 +85,6 @@ export  function utils(){
                 $(this).attr({'style': 'border-color: #dc3545 !important'})
                 $(this).parent().find('small').addClass('text-danger').text('required')
             }else {
-                errors = []
                 $(this).removeAttr('style')
                 $(this).parent().find('small').empty()
             }
@@ -91,7 +96,6 @@ export  function utils(){
                 $(this).attr({'style': 'border-color: #dc3545 !important'})
                 $(this).parent().find('small').addClass('text-danger').text('required')
             }else {
-                errors = []
                 $(this).removeAttr('style')
                 $(this).parent().find('small').empty()
             }
@@ -165,6 +169,15 @@ export  function utils(){
       
         // Return `null` if the term should not be displayed
         return null;
+      }
+      
+    this.getRandomColor = function() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
       }
 
 }

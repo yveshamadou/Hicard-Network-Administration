@@ -71,9 +71,13 @@ class HicardRequest{
             if (api.postAPIs[method] == undefined) {
                 reject(new Error("404: This URL doesn't exist"))
             }
+            let url
+            if (params.facilityID != "") {
+                url = api.baseUrl + '/' + api.postAPIs[method] + '/'+params.id+'/facilities/'+params.facilityID+''
+            } else {
+                url = api.baseUrl + '/' + api.postAPIs[method] + '/'+params.id+'/networks/'+params.networkID+''
+            }
             
-            let url = api.baseUrl + '/' + api.postAPIs[method] + '/'+params.id+'/networks/'+params.networkID+''
-
             axios.post(url, datas)
                 .then(function (response) {
                     if (response.data.errors.length > 0) {

@@ -3,6 +3,7 @@ import {utils} from '../helpers/utils.js'
 import {setToken} from './http.js'
 import {facilityNetwork} from './facility.model.js'
 import {usersNetwork} from './users.model.js'
+import { providerNetwork } from './provider.model.js';
 
 new setToken ($.cookie("ACCESS_TOKEN"))
 let helper = new utils()
@@ -36,7 +37,7 @@ export function userNetwork(token, url) {
                 resolve(result)
             }).catch((err) => {
                 console.log(err);
-                $('#main').show().empty().append('<p class="text-center alert-warning">Something Wrong. Please </p>')
+                $('#main').show().empty().append('<p class="text-center alert-warning">Something Wrong. Please <a href="/logout" class="btn btn-sm btn-outline-primary">go back</a> to login page </p>')
                 $('div.loader-full').remove()
                 reject(err)
                 
@@ -75,6 +76,20 @@ export function userNetwork(token, url) {
         })
     }
     
+    this.getAllProvidersByNetworkGuid = function (id){
+        return new Promise((resolve, reject) => {
+            this.client.providers(id).then((result) => {
+                resolve(result)
+            }).catch((err) => {
+                console.log(err);
+                reject(err)
+                
+                
+            })
+        
+        })
+    }
+    
     this.getUsersByNetworkGuid = function (id){
         return new Promise((resolve, reject) => {
             this.client.users(id).then((result) => {
@@ -96,7 +111,6 @@ export function userNetwork(token, url) {
             }).catch((err) => {
                 console.log(err);
                 reject(err)
-                
                 
             })
         
@@ -285,7 +299,7 @@ export function userNetwork(token, url) {
                 }
             }
         }).catch((err) => {
-            $('#main').show().empty().append('<p class="text-center alert-warning">Something Wrong. Please </p>')
+            $('#main').show().empty().append('<p class="text-center alert-warning">Something Wrong. Please <a href="/logout" class="btn btn-sm btn-outline-primary">go back</a> to login page</p>')
             $('div.loader-full').remove()
             console.log(err);
         })
@@ -304,35 +318,40 @@ export function userNetwork(token, url) {
                     result.payload.forEach((network,i) => {
                         $('#network-content').append(
                             $('<div/>')
-                            .addClass('bg-white col-lg-3 col-md-3 col-sm-5  col-12 p-3 mb-3 border shadow-sm')
-                            .attr({'style':'border-radius: 5px'})
+                            .addClass('col-lg-3 col-md-3 col-sm-5  col-12 mb-3 ')
                             .append(
                                 $('<div/>')
-                                .addClass('media py-3')
+                                .addClass('bg-white shadow-sm p-3')
+                                .attr({'style':'border-radius: 5px'})
                                 .append(
-                                    '<img class="rounded mx-auto d-block img circle" src="/images/hospital2.png" alt="images"height="100" width="100" style="object-fit: cover;border-radius: 50%!important"><div class="media-body ml-3 mt-3"><div class="mb-2 fs-small2 fw-medium name">'+network.name+'</div><p class="fs-small fw-medium text-color-gray">'+network.description+'<p></div>'
+                                    $('<div/>')
+                                    .addClass('media py-3')
+                                    .append(
+                                        '<img class="rounded mx-auto d-block img circle" src="/images/hospital2.png" alt="images"height="100" width="100" style="object-fit: cover;border-radius: 50%!important"><div class="media-body ml-3 mt-3"><div class="mb-2 fs-small2 fw-medium name">'+network.name+'</div><p class="fs-small fw-medium text-color-gray">'+network.description+'<p></div>'
+                                    )
+                                )
+                                .append(
+                                    $('<div/>')
+                                    .append(
+                                        '<div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Mail address :</div><div class="fs-small w-100 text-color-gray">'+network.emailAddress+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Address Line 1 :</div><div class="fs-small w-100 text-color-gray">'+network.addressLine1+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">City :</div><div class="fs-small w-100 text-color-gray">'+network.city+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Phone Number :</div><div class="fs-small w-100 text-color-gray">'+network.mainPhoneNumber+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Fax Number :</div><div class="fs-small w-100 text-color-gray">'+network.faxNumber+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Postal Code :</div><div class="fs-small w-100 text-color-gray">'+network.postalCode+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">State :</div><div class="fs-small w-100 text-color-gray">'+network.state+'</div></div>'
+                                    )
+                                )
+                                .append(
+                                    $('<div/>')
+                                    .addClass('py-3')
+                                    .append(
+                                        '<a href="/user_network_details?N='+network.id+'" class="btn btn-outline-primary w-100" role="button">More view</a>'
+                                    )
                                 )
                             )
-                            .append(
-                                $('<div/>')
-                                .append(
-                                    '<div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Mail address :</div><div class="fs-small w-100 text-color-gray">'+network.emailAddress+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Address Line 1 :</div><div class="fs-small w-100 text-color-gray">'+network.addressLine1+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">City :</div><div class="fs-small w-100 text-color-gray">'+network.city+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Phone Number :</div><div class="fs-small w-100 text-color-gray">'+network.mainPhoneNumber+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Fax Number :</div><div class="fs-small w-100 text-color-gray">'+network.faxNumber+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Postal Code :</div><div class="fs-small w-100 text-color-gray">'+network.postalCode+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">State :</div><div class="fs-small w-100 text-color-gray">'+network.state+'</div></div>'
-                                )
-                            )
-                            .append(
-                                $('<div/>')
-                                .addClass('py-3')
-                                .append(
-                                    '<a href="/user_network_details?N='+network.id+'" class="btn btn-outline-primary w-100" role="button">More view</a>'
-                                )
-                            )
+                            
                         )
                     });
                     
                     
-                    $('#network-content').append(
+                    /* $('#network-content').append(
                         '<div class="media-main bg-white col-lg-3 col-md-3 col-sm-5 col-12 p-3 mb-3 border shadow-sm create-network" style="border-radius: 5px; cursor:pointer;"><div class="symbol p-3"><div class="rounded m-auto fw-light fs-big " style="width: 100px; height: 100px;border: 2.5px dashed #005EA3"><div class="bg-pink plusSymbole" role="plusSymbole"></div></div><div class="text-primary mt-3 text-center">Add a new network</div></div></div>'
-                    )
+                    ) */
                     $('div.loader-full').hide()
                     $('#main').show()
                     helper.filterCard()
@@ -342,7 +361,7 @@ export function userNetwork(token, url) {
                 }
             }
         }).catch((err) => {
-            $('#main').show().empty().append('<p class="text-center alert-warning">Something Wrong. Please </p>')
+            $('#main').show().empty().append('<p class="text-center alert-warning">Something Wrong. Please <a href="/logout" class="btn btn-sm btn-outline-primary">go back</a> to login page</p>')
             $('div.loader-full').hide()
             console.log(err);
         })
@@ -358,23 +377,23 @@ export function userNetwork(token, url) {
             
             body += '<div class="d-flex"> '
             body += '<fieldset class="col-lg-12 mb-3"> '
-            body += '<legend class="px-2 py-2">Generale Informations</legend>'
+            body += '<legend class="px-2 py-2">General Information</legend>'
             body += '<div class="row">'
             
             body += '<div class="col-lg-6">'
-            body += '<label for="networkName" class="fs-small2 fw-medium w-100 font-weight-bold">Name : '
-            body += '<input type="text" id="networkName" class="form-control required" placeholder="Enter network name">  '
+            body += '<label for="networkName" class="fs-small2 fw-medium w-100 font-weight-bold"><t class="text-danger">*</t>Name : '
+            body += '<input type="text" id="networkName" class="form-control required" placeholder="Enter contract name">  '
             body += '<small class="form-text"></small></label>'
             body += '</div>'
             
             body += '<div class="col-lg-6">'
-            body += '<label for="networkContactName" class="fs-small2 fw-medium w-100">Contact Name :'
+            body += '<label for="networkContactName" class="fs-small2 fw-medium w-100"><t class="text-danger">*</t>Contact Name :'
             body += '<input type="text" id="networkContactName" class="form-control required" placeholder="Contact Name">'
             body += '<small class="form-text"></small></label>'
             body += '</div>'
             
             body += '<div class="col-lg-6">'
-            body += '<label for="networkEmail" class="fs-small2 fw-medium w-100">Email Address :'
+            body += '<label for="networkEmail" class="fs-small2 fw-medium w-100"><t class="text-danger">*</t>Email Address :'
             body += '<input type="text" id="networkEmail" class="form-control required" placeholder="Email Address">'
             body += '<small class="form-text"></small></label>'
             body += '</div>'
@@ -386,7 +405,7 @@ export function userNetwork(token, url) {
             body += '</div>'
             
             body += '<div class="col-lg-6">'
-            body += '<label for="networkPhone" class="fs-small2 fw-medium w-100 ">Phone Number :'
+            body += '<label for="networkPhone" class="fs-small2 fw-medium w-100 "><t class="text-danger">*</t>Phone Number :'
             body += '<input type="text" id="networkPhone" class="form-control required" placeholder="Phone Number"> '
             body += '<small class="form-text"></small></label>'
             body += '</div>'
@@ -403,47 +422,47 @@ export function userNetwork(token, url) {
             
             
             body += '<div class="d-flex"> '
-            body += '<fieldset class="col-lg-6"> '
-            body += '<legend class="px-2 py-2">Location </legend>'
+            body += '<fieldset class="col-lg-12"> '
+            body += '<legend class="px-2 py-2">Address </legend>'
             body += '<div class="row">'
             
-            body += '<div class="col-lg-6">'
-            body += '<label for="networkCity" class="fs-small2 w-100 fw-medium">City :'
+            body += '<div class="col-lg-4">'
+            body += '<label for="networkAddLine1" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>Address Line 1 :'
+            body += '<input type="text" id="networkAddLine1" class="form-control required" placeholder="Address Line 1"> '
+            body += '<small class="form-text"></small></label>'
+            body += '</div>'
+            
+            body += '<div class="col-lg-4">'
+            body += '<label for="networkAddLine2" class="fs-small2 w-100 fw-medium">Address Line 2 :'
+            body += '<input type="text" id="networkAddLine2" class="form-control" placeholder="Address Line 2">'
+            body += '<small class="form-text"></small></label>'
+            body += '</div>'
+            
+            body += '<div class="col-lg-4">'
+            body += '<label for="networkAddLine3" class="fs-small2 w-100 fw-medium">Address Line 3 :'
+            body += '<input type="text" id="networkAddLine3" class="form-control" placeholder="Address Line 3">'
+            body += '<small class="form-text"></small></label>'
+            body += '</div>'
+            
+            body += '<div class="col-lg-4">'
+            body += '<label for="networkCity" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>City :'
             body += '<input type="text" id="networkCity" class="form-control required" placeholder="City">'
             body += '<small class="form-text"></small></label>'
             body += '</div>'
             
-            body += '<div class="col-lg-6">'
-            body += '<label for="networkPostalCode" class="fs-small2 w-100 fw-medium">Postal Code :'
-            body += '<input type="text" id="networkPostalCode" class="form-control required" placeholder="Postal Code">'
-            body += '<small class="form-text"></small></label>'
-            body += '</div>'
-            
-            body += '<div class="col-lg-6">'
-            body += '<label for="networkState" class="fs-small2 w-100 fw-medium">State :'
+            body += '<div class="col-lg-4">'
+            body += '<label for="networkState" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>State :'
             body += '<select id="networkState" class="custom-select required">'
             body += '</select>'
             body += '<small class="form-text"></small></label>'
             body += '</div>'
             
-            body += '</div>'
-            body += '</fieldset>'
-            
-            body += '<fieldset class="col-lg-6"> '
-            body += '<legend class="px-2 py-2">Address </legend>'
-            body += '<div class="row">'
-            
-            body += '<div class="col-lg-6">'
-            body += '<label for="networkAddLine1" class="fs-small2 w-100 fw-medium">Address Line 1 :'
-            body += '<input type="text" id="networkAddLine1" class="form-control required" placeholder="Address Line 1"> '
+            body += '<div class="col-lg-4">'
+            body += '<label for="networkPostalCode" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>Zip Code :'
+            body += '<input type="text" id="networkPostalCode" class="form-control required" placeholder="Zip Code">'
             body += '<small class="form-text"></small></label>'
             body += '</div>'
-            
-            body += '<div class="col-lg-6">'
-            body += '<label for="networkAddLine2" class="fs-small2 w-100 fw-medium">Address Line 2 :'
-            body += '<input type="text" id="networkAddLine2" class="form-control" placeholder="Address Line 2">'
-            body += '<small class="form-text"></small></label>'
-            body += '</div>'
+           
             
             body += '</div>'
             body += '</fieldset>'
@@ -453,7 +472,7 @@ export function userNetwork(token, url) {
             
             let footer = '<button id="btn-save-network-form"  class="btn btn-primary">Save</button>';
             
-            $('body').append(helper.createModal('modal-create-network', "Create a New Network", body, footer , 'lg'));
+            $('body').append(helper.createModal('modal-create-network', "Create a Contract", body, footer , 'lg'));
             $('#modal-create-network').modal('show')
             
             $('#modal-create-network').on('hide.bs.modal', function (e) {
@@ -533,45 +552,44 @@ export function userNetwork(token, url) {
                     
                     
                     body += '<div class="d-flex"> '
-                    body += '<fieldset class="col-lg-6"> '
-                    body += '<legend class="px-2 py-2">Location </legend>'
-                    body += '<div class="row">'
-                    
-                    body += '<div class="col-lg-6">'
-                    body += '<label for="networkCity" class="fs-small2 w-100 fw-medium">City :'
-                    body += '<input type="text" id="networkCity" value="'+data.city+'" class="form-control required" placeholder="City">'
-                    body += '<small class="form-text"></small></label>'
-                    body += '</div>'
-                    
-                    body += '<div class="col-lg-6">'
-                    body += '<label for="networkPostalCode" class="fs-small2 w-100 fw-medium">Postal Code :'
-                    body += '<input type="text" id="networkPostalCode" value="'+data.postalCode+'" class="form-control required" placeholder="Postal Code">'
-                    body += '<small class="form-text"></small></label>'
-                    body += '</div>'
-                    
-                    body += '<div class="col-lg-6">'
-                    body += '<label for="networkState" class="fs-small2 w-100 fw-medium">State :'
-                    body += '<select id="networkState" class="custom-select required">'
-                    body += '</select>'
-                    body += '<small class="form-text"></small></label>'
-                    body += '</div>'
-                    
-                    body += '</div>'
-                    body += '</fieldset>'
-                    
-                    body += '<fieldset class="col-lg-6"> '
+                    body += '<fieldset class="col-lg-12"> '
                     body += '<legend class="px-2 py-2">Address </legend>'
                     body += '<div class="row">'
                     
-                    body += '<div class="col-lg-6">'
+                    body += '<div class="col-lg-4">'
                     body += '<label for="networkAddLine1" class="fs-small2 w-100 fw-medium">Address Line 1 :'
                     body += '<input type="text" id="networkAddLine1" value="'+data.addressLine1+'" class="form-control required" placeholder="Address Line 1"> '
                     body += '<small class="form-text"></small></label>'
                     body += '</div>'
                     
-                    body += '<div class="col-lg-6">'
+                    body += '<div class="col-lg-4">'
                     body += '<label for="networkAddLine2" class="fs-small2 w-100 fw-medium">Address Line 2 :'
                     body += '<input type="text" id="networkAddLine2" value="'+data.addressLine2+'" class="form-control" placeholder="Address Line 2">'
+                    body += '<small class="form-text"></small></label>'
+                    body += '</div>'
+                    
+                    body += '<div class="col-lg-4">'
+                    body += '<label for="networkAddLine3" class="fs-small2 w-100 fw-medium">Address Line 3 :'
+                    body += '<input type="text" id="networkAddLine3" value="'+data.addressLine2+'" class="form-control" placeholder="Address Line 3">'
+                    body += '<small class="form-text"></small></label>'
+                    body += '</div>'
+                    
+                    body += '<div class="col-lg-4">'
+                    body += '<label for="networkCity" class="fs-small2 w-100 fw-medium">City :'
+                    body += '<input type="text" id="networkCity" value="'+data.city+'" class="form-control required" placeholder="City">'
+                    body += '<small class="form-text"></small></label>'
+                    body += '</div>'
+                    
+                    body += '<div class="col-lg-4">'
+                    body += '<label for="networkPostalCode" class="fs-small2 w-100 fw-medium">Postal Code :'
+                    body += '<input type="text" id="networkPostalCode" value="'+data.postalCode+'" class="form-control required" placeholder="Postal Code">'
+                    body += '<small class="form-text"></small></label>'
+                    body += '</div>'
+                    
+                    body += '<div class="col-lg-4">'
+                    body += '<label for="networkState" class="fs-small2 w-100 fw-medium">State :'
+                    body += '<select id="networkState" class="custom-select required">'
+                    body += '</select>'
                     body += '<small class="form-text"></small></label>'
                     body += '</div>'
                     
@@ -608,7 +626,7 @@ export function userNetwork(token, url) {
     }
     
     this.setState = function(id, current = ""){
-        $('#'+id).attr({'disabled':'disabled'})
+        $('#'+id).attr({'disabled':'disabled'}).parent().prepend('<i class="fa fa-spinner fa-spin select-loader-state"></i>')
         this.getState(this.activatortoken)
         .then((result) => {
             $('#'+id).empty().append('<option value="" class="text-muted" disabled selected>State</option>')
@@ -620,6 +638,7 @@ export function userNetwork(token, url) {
             if (current != "" || current != null || current != undefined) {
                 $('#'+id).val(current).change()
             }
+            $('#'+id).parent().find('.select-loader-state').remove()
         }).catch((err) => {
             console.log(err);
         })
@@ -678,12 +697,14 @@ export function userNetwork(token, url) {
                 this.showModalCreateNetwork()
                 this.setAllFacilityByNetworkID(data.id)
                 this.setUsersByNetworkID(data.id)
+                this.setAllProvidersByNetworkID(data.id)
             }
         }).catch((err) => {
             console.log(err);
+            $('#main').empty().append('<div class="main container"><div class="text-center text-danger">the identifier of this network is not correct. Please return to the previous page.<p><a href="/">Go Back</a></p></div></div>')
         })
        } else {
-           $('#main').empty().append('<div class="main container"><div class="text-center text-danger">the identifier of this network is not correct. Please return to the previous page.<p><a href="/user_network">Go Back</a></p></div></div>')
+           $('#main').empty().append('<div class="main container"><div class="text-center text-danger">the identifier of this network is not correct. Please return to the previous page.<p><a href="/">Go Back</a></p></div></div>')
        }
     }
     
@@ -692,28 +713,79 @@ export function userNetwork(token, url) {
         this.getAllFacilityByNetworkGuid(id).then((result) => {
             if (result.errors.length > 0) {
                 $('#tbody-facilities-list')
-                .find('.loader-facility-tbody').remove()
-                .append('<tr><td colspan="8"><p class="text-center">No hospital found !</p></td></tr>')
+                .empty()
+                .append('<tr><td colspan="8"><p class="text-center">No facility found !</p></td></tr>')
             } else {
-                $('#tbody-facilities-list')
-                .find('.loader-facility-tbody').remove()
-                result.payload.forEach(data => {
+                if (result.payload.length > 0) {
                     $('#tbody-facilities-list')
-                    .append(
-                        $('<tr/>')
-                        .attr({'id':data.id})
+                    .empty()
+                    result.payload.forEach(data => {
+                        $('#tbody-facilities-list')
                         .append(
-                            $('<th/>')
-                            .addClass()
-                            .attr({})
-                            .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
+                            $('<tr/>')
+                            .attr({'id':data.id})
+                            .append(
+                                $('<th/>')
+                                .addClass()
+                                .attr({})
+                                .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
+                            )
+                            .append('<td class="name-tab">'+data.name+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'</div>'+data.state+'</div></div></td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="eye-tab"><a href="/user_facility_details?N='+helper.getParameterByName('N')+'&F='+data.id+'" class="view-facility"><i class="fas fa-eye"></i> View</a></td><td class="act-tab"><a class="lock-facility"><i class="fas fa-trash-alt"></i> Lock</a></td>')
                         )
-                        .append('<td class="name-tab">'+data.name+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'</div>'+data.state+'</div></div></td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="eye-tab"><a href="/user_facility_details?N='+helper.getParameterByName('N')+'&F='+data.id+'" class="view-facility"><i class="fas fa-eye"></i> View</a></td><td class="act-tab"><a class="lock-facility"><i class="fas fa-trash-alt"></i> Lock</a></td>')
-                    )
-                });
+                    });
+                } else {
+                    $('#tbody-facilities-list')
+                    .empty()
+                    .append('<tr><td colspan="8"><p class="text-center">No facility found !</p></td></tr>')
+                }
             }
         }).catch((err) => {
             console.log(err);
+            $('#tbody-facilities-list')
+            .empty()
+            .append('<tr><td colspan="8"><p class="text-center">Something Wrong!</p></td></tr>')
+        })
+    }
+    
+    this.setAllProvidersByNetworkID = function(id){
+        $('#tbody-providers-list').empty().prepend('<tr class="loader-providers-tbody"><td colspan="8" class="text-center"><skeleton-box lines="1"></skeleton-box></i></td></tr>')
+        this.getAllProvidersByNetworkGuid(id).then((result) => {
+            if (result.errors.length > 0) {
+                $('#tbody-providers-list')
+                .empty()
+                .append('<tr><td colspan="8"><p class="text-center">No provider found !</p></td></tr>')
+            } else {
+                if (result.payload.length > 0) {
+                    $('#tbody-providers-list')
+                    .empty()
+                    result.payload.forEach(data => {
+                        $('#tbody-providers-list')
+                        .append(
+                            $('<tr/>')
+                            .attr({'id':data.id})
+                            .append(
+                                $('<th/>')
+                                .addClass()
+                                .attr({})
+                                .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
+                            )
+                            .append('<td class="name-tab">'+data.firstName+' '+data.lastName+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'</div>'+data.state+'</div></div></td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="eye-tab"><a href="javascript:void(0)" class="view-provider"><i class="fas fa-eye"></i> View</a></td><td class="act-tab"><a class="lock-facility"><i class="fas fa-trash-alt"></i> Lock</a></td>')
+                        )
+                    });
+                    let provider = new providerNetwork(token, url)
+                    provider.setProvidersModal('.view-provider')
+                } else {
+                    $('#tbody-providers-list')
+                    .empty()
+                    .append('<tr><td colspan="8"><p class="text-center">No provider found !</p></td></tr>')
+                }
+                
+            }
+        }).catch((err) => {
+            console.log(err.errors);
+            $('#tbody-providers-list')
+            .empty()
+            .append('<tr><td colspan="8"><p class="text-center">Something Wrong!</p></td></tr>')
         })
     }
     
@@ -722,12 +794,11 @@ export function userNetwork(token, url) {
         this.getUsersByNetworkGuid(id).then((result) => {
             if (result.errors.length > 0) {
                 $('#tbody-users-list')
-                .find('.loader-users-tbody').remove()
+                .empty()
                 .append('<tr><td colspan="8"><p class="text-center">Something Wrong!</p></td></tr>')
             } else {
-                $('#tbody-users-list')
-                .find('.loader-users-tbody').remove()
-                if (result.payload.length > 0 || result.payload != null) {
+                $('#tbody-users-list').empty()
+                if (result.payload.length > 0) {
                     result.payload.forEach(data => {
                         $('#tbody-users-list')
                         .append(
@@ -737,16 +808,18 @@ export function userNetwork(token, url) {
                                 $('<th/>')
                                 .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
                             )
-                            .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.role+'</td><td class="eye-tab"><a href="/user_facility_details?N='+helper.getParameterByName('N')+'&F='+data.id+'" class="view-facility"><i class="fas fa-eye"></i> View</a></td><td class="act-tab"><a class="lock-facility"><i class="fas fa-trash-alt"></i> Lock</a></td>')
+                            .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.role+'</td><td class="eye-tab text-right"><a href="javascript:void(0)" class="view-users"><i class="fas fa-eye"></i> View</a> <a href="javascript:void(0)" class=" ml-4 text-success"><i class="fas fa-edit"></i> Edit </a></td><td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</a></td>')
                         )
                     });
                 }else{
-                    $('#tbody-users-list').empty()
-                    .append('<tr><td colspan="7"><p class="text-center">No hospital found !</p></td></tr>')
+                    $('#tbody-users-list')
+                    .append('<tr><td colspan="7"><p class="text-center">No user found !</p></td></tr>')
                 }
             }
         }).catch((err) => {
             console.log(err);
+            $('#tbody-users-list').empty()
+            .append('<tr><td colspan="7"><p class="text-center">Something Wrong!</p></td></tr>')
         })
         
     }
