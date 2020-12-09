@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Page</title>
-    <link href="http://localhost:3000/img/favicon.144x144.png" rel="apple-touch-icon" type="image/png" sizes="144x144"/>
-    <link href="http://localhost:3000/img/favicon.114x114.png" rel="apple-touch-icon" type="image/png" sizes="114x114"/>
-    <link href="http://localhost:3000/img/favicon.72x72.png" rel="apple-touch-icon" type="image/png" sizes="72x72"/>
-    <link href="http://localhost:3000/img/favicon.57x57.png" rel="apple-touch-icon" type="image/png"/>
-    <link href="http://localhost:3000/img/favicon.png" rel="icon" type="image/png"/>
-    <link href="http://localhost:3000/img/favicon.ico" rel="shortcut icon"/>
+    <link href="./images/fav/favicon.144x144.png" rel="apple-touch-icon" type="image/png" sizes="144x144"/>
+    <link href="./images/fav/favicon.114x114.png" rel="apple-touch-icon" type="image/png" sizes="114x114"/>
+    <link href="./images/fav/favicon.72x72.png" rel="apple-touch-icon" type="image/png" sizes="72x72"/>
+    <link href="./images/fav/favicon.57x57.png" rel="apple-touch-icon" type="image/png"/>
+    <link href="./images/fav/favicon.png" rel="icon" type="image/png"/>
+    <link href="./images/fav/favicon.ico" rel="shortcut icon"/>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="./css/app.css"/>
     <style>   
         .bg-login{
-            background: url('/images/bg-login.png') no-repeat top;
+            background: url('/images/bg-login.jpg') no-repeat top;
         	background-size: cover;
         }
         .login-content{
@@ -87,6 +87,13 @@
                         <div class="brand_logo_container">
                             <img src="./images/logo_hc_na.png" class="brand_logo img-fluid" alt="Logo">
                         </div>
+                    </div>
+                    <div class="text-center loaders">
+                        <div class="spinner-border text-primary" style="height: 5rem; width: 5rem;" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <br>
+                        <span>Loading...</span>
                     </div>
                     <div id="auth_module_inputs">
                     </div>
@@ -191,6 +198,7 @@
             }).then(() => {
                 $asm_identity.renderLogin().then(() => {
                     //add additional classes to HTML generated objects here
+                    $('.loaders').empty()
                     let auth_username_input = $("#auth_username_input").addClass("form-control m-b-1 form-control icon-left email").get()
                     $("#auth_username_input").remove()
                     $(".auth_username_div")

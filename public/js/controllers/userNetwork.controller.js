@@ -13,6 +13,7 @@ let load = function (){
         network.showAllNetwork()
         facility.showModalCreateFacility('.add-facility-btn')
         provider.showModalCreateProvider('.add-provider-btn')
+        provider.showModalAssociateProviderToNetwork('.associate-provider-btn')
         users.showModalCreateUsers('.add-user-btn')
     } else {
         network.showNetworkByUserID()

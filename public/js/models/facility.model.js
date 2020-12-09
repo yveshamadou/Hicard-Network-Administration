@@ -632,8 +632,7 @@ export function facilityNetwork(token, url) {
                 content += '<div class="col-4">'
                 content += '<div class="button-group" data-id="'+data.id+'">'
                 content += '<div class="mt-2"> <a href="#" class="p-1 btn btn-outline-primary w-100 fs-small update-facility" ><i class="fas fa-edit"></i> Edit</a></div>'
-                content += '<div class="mt-2"> <a href="#" class="p-1 btn btn-outline-primary w-100 fs-small delete-facility-btn"><i class="fas fa-trash-alt"></i> Delete</a></div>'
-                content += '<div class="mt-2"> <a href="#" class="p-1 btn btn-outline-primary w-100 fs-small lock-facility-btn"><i class="fas fa-edit"></i> Lock</a></div>'
+                content += '<div class="mt-2"> <a href="#" class="p-1 btn btn-outline-primary w-100 fs-small lock-facility-btn"><i class="fas fa-lock"></i> Lock</a></div>'
                 content += '</div>'
                 content += '</div>'
                 
@@ -659,7 +658,7 @@ export function facilityNetwork(token, url) {
         if (helper.getParameterByName('N')) {
         let networkGuid = helper.getParameterByName('N')
             return new Promise((resolve, reject) => {
-                this.client.providers(networkGuid, id)
+                this.client.providers2(networkGuid, id)
                 .then((result) => {
                     if (result.errors.length > 0) {
                         $('#tbody-providers-list')
@@ -681,7 +680,7 @@ export function facilityNetwork(token, url) {
                                         .attr({})
                                         .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
                                     )
-                                    .append('<td class="name-tab">'+data.firstName+' '+data.lastName+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'</div>'+data.state+'</div></div></td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="eye-tab"><a href="javascript:void(0)" class="view-provider"><i class="fas fa-eye"></i> View</a></td><td class="act-tab"><a class="lock-facility"><i class="fas fa-trash-alt"></i> Lock</a></td>')
+                                    .append('<td class="name-tab">'+data.firstName+' '+data.lastName+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'</div>'+data.state+'</div></div></td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="eye-tab" colspan="2"><a href="javascript:void(0)" class="view-provider"><i class="fas fa-eye"></i> View</a> <a href="javascript:void(0)" class=" ml-4 text-success"><i class="fas fa-edit"></i> Edit </a></td>')
                                 )
                             });
                             let provider = new providerNetwork(token, url)
@@ -737,7 +736,7 @@ export function facilityNetwork(token, url) {
                                         $('<th/>')
                                         .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
                                     )
-                                    .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.role+'</td><td class="eye-tab text-right"><a href="javascript:void(0)" class="view-users"><i class="fas fa-eye"></i> View</a> <a href="javascript:void(0)" class=" ml-4 text-success"><i class="fas fa-edit"></i> Edit </a></td><td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</a></td>')
+                                    .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.role+'</td><td class="eye-tab text-right" colspan="2"><a href="javascript:void(0)" class="view-users"><i class="fas fa-eye"></i> View</a> <a href="javascript:void(0)" class=" ml-4 text-success"><i class="fas fa-edit"></i> Edit </a></td>')
                                 )
                             });
                         }else{

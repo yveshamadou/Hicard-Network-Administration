@@ -179,7 +179,7 @@ export function usersNetwork(token, url, url2) {
                     let facilityGuid = $('#usersFacilityGuid').val();
                     //helper.toastr('success','top-full-width',1000, "Create user "+datas.name+" with succesfull.")
                     $('#form-create-users').attr({'method':'POST', 'action':'/create_users'})
-                    .append('<input type="hidden" id="currentUrl" name="currentUrl" value="'+window.location.href+'" class="form-control" > <input type="hidden" name="usersNetworkGuid" value="'+networkGuid+'" class="form-control" > <input type="hidden" name="usersFacilityGuid" value="'+facilityGuid+'" class="form-control" >')
+                    .append('<input type="hidden" id="currentUrl" name="currentUrl" value="'+window.location.href+'" class="form-control" >')
                     .submit()
                     
                }
@@ -329,6 +329,31 @@ export function usersNetwork(token, url, url2) {
                 body += '</div>'
                 body += '</fieldset>'
                 body += '</div>'
+            }else{
+            
+                body += '<div class="d-flex"> '
+                body += '<fieldset class="col-lg-12 mb-3"> '
+                body += '<legend class="px-2 py-2">Associate To Facility</legend>'
+                body += '<div class="row">'
+                
+                body += '<div class="col-lg-12">'
+                body += '<label for="chooseUsersFacility" class="fs-small2 w-100 fw-medium">Do you want to associate this user with a facility ?'
+                body += '<select id="chooseUsersFacility" class="custom-select required">'
+                body += '<option value="" selected>Choose</option>'
+                body += '<option value="Yes" >Yes</option>'
+                body += '<option value="No" >No</option>'
+                body += '</select>'
+                body += '<small class="form-text"></small></label>'
+                body += '</div>'
+                
+                body += '<div class="col-lg-12">'
+                body += '<div id="yesUsersFacilityAnswer"></div>'
+                body += '</div>'
+                
+                body += '</div>'
+                body += '</fieldset>'
+                body += '</div>'
+            
             }
             
             body += '</form>'
@@ -347,10 +372,27 @@ export function usersNetwork(token, url, url2) {
             
             save.saveUsersModal('create')
             save.setAllNetwork("usersNetworkGuid")
+            let provider = new providerNetwork(token, url)
             if (helper.getParameterByName('F')) {
-                let provider = new providerNetwork(token, url)
                 provider.setAllFacility('usersFacilityGuid', helper.getParameterByName('F'))
             }
+            
+            $('#chooseUsersFacility').on('change', function(){
+                let t = $(this)
+                if (t.val() == "Yes") {
+                    let f = '';
+                    f += '<label for="usersFacilityGuid" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>Facility :'
+                    f += '<select id="usersFacilityGuid" name="usersFacilityGuid" class="custom-select required">'
+                    f += '</select>'
+                    f += '<small class="form-text"></small></label>'
+                    $('div#yesUsersFacilityAnswer').empty().append(f)
+                    provider.setAllFacility('usersFacilityGuid', $('#usersNetworkGuid').val())
+                } else if (t.val() == "No") {
+                    $('div#yesUsersFacilityAnswer').empty()
+                }else {
+                    console.log(t.val());
+                }
+            })
         });
         
         
@@ -470,6 +512,11 @@ export function usersNetwork(token, url, url2) {
                     $('#'+id).val(result.payload.id).change() 
                 }
                 $('#'+id).parent().find('.select-loader-network').remove()
+                $('#'+id).change(function(){
+                    let guid = $(this).val()
+                    let provider = new providerNetwork(token, url)
+                    provider.setAllFacility('usersFacilityGuid', guid)
+                })
             }).catch((err) => {
                 console.log(err);
                 $('#'+id).parent().find('.select-loader-network').remove()
@@ -486,6 +533,11 @@ export function usersNetwork(token, url, url2) {
                 $('#'+id).parent().find('.select-loader-network').remove()
                 $('#'+id).val('').change()
                 $('#'+id).removeAttr('disabled')
+                $('#'+id).change(function(){
+                    let guid = $(this).val()
+                    let provider = new providerNetwork(token, url)
+                    provider.setAllFacility('usersFacilityGuid', guid)
+                })
             }).catch((err) => {
                 console.log(err);
                 $('#'+id).parent().find('.select-loader-network').remove()

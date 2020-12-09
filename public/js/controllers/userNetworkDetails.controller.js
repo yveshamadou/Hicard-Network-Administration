@@ -12,6 +12,7 @@ let load = function (){
     if (RX == "super") {
         facility.showModalCreateFacility('.add-facility-btn')
         provider.showModalCreateProvider('.add-provider-btn')
+        provider.showModalAssociateProviderToNetwork('.associate-provider-btn')
     }else{
         facility.showModalCreateFacility('.add-facility-btn')
         provider.showModalCreateProvider('.add-provider-btn')

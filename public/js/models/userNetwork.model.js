@@ -493,7 +493,7 @@ export function userNetwork(token, url) {
         $('.update-network').on('click', function(e){
             e.preventDefault()
             let t = $(this)
-            let id = t.attr('data-id')
+            let id = t.parent().parent().attr('data-id')
             let save = new userNetwork($.cookie("ACCESS_TOKEN"),url)
             helper.setNextButtonLoader(t)
             save.getNetworkApi(id).then((result) => {
@@ -625,6 +625,61 @@ export function userNetwork(token, url) {
         
     }
     
+    this.showModalDeleteNetwork = function (){
+    
+        $('.lock-network-btn').on('click', function(){
+            let t = $(this)
+            let id = t.parent().parent().attr('data-id')
+            let name = $('body').find('div.info-data').first().text()
+            let body = '<div class="alert-danger text-center errors-lock-network"></div>'
+            body += '<div><p>Are you sure you want to lock this contract ?</p></div>'
+            
+            let footer = '<button type="button" class="btn btn-secondary mr-3" data-dismiss="modal" aria-label="Close">Non</button> <button id="btn-lock-network-form" class="btn btn-primary">Yes</button>';
+            
+            $('body').append(helper.createModal('modal-lock-network', "Lock Contract : "+name, body, footer , 'md'));
+            $('#modal-lock-network').modal('show')
+            
+            $('#modal-lock-network').on('hide.bs.modal', function (e) {
+                setTimeout(function(){ $('#modal-lock-network').remove()},1000)
+            })
+            let network = new userNetwork(token, url)
+            network.lockNetwork(id)
+        })
+        
+    
+    }
+    
+    this.lockNetwork = function(id){
+        $('button#btn-lock-network-form').on('click', function(){
+            let t = $(this)
+            helper.setNextButtonLoader(t)
+            let network = new userNetwork(token, url)
+            network.deleteNetworkApi(id)
+            .then((result) => {
+                helper.removeNextButtonLoader(t)
+                if (result.errors.length > 0) {
+                    $('div.errors-lock-network').empty()
+                    result.errors.forEach(el => {
+                        $('div.errors-lock-network').addClass('alert alert-warning').append('<p class="mb-2">'+el.description+'</p>')
+                    });
+                   
+                } else {
+                    console.log(result.payload);
+                    helper.toastr('success','top-full-width',1000, "Succesfully locked.")
+                    $('#modal-lock-network').modal('hide')
+                    setTimeout(function(){window.location.href = "/"},1200)
+                }
+            
+                
+            }).catch((err) => {
+                console.log(err);
+                helper.removeNextButtonLoader(t)
+            })
+        })
+        
+    
+    }
+    
     this.setState = function(id, current = ""){
         $('#'+id).attr({'disabled':'disabled'}).parent().prepend('<i class="fa fa-spinner fa-spin select-loader-state"></i>')
         this.getState(this.activatortoken)
@@ -682,10 +737,9 @@ export function userNetwork(token, url) {
                 content += '</div>'
                 
                 content += '<div class="col-4">'
-                content += '<div class="button-group">'
-                content += '<div class="mt-2"> <a href="#" class="p-1 btn btn-outline-primary w-100 fs-small update-network" data-id="'+data.id+'"><i class="fas fa-edit"></i> Edit</a></div>'
-                content += '<div class="mt-2"> <a href="#" class="p-1 btn btn-outline-primary w-100 fs-small delete-network-btn"><i class="fas fa-trash-alt"></i> Delete</a></div>'
-                content += '<div class="mt-2"> <a href="#" class="p-1 btn btn-outline-primary w-100 fs-small lock-network-btn"><i class="fas fa-edit"></i> Lock</a></div>'
+                content += '<div class="button-group" data-id="'+data.id+'">'
+                content += '<div class="mt-2"> <a href="javascript:void(0)" class="p-1 btn btn-outline-primary w-100 fs-small update-network" ><i class="fas fa-edit"></i> Edit</a></div>'
+                content += '<div class="mt-2"> <a href="javascript:void(0)" class="p-1 btn btn-outline-primary w-100 fs-small lock-network-btn"><i class="fas fa-lock"></i> Lock</a></div>'
                 content += '</div>'
                 content += '</div>'
                 
@@ -695,6 +749,7 @@ export function userNetwork(token, url) {
                 $('#'+idName).empty().append(content)
                 this.showModalUpdateNetwork()
                 this.showModalCreateNetwork()
+                this.showModalDeleteNetwork()
                 this.setAllFacilityByNetworkID(data.id)
                 this.setUsersByNetworkID(data.id)
                 this.setAllProvidersByNetworkID(data.id)
@@ -730,7 +785,7 @@ export function userNetwork(token, url) {
                                 .attr({})
                                 .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
                             )
-                            .append('<td class="name-tab">'+data.name+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'</div>'+data.state+'</div></div></td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="eye-tab"><a href="/user_facility_details?N='+helper.getParameterByName('N')+'&F='+data.id+'" class="view-facility"><i class="fas fa-eye"></i> View</a></td><td class="act-tab"><a class="lock-facility"><i class="fas fa-trash-alt"></i> Lock</a></td>')
+                            .append('<td class="name-tab">'+data.name+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'</div>'+data.state+'</div></div></td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="eye-tab text-right" colspan="2"><a href="/user_facility_details?N='+helper.getParameterByName('N')+'&F='+data.id+'" class="view-facility mr-4"><i class="fas fa-eye"></i> View</a></td>')
                         )
                     });
                 } else {
@@ -769,11 +824,12 @@ export function userNetwork(token, url) {
                                 .attr({})
                                 .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
                             )
-                            .append('<td class="name-tab">'+data.firstName+' '+data.lastName+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'</div>'+data.state+'</div></div></td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="eye-tab"><a href="javascript:void(0)" class="view-provider"><i class="fas fa-eye"></i> View</a></td><td class="act-tab"><a class="lock-facility"><i class="fas fa-trash-alt"></i> Lock</a></td>')
+                            .append('<td class="name-tab name_provider">'+data.firstName+' '+data.lastName+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'</div>'+data.state+'</div></div></td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="eye-tab"><a href="javascript:void(0)" class="view-provider"><i class="fas fa-eye"></i> View</a></td><td class="act-tab"><a href="javascript:void(0)" class="diassociate-provider"><i class="fas fa-unlock-alt"></i> Diassociate</a></td>')
                         )
                     });
                     let provider = new providerNetwork(token, url)
                     provider.setProvidersModal('.view-provider')
+                    provider.showModalDiassociteNetwork()
                 } else {
                     $('#tbody-providers-list')
                     .empty()
@@ -808,7 +864,7 @@ export function userNetwork(token, url) {
                                 $('<th/>')
                                 .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
                             )
-                            .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.role+'</td><td class="eye-tab text-right"><a href="javascript:void(0)" class="view-users"><i class="fas fa-eye"></i> View</a> <a href="javascript:void(0)" class=" ml-4 text-success"><i class="fas fa-edit"></i> Edit </a></td><td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</a></td>')
+                            .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.role+'</td><td class="eye-tab text-right"><a href="javascript:void(0)" class="view-users"><i class="fas fa-eye"></i> View</a> <a href="javascript:void(0)" class="edit-users ml-4 text-success"><i class="fas fa-edit"></i> Edit </a></td><td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</a></td>')
                         )
                     });
                 }else{

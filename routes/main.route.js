@@ -256,13 +256,14 @@ app.post('/create_users', function (req, res) {
     }
     security.postRequest('postUrl','security', 'newApplicationUser', requestData)
     .then((result) => {
+        console.log("newApplicationUser");
         console.log(result.data);
+        console.log("==END-newApplicationUser====");
         if (result.data.errors == null) {
             res.render('errors/404', {
                 page: "errors/404",
             })
         } else {
-            
             if (result.data.payload == '00000000-0000-0000-0000-000000000000') {
                 res.render('errors/errors', {
                     page: "errors/errors",
@@ -281,14 +282,16 @@ app.post('/create_users', function (req, res) {
                     "role": body.usersRoles,
                     "name": body.usersFirstName + " "+ body.usersLastName
                 }
+                console.log("=====createDatas=======");
                 console.log(createDatas);
+                console.log("=====END-createDatas=======");
                 hicard.putRequest('medicalnetworkusers', createDatas)
                 .then((datas) => {
                     console.log(datas.data);
                     if (datas.data.errors.length > 0) {
                         res.render('errors/errors', {
                             page: "errors/errors",
-                            errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
+                            errors : "We encounter an error while adding this user to the selected network, please try again later...",
                             previousUrl : body.currentUrl
                         })
                     } else {
@@ -307,7 +310,7 @@ app.post('/create_users', function (req, res) {
                                 if (associate.data.errors.length > 0) {
                                     res.render('errors/errors', {
                                         page: "errors/errors",
-                                        errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
+                                        errors : "assciate user error. Please try again later...",
                                         previousUrl : body.currentUrl
                                     })
                                 } else {
