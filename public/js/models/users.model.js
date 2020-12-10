@@ -157,7 +157,6 @@ export function usersNetwork(token, url, url2) {
     }
     
     this.saveUsersModal = function (name){
-    
         if (name == "create") {
             $('#btn-save-users-form').on('click', function(){
                 helper.setNextButtonLoader($(this))
@@ -175,6 +174,20 @@ export function usersNetwork(token, url, url2) {
                         "role": $('#usersRoles').val(),
                         "name": $('#usersFirstName').val() + $('#usersLastName').val()
                     }
+                    /* let url = 'https://auth_eval.asmlogic.com/api/security/checkemail/'
+                    $.ajax({
+                        url: url+$('#usersEmail').val(),
+                        type: "GET",
+                        beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer '+$.cookie("ACCESS_TOKEN"));},
+                     })
+                     .done(function(data) {
+                       console.log(data);
+                      })
+                      .fail(function() {
+                        alert( "error" );
+                      })
+                      .always(function() {
+                      }); */
                     let networkGuid = $('#usersNetworkGuid').val();
                     let facilityGuid = $('#usersFacilityGuid').val();
                     //helper.toastr('success','top-full-width',1000, "Create user "+datas.name+" with succesfull.")

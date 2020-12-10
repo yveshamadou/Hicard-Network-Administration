@@ -44,9 +44,7 @@ app.get('/authentication', function (req, res) {
     let query = req._parsedOriginalUrl.query.split('&')
     let cookies_list = m_cookies.parseCookies(req)
     let datas = {
-        id_token : (query[0].split('=')[1]),
-        access_token : (query[2].split('=')[1]),
-        state : (query[4].split('=')[1]),
+        id_token : (query[0].split('=')[1])
     };
     
     Application.getToken(function (response) {

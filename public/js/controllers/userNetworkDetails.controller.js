@@ -13,13 +13,13 @@ let load = function (){
         facility.showModalCreateFacility('.add-facility-btn')
         provider.showModalCreateProvider('.add-provider-btn')
         provider.showModalAssociateProviderToNetwork('.associate-provider-btn')
+        users.showModalCreateUsers('.add-user-btn')
     }else{
         facility.showModalCreateFacility('.add-facility-btn')
         provider.showModalCreateProvider('.add-provider-btn')
         users.showModalCreateUsers('.add-user-btn')
     }
     network.setNetworkCard('info-network-card')
-    users.showModalCreateUsers('.add-user-btn')
     
     
 }
