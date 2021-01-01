@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+var session = require('express-session')
 const config = require('../config/hicard.config')
 const jwt_decode = require('jwt-decode');
 const Application = require("../models/app.model")
@@ -8,6 +9,16 @@ const securityModel = require ('../models/security.module.model')
 const HicardRequest = require ('../models/hicard.request.model')
 const hasToBe = require('../middlewares/checkRole.mdlw')
 const m_cookies = new M_Cookies()
+
+//Session
+app.set('trust proxy', 1) // trust first proxy
+app.use(session({
+  secret: 'hicard-flash-session',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}))
+
 
 //Middlewares
 const appAuthentication = require('../middlewares/authenticateApp.mdlw')
@@ -201,6 +212,7 @@ app.get('/user_network_details', function (req, res) {
     })
 })
 
+app.use(require('../middlewares/flash.mdlw'))
 app.post('/update_users', function (req, res) {
     let cookies = m_cookies.parseCookies(req)
     let body = req.body
@@ -236,153 +248,253 @@ app.post('/update_users', function (req, res) {
 });
 
 app.post('/create_users', function (req, res) {
+    console.log("=======");
     let security = new securityModel(req)
-    console.log(req.body);
     let body = req.body
-    let requestData = {
-        "applicationID": config.authenticationParams.client_Id,
-          "emailAddress": body.usersEmail,
-          "userName": body.usersEmail,
-          "firstName": body.usersFirstName,
-          "lastName": body.usersLastName,
-        "attributes": [
-          {
-            "attributeId": "e367e62a-55b6-4ede-b340-72b2e26765f1",
-            "value": body.usersRoles
-          }
-        ]
-    }
-    security.postRequest('postUrl','security', 'newApplicationUser', requestData)
-    .then((result) => {
-        console.log("newApplicationUser");
-        console.log(result.data);
-        console.log("==END-newApplicationUser====");
-        if (result.data.errors == null) {
-            res.render('errors/404', {
-                page: "errors/404",
-            })
-        } else {
-            if (result.data.payload == '00000000-0000-0000-0000-000000000000') {
+    console.log(body);
+    
+    if (body.usersGuid != undefined) {
+        console.log(body.usersGuid);
+        let hicard = new HicardRequest(req)
+        let paramaters = [body.usersGuid]
+        hicard.verifyUserExist('verifyUserExist', paramaters)
+        .then((resp) => {
+            console.log("=====createDatas=======");
+            console.log(resp.data);
+            console.log("=====END-createDatas=======");
+            if (resp.data.errors.length > 0) {
                 res.render('errors/errors', {
                     page: "errors/errors",
-                    errors : "This email address already exists. it is impossible to create it again. Please enter another email address then try again...",
+                    errors : "Contact your Administation",
                     previousUrl : body.currentUrl
                 })
             } else {
-                let hicard = new HicardRequest(req)
-                let createDatas = {
-                    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-                    "emailAddress": body.usersEmail,
-                    "firstName": body.usersFirstName,
-                    "lastName": body.usersLastName,
-                    "userId": result.data.payload,
-                    "networkRecordGuid": body.usersNetworkGuid,
-                    "role": body.usersRoles,
-                    "name": body.usersFirstName + " "+ body.usersLastName
-                }
-                console.log("=====createDatas=======");
-                console.log(createDatas);
-                console.log("=====END-createDatas=======");
-                hicard.putRequest('medicalnetworkusers', createDatas)
-                .then((datas) => {
-                    console.log(datas.data);
-                    if (datas.data.errors.length > 0) {
-                        res.render('errors/errors', {
-                            page: "errors/errors",
-                            errors : "We encounter an error while adding this user to the selected network, please try again later...",
-                            previousUrl : body.currentUrl
-                        })
-                    } else {
-                        console.log("medicalnetworkusers");
-                        console.log(datas.data.payload);
-                        let params = {
-                            id : datas.data.payload,
-                            networkID : body.usersNetworkGuid,
-                            facilityID : ""
-                        }
-                        hicard.postRequestWithParams('medicalnetworkusersAssociatesToNetwork',params, {"role": body.usersRoles})
-                        .then((associate) => {
-                            console.log('associate');
-                            console.log(associate.data);
-                            console.log(body.usersFacilityGuid);
-                                if (associate.data.errors.length > 0) {
-                                    res.render('errors/errors', {
-                                        page: "errors/errors",
-                                        errors : "assciate user error. Please try again later...",
-                                        previousUrl : body.currentUrl
+                if (resp.data.payload != null) {
+                    let idUser = resp.data.payload.id;
+                    let params = {
+                        id : idUser,
+                        networkID : body.usersNetworkGuid,
+                        facilityID : ""
+                    }
+                    hicard.postRequestWithParams('medicalnetworkusersAssociatesToNetwork',params, {"role": body.usersRoles})
+                    .then((associate) => {
+                        console.log('associate');
+                        console.log(associate.data);
+                        console.log("==========body.usersFacilityGuid=====");
+                        console.log(body.usersFacilityGuid);
+                        console.log("==========END-body.usersFacilityGuid=====");
+                            if (associate.data.errors.length > 0) {
+                                res.render('errors/errors', {
+                                    page: "errors/errors",
+                                    errors : "assciate user error. Please try again later...",
+                                    previousUrl : body.currentUrl
+                                })
+                            } else {
+                                console.log('associate success');
+                                if (body.usersFacilityGuid != 'undefined' && body.usersFacilityGuid != undefined) {
+                                    let dat = {
+                                        id : idUser,
+                                        facilityID : (body.usersFacilityGuid == undefined ? "" : body.usersFacilityGuid)
+                                    }
+                                    hicard.postRequestWithParams('medicalnetworkusersAssociatesToNetwork',dat, {"role": body.usersRoles})
+                                    .then((associateF) => {
+                                        console.log('associateF');
+                                        console.log(associateF.data);
+                                            if (associateF.data.errors.length > 0) {
+                                                res.render('errors/errors', {
+                                                    page: "errors/errors",
+                                                    errors : "Assiociated failed. Please contact your system administrator.",
+                                                    previousUrl : body.currentUrl
+                                                })
+                                            } else {
+                                                console.log('associate success');
+                                                console.log(associateF.data.payload);
+                                                req.flash('success', 'Successful created user')
+                                                res.redirect(body.currentUrl)
+                                            }
+                                        
+                                    }).catch((err2) => {
+                                        console.log('err.data22222');
+                                        console.log(err2.data);
+                                        res.render('errors/errors', {
+                                            page: "errors/errors",
+                                            errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
+                                            previousUrl : body.currentUrl
+                                        })
                                     })
                                 } else {
                                     console.log('associate success');
-                                    if (body.usersFacilityGuid != 'undefined' && body.usersFacilityGuid != undefined) {
-                                        let dat = {
-                                            id : datas.data.payload,
-                                            facilityID : (body.usersFacilityGuid == undefined ? "" : body.usersFacilityGuid)
-                                        }
-                                        hicard.postRequestWithParams('medicalnetworkusersAssociatesToNetwork',dat, {"role": body.usersRoles})
-                                        .then((associateF) => {
-                                            console.log('associateF');
-                                            console.log(associateF.data);
-                                                if (associateF.data.errors.length > 0) {
-                                                    res.render('errors/errors', {
-                                                        page: "errors/errors",
-                                                        errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
-                                                        previousUrl : body.currentUrl
-                                                    })
-                                                } else {
-                                                    console.log('associate success');
-                                                    console.log(associateF.data.payload);
-                                                    res.locals.success = "Succesfull"
-                                                    res.redirect(body.currentUrl)
-                                                }
-                                            
-                                        }).catch((err2) => {
-                                            console.log('err.data22222');
-                                            console.log(err.data.errors);
-                                            res.render('errors/errors', {
-                                                page: "errors/errors",
-                                                errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
-                                                previousUrl : body.currentUrl
-                                            })
+                                    console.log(associate.data.payload);
+                                    res.locals.success = "Succesfull"
+                                    res.redirect(body.currentUrl)
+                                }
+                            }
+                        
+                    }).catch((err) => {
+                        console.log('err.data');
+                        console.log(err);
+                        res.render('errors/errors', {
+                            page: "errors/errors",
+                            errors : "Please enter another email address then try again...",
+                            previousUrl : body.currentUrl
+                        })
+                    })
+                }
+            }
+        }).catch((er) => {
+            console.log("===========er+=====================");
+            console.log(er);
+            console.log("===========END-er+=====================");
+        })
+        
+    } else {
+        let requestData = {
+            "applicationID": config.authenticationParams.client_Id,
+              "emailAddress": body.usersEmail,
+              "userName": body.usersEmail,
+              "firstName": body.usersFirstName,
+              "lastName": body.usersLastName,
+            "attributes": [
+              {
+                "attributeId": "e367e62a-55b6-4ede-b340-72b2e26765f1",
+                "value": body.usersRoles
+              }
+            ]
+        }
+        console.log("Second Post");
+        /* security.postRequest('postUrl','security', 'newApplicationUser', requestData)
+        .then((result) => {
+            console.log("newApplicationUser");
+            console.log(result.data);
+            console.log("==END-newApplicationUser====");
+            if (result.data.errors == null) {
+                res.render('errors/404', {
+                    page: "errors/404",
+                })
+            } else {
+                if (result.data.payload == '00000000-0000-0000-0000-000000000000') {
+                    res.render('errors/errors', {
+                        page: "errors/errors",
+                        errors : "This email address already exists. it is impossible to create it again. Please enter another email address then try again...",
+                        previousUrl : body.currentUrl
+                    })
+                } else {
+                    let hicard = new HicardRequest(req)
+                    let createDatas = {
+                        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                        "emailAddress": body.usersEmail,
+                        "firstName": body.usersFirstName,
+                        "lastName": body.usersLastName,
+                        "userId": result.data.payload,
+                        "networkRecordGuid": body.usersNetworkGuid,
+                        "role": body.usersRoles,
+                        "name": body.usersFirstName + " "+ body.usersLastName
+                    }
+                    console.log("=====createDatas=======");
+                    console.log(createDatas);
+                    console.log("=====END-createDatas=======");
+                    hicard.putRequest('medicalnetworkusers', createDatas)
+                    .then((datas) => {
+                        console.log(datas.data);
+                        if (datas.data.errors.length > 0) {
+                            res.render('errors/errors', {
+                                page: "errors/errors",
+                                errors : "We encounter an error while adding this user to the selected network, please try again later...",
+                                previousUrl : body.currentUrl
+                            })
+                        } else {
+                            console.log("medicalnetworkusers");
+                            console.log(datas.data.payload);
+                            let params = {
+                                id : datas.data.payload,
+                                networkID : body.usersNetworkGuid,
+                                facilityID : ""
+                            }
+                            hicard.postRequestWithParams('medicalnetworkusersAssociatesToNetwork',params, {"role": body.usersRoles})
+                            .then((associate) => {
+                                console.log('associate');
+                                console.log(associate.data);
+                                console.log(body.usersFacilityGuid);
+                                    if (associate.data.errors.length > 0) {
+                                        res.render('errors/errors', {
+                                            page: "errors/errors",
+                                            errors : "assciate user error. Please try again later...",
+                                            previousUrl : body.currentUrl
                                         })
                                     } else {
                                         console.log('associate success');
-                                        console.log(associate.data.payload);
-                                        res.locals.success = "Succesfull"
-                                        res.redirect(body.currentUrl)
+                                        if (body.usersFacilityGuid != 'undefined' && body.usersFacilityGuid != undefined) {
+                                            let dat = {
+                                                id : datas.data.payload,
+                                                facilityID : (body.usersFacilityGuid == undefined ? "" : body.usersFacilityGuid)
+                                            }
+                                            hicard.postRequestWithParams('medicalnetworkusersAssociatesToNetwork',dat, {"role": body.usersRoles})
+                                            .then((associateF) => {
+                                                console.log('associateF');
+                                                console.log(associateF.data);
+                                                    if (associateF.data.errors.length > 0) {
+                                                        res.render('errors/errors', {
+                                                            page: "errors/errors",
+                                                            errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
+                                                            previousUrl : body.currentUrl
+                                                        })
+                                                    } else {
+                                                        console.log('associate success');
+                                                        console.log(associateF.data.payload);
+                                                        res.locals.success = "Succesfull"
+                                                        res.redirect(body.currentUrl)
+                                                    }
+                                                
+                                            }).catch((err2) => {
+                                                console.log('err.data22222');
+                                                console.log(err.data.errors);
+                                                res.render('errors/errors', {
+                                                    page: "errors/errors",
+                                                    errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
+                                                    previousUrl : body.currentUrl
+                                                })
+                                            })
+                                        } else {
+                                            console.log('associate success');
+                                            console.log(associate.data.payload);
+                                            res.locals.success = "Succesfull"
+                                            res.redirect(body.currentUrl)
+                                        }
                                     }
-                                }
-                            
-                        }).catch((err) => {
-                            console.log('err.data');
-                            console.log(err.data.errors);
-                            res.render('errors/errors', {
-                                page: "errors/errors",
-                                errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
-                                previousUrl : body.currentUrl
+                                
+                            }).catch((err) => {
+                                console.log('err.data');
+                                console.log(err.data.errors);
+                                res.render('errors/errors', {
+                                    page: "errors/errors",
+                                    errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
+                                    previousUrl : body.currentUrl
+                                })
                             })
+                        }
+                        
+                    }).catch((err) => {
+                        console.log(err.data);
+                        res.render('errors/errors', {
+                            page: "errors/errors",
+                            errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
+                            previousUrl : body.currentUrl
                         })
-                    }
-                    
-                }).catch((err) => {
-                    console.log(err.data);
-                    res.render('errors/errors', {
-                        page: "errors/errors",
-                        errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
-                        previousUrl : body.currentUrl
                     })
-                })
-            
+                
+                }
+                
             }
             
-        }
-        
-    }).catch((err) => {
-        console.log(err);
-        res.render('errors/404', {
-            page: "errors/404",
-            errors : err
-        })
-    })
+        }).catch((err) => {
+            console.log(err);
+            res.render('errors/404', {
+                page: "errors/404",
+                errors : err
+            })
+        }) */
+    }
+    
 });
 
 

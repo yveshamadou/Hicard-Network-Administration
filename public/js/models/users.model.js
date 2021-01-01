@@ -174,7 +174,9 @@ export function usersNetwork(token, url, url2) {
                         "role": $('#usersRoles').val(),
                         "name": $('#usersFirstName').val() + $('#usersLastName').val()
                     }
-                    /* let url = 'https://auth_eval.asmlogic.com/api/security/checkemail/'
+                    let url = 'https://auth_eval.asmlogic.com/api/security/getUserId/'
+                    let networkGuid = $('#usersNetworkGuid').val();
+                    let facilityGuid = $('#usersFacilityGuid').val();
                     $.ajax({
                         url: url+$('#usersEmail').val(),
                         type: "GET",
@@ -182,18 +184,28 @@ export function usersNetwork(token, url, url2) {
                      })
                      .done(function(data) {
                        console.log(data);
-                      })
-                      .fail(function() {
-                        alert( "error" );
-                      })
-                      .always(function() {
-                      }); */
-                    let networkGuid = $('#usersNetworkGuid').val();
-                    let facilityGuid = $('#usersFacilityGuid').val();
+                       if (data.payload != "00000000-0000-0000-0000-000000000000") {
+                        $('#form-create-users').attr({'method':'POST', 'action':'/create_users'})
+                        .append('<input type="hidden" id="currentUrl" name="currentUrl" value="'+window.location.href+'" class="form-control" >')
+                        .append('<input type="hidden" id="usersGuid" name="usersGuid" value="'+data.payload+'" class="form-control" >')
+                        .submit()
+                       } else {
+                        $('#form-create-users').attr({'method':'POST', 'action':'/create_users'})
+                        .append('<input type="hidden" id="currentUrl" name="currentUrl" value="'+window.location.href+'" class="form-control" >')
+                        .submit()
+                       }
+                    })
+                  .fail(function() {
+                    alert( "error" );
+                  })
+                  .always(function() {
+                    
+                  });
+                    
                     //helper.toastr('success','top-full-width',1000, "Create user "+datas.name+" with succesfull.")
-                    $('#form-create-users').attr({'method':'POST', 'action':'/create_users'})
+                    /* $('#form-create-users').attr({'method':'POST', 'action':'/create_users'})
                     .append('<input type="hidden" id="currentUrl" name="currentUrl" value="'+window.location.href+'" class="form-control" >')
-                    .submit()
+                    .submit() */
                     
                }
             })

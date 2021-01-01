@@ -133,6 +133,37 @@ class HicardRequest{
                 })
         })
     }
+    
+    verifyUserExist(method, params = false) {
+        return new Promise((resolve, reject) => {
+            if (api.getAPIs[method] == undefined) {
+                reject(new Error("404: This URL doesn't exist"))
+            }
+            let url = ""
+            if (params && params.length > 0) {
+                let paramsList = params.map(value => ('/' + value))
+                url = api.baseUrl + '/' + api.getAPIs[method] + paramsList + '/details'
+            } else {
+                url = api.baseUrl + '/' + api.getAPIs[method] + '/details'
+            }
+
+            let request = {
+                method: 'get',
+                url: url,
+            }
+            axios(request)
+                .then(function (response) {
+                    if (response.data.errors.length > 0) {
+                        reject(response)
+                    } else {
+                        resolve(response)
+                    }
+                })
+                .catch(function (error) {
+                    reject(error.response)
+                })
+        })
+    }
 }
 
 module.exports = HicardRequest

@@ -46,6 +46,7 @@ var hicardConfig = {
     },
     
     getAPIs: {
+        verifyUserExist: "medicalnetworkusers",
         medicalnetworks: "medicalnetworks",
     },
     postAPIs: {

@@ -114,12 +114,12 @@
      <!-- Latest compiled and minified JavaScript -->
      <script type="text/javascript" src="./js/jquery-ui.js"></script>
      <script type="text/javascript" src="./js/app.js"></script>
-    <script src="https://auth_eval.asmlogic.com/js/asm_identity.min.js?<%= authenticationParams.lastVersionNumber %>"></script>
+    <script src="<%= authenticationParams.baseUrl2 %>/js/asm_identity.min.js?<%= authenticationParams.lastVersionNumber %>"></script>
     <script type="text/javascript">
         $(function () {
             loadProfile();
             $asm_identity.initialize({
-                authority: "https://auth_eval.asmlogic.com",
+                authority: "<%= authenticationParams.baseUrl2 %>",
                 clientId: "<%= authenticationParams.client_Id %>",
                 returnUrl: "<%= authenticationParams.redirect_uri %>",
                 scope: "<%= authenticationParams.scope %>",
