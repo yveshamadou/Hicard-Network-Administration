@@ -37,10 +37,10 @@ let hasToBe = (role) => {
         }else{
             token = roles.findIndex((element) => element == role)
         }
-        if (token != -1) {
+        if (token != -1 && token != undefined) {
             next()
         }else{
-            res.redirect('/logout')
+            res.redirect('/')
         }
     })
 }

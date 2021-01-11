@@ -2,7 +2,6 @@ import { Client } from './hiCardAPI.js';
 import {utils} from '../helpers/utils.js'
 import {setToken} from './http.js'
 import {userNetwork} from './userNetwork.model.js'
-import {usersNetwork} from './users.model.js'
 import { providerNetwork } from './provider.model.js';
 
 new setToken ($.cookie("ACCESS_TOKEN"))
@@ -12,6 +11,7 @@ export function facilityNetwork(token, url) {
     this.client = new Client(url)
     this.token = token;
     this.activatortoken = helper.parseJwt(this.token).activator_security_token;
+    let th = this;
     
     this.getState = function (id){
         return new Promise((resolve, reject) => {
@@ -206,18 +206,17 @@ export function facilityNetwork(token, url) {
     }
     
     this.showFacilityByUserID = function(){
+        let id_user = helper.parseJwt($.cookie("ACCESS_TOKEN")).nameid;
         
-        let user = new usersNetwork(token, url)
-    
-        this.getNetworkByUser().then((result) => {
+        this.getAllFacilityApi(id_user).then((result) => {
             if (result.errors.length > 0) {
-                $('#network-content').html("<p class='text-center alert-warning'> Not Found</p>")
+                $('#facility-content').html("<p class='text-center alert-warning'> Not Found</p>")
             } else {
-                $('#network-content').empty()
+                $('#facility-content').empty()
                 if (result.payload.length > 0) {
-                    
-                    result.payload.forEach((network,i) => {
-                        $('#network-content').append(
+                    //console.log(result.payload);
+                    result.payload.forEach((facility,i) => {
+                        $('#facility-content').append(
                             $('<div/>')
                             .addClass('media-main bg-white col-lg-3 col-md-3 col-sm-5  col-12 p-3 mx-4 mb-3 shadow-sm')
                             .attr({'style':'border-radius: 5px'})
@@ -225,20 +224,20 @@ export function facilityNetwork(token, url) {
                                 $('<div/>')
                                 .addClass('media py-3')
                                 .append(
-                                    '<img class="rounded mx-auto d-block img circle" src="/images/hospital2.png" alt="images"height="100" width="100" style="object-fit: cover;border-radius: 50%!important"><div class="media-body ml-3 mt-3"><div class="mb-2 fs-small2 fw-medium name">'+network.name+'</div><p class="fs-small fw-medium text-color-gray">'+network.description+'<p></div>'
+                                    '<img class="rounded mx-auto d-block img circle" src="/images/hospital2.png" alt="images"height="100" width="100" style="object-fit: cover;border-radius: 50%!important"><div class="media-body ml-3 mt-3"><div class="mb-2 fs-small2 fw-medium name">'+facility.name+'</div><p class="fs-small fw-medium text-color-gray"><p></div>'
                                 )
                             )
                             .append(
                                 $('<div/>')
                                 .append(
-                                    '<div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Mail address :</div><div class="fs-small w-100 text-color-gray">'+network.emailAddress+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Address Line 1 :</div><div class="fs-small w-100 text-color-gray">'+network.addressLine1+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">City :</div><div class="fs-small w-100 text-color-gray">'+network.city+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Phone Number :</div><div class="fs-small w-100 text-color-gray">'+network.mainPhoneNumber+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Fax Number :</div><div class="fs-small w-100 text-color-gray">'+network.faxNumber+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Postal Code :</div><div class="fs-small w-100 text-color-gray">'+network.postalCode+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">State :</div><div class="fs-small w-100 text-color-gray">'+network.state+'</div></div>'
+                                    '<div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Mail address :</div><div class="fs-small w-100 text-color-gray">'+facility.emailAddress+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Address Line 1 :</div><div class="fs-small w-100 text-color-gray">'+facility.addressLine1+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">City :</div><div class="fs-small w-100 text-color-gray">'+facility.city+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Phone Number :</div><div class="fs-small w-100 text-color-gray">'+facility.phoneNumber+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Fax Number :</div><div class="fs-small w-100 text-color-gray">'+facility.faxNumber+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">Postal Code :</div><div class="fs-small w-100 text-color-gray">'+facility.zipCode+'</div></div><div class="d-flex p-1"><div class="fs-small w-100 fw-normal">State :</div><div class="fs-small w-100 text-color-gray">'+facility.state+'</div></div>'
                                 )
                             )
                             .append(
                                 $('<div/>')
                                 .addClass('py-3')
                                 .append(
-                                    '<a href="/user_network_details?N='+network.id+'" class="btn btn-outline-primary w-100" role="button">More view</a>'
+                                    '<a href="/user_facility_details?F='+facility.id+'" class="btn btn-outline-primary w-100" role="button">More view</a>'
                                 )
                             )
                         )
@@ -248,10 +247,9 @@ export function facilityNetwork(token, url) {
                     $('div.loader-full').remove()
                     $('#main').show()
                     helper.filterCard()
-                    this.showModalCreateNetwork()
                 } else {
                     $('div.loader-full').hide()
-                    $('#main').show().find('div#network-content').empty().html("<p class='text-center container text-info fs-normal fw-normal'> <i class='fas fa-info-circle fa-lg mr-2'></i> Not Found</p>")
+                    $('#main').show().find('div#facility-content').empty().html("<p class='text-center container text-info fs-normal fw-normal'> <i class='fas fa-info-circle fa-lg mr-2'></i> Not Found</p>")
                 }
             }
         }).catch((err) => {
@@ -299,8 +297,8 @@ export function facilityNetwork(token, url) {
             body += '</div>'
             
             body += '<div class="col-lg-6">'
-            body += '<label for="facilityEmail" class="fs-small2 fw-medium w-100"><t class="text-danger">*</t>Email Address :'
-            body += '<input type="text" id="facilityEmail" class="form-control required" placeholder="Email Address">'
+            body += '<label for="facilityEmail" class="fs-small2 fw-medium w-100">Email Address :'
+            body += '<input type="text" id="facilityEmail" class="form-control" placeholder="Email Address">'
             body += '<small class="form-text"></small></label>'
             body += '</div>'
             
@@ -352,7 +350,7 @@ export function facilityNetwork(token, url) {
             
             body += '<div class="col-lg-4">'
             body += '<label for="facilityCountry" class="fs-small2 w-100 fw-medium">Country :'
-            body += '<input type="text" id="facilityCountry" class="form-control required" placeholder="Country">'
+            body += '<input type="text" id="facilityCountry" class="form-control" placeholder="Country">'
             body += '<small class="form-text"></small></label>'
             body += '</div>'
             
@@ -574,6 +572,41 @@ export function facilityNetwork(token, url) {
                 $('#'+id).attr({'style':'border-color :red !important'}).parent().append('<p class="text-danger">We are unable to authenticate your network identifier. Please go back to the network list then try again</p>')
             })
             
+        }else if (helper.getParameterByName('F')){
+        
+            new Promise((resolve, reject) => {
+                this.client.medicalfacilities3(helper.getParameterByName('F'))
+                .then((res) => {
+                    console.log("polpioi");
+                    
+                    if (res.errors.length > 0) {
+                        $('#tbody-providers-list')
+                        .empty()
+                        .append('<tr><td colspan="7"><p class="text-center">No provider found !</p></td></tr>')
+                        console.log(res.errors);
+                    } else {
+                        let networkGuid = res.payload.medicalNetworkID
+                        network.getNetworkApi(networkGuid)
+                        .then((result) => {
+                            if (result.errors.length > 0) {
+                                $('#'+id).attr({'style':'border-color :red !important'}).parent().append('<small class="text-center text-danger">We are unable to authenticate your network identifier. Please go back to the network list then try again</small>')
+                            } else {
+                                $('#'+id).empty()
+                                $('#'+id).append('<option value="'+result.payload.id+'">'+result.payload.name+'</option>')
+                                $('#'+id).val(result.payload.id).change() 
+                            }
+                            $('#'+id).parent().find('.select-loader-network').remove()
+                        }).catch((err) => {
+                            console.log(err);
+                            $('#'+id).parent().find('.select-loader-network').remove()
+                            $('#'+id).attr({'style':'border-color :red !important'}).parent().append('<p class="text-danger">We are unable to authenticate your network identifier. Please go back to the network list then try again</p>')
+                        })
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                })
+            
+            });
         }else{
             network.getAllNetworkApi()
             .then((result) => {
@@ -656,7 +689,7 @@ export function facilityNetwork(token, url) {
     this.setProvidersByFacilityID = function(id){
         $('#tbody-providers-list').empty().prepend('<tr class="loader-providers-tbody"><td colspan="8" class="text-center"><skeleton-box lines="1"></skeleton-box></i></td></tr>')
         if (helper.getParameterByName('N')) {
-        let networkGuid = helper.getParameterByName('N')
+            let networkGuid = helper.getParameterByName('N')
             return new Promise((resolve, reject) => {
                 this.client.providers2(networkGuid, id)
                 .then((result) => {
@@ -699,10 +732,62 @@ export function facilityNetwork(token, url) {
             });
            
         } else {
-            console.log("polpioi");
             new Promise((resolve, reject) => {
-        
-                this.client.users()
+                this.client.medicalfacilities3(helper.getParameterByName('F'))
+                .then((res) => {
+                    console.log("polpioi");
+                    
+                    if (res.errors.length > 0) {
+                        $('#tbody-providers-list')
+                        .empty()
+                        .append('<tr><td colspan="7"><p class="text-center">No provider found !</p></td></tr>')
+                        console.log(res.errors);
+                    } else {
+                        let networkGuid = res.payload.medicalNetworkID
+                        return new Promise((resolve, reject) => {
+                            this.client.providers2(networkGuid, id)
+                            .then((result) => {
+                                if (result.errors.length > 0) {
+                                    $('#tbody-providers-list')
+                                    .empty()
+                                    .append('<tr><td colspan="7"><p class="text-center">No provider found !</p></td></tr>')
+                                    reject(result.errors)
+                                } else {
+                                    if (result.payload.length > 0) {
+                                        $('#tbody-providers-list')
+                                        .empty()
+                                        result.payload.forEach(data => {
+                                            $('#tbody-providers-list')
+                                            .append(
+                                                $('<tr/>')
+                                                .attr({'id':data.id})
+                                                .append(
+                                                    $('<th/>')
+                                                    .addClass()
+                                                    .attr({})
+                                                    .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
+                                                )
+                                                .append('<td class="name-tab">'+data.firstName+' '+data.lastName+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'</div>'+data.state+'</div></div></td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="eye-tab" colspan="2"><a href="javascript:void(0)" class="view-provider"><i class="fas fa-eye"></i> View</a> <a href="javascript:void(0)" class=" ml-4 text-success"><i class="fas fa-edit"></i> Edit </a></td>')
+                                            )
+                                        });
+                                        let provider = new providerNetwork(token, url)
+                                        provider.setProvidersModal('.view-provider')
+                                    } else {
+                                        $('#tbody-providers-list')
+                                        .empty()
+                                        .append('<tr><td colspan="7"><p class="text-center">No provider found !</p></td></tr>')
+                                    }
+                                    resolve(result)
+                                }
+                            }).catch((err) => {
+                                console.log(err);
+                            })
+                        
+                        });
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                })
             
             });
         }
@@ -736,9 +821,11 @@ export function facilityNetwork(token, url) {
                                         $('<th/>')
                                         .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
                                     )
-                                    .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.role+'</td><td class="eye-tab text-right" colspan="2"><a href="javascript:void(0)" class="view-users"><i class="fas fa-eye"></i> View</a> <a href="javascript:void(0)" class=" ml-4 text-success"><i class="fas fa-edit"></i> Edit </a></td>')
+                                    .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.role+'</td><td class="eye-tab text-right" colspan="2"><a href="javascript:void(0)" class="view-user"><i class="fas fa-eye"></i> View</a> </td>')
                                 )
                             });
+                            //<a href="javascript:void(0)" class=" ml-4 text-success"><i class="fas fa-edit"></i> Edit </a>
+                            this.showModalDetailsUserInfo('view-user');
                         }else{
                             $('#tbody-users-list').empty()
                             .append('<tr><td colspan="6"><p class="text-center">Not users found !</p></td></tr>')
@@ -756,8 +843,59 @@ export function facilityNetwork(token, url) {
            
         } else {
             new Promise((resolve, reject) => {
-        
-                this.client.users()
+                this.client.medicalfacilities3(helper.getParameterByName('F'))
+                .then((res) => {
+                    console.log("polpioi");
+                    
+                    if (res.errors.length > 0) {
+                        $('#tbody-users-list')
+                        .empty()
+                        .append('<tr><td colspan="7"><p class="text-center">No provider found !</p></td></tr>')
+                        console.log(res.errors);
+                    } else {
+                        let networkGuid = res.payload.medicalNetworkID
+                        return new Promise((resolve, reject) => {
+                            this.client.users2(networkGuid, id)
+                            .then((result) => {
+                                if (result.errors.length > 0) {
+                                    $('#tbody-users-list')
+                                    .empty()
+                                    .append('<tr><td colspan="6"><p class="text-center">Not users found !</p></td></tr>')
+                                    reject(result.errors)
+                                } else {
+                                    $('#tbody-users-list')
+                                    .empty()
+                                    if (result.payload.length > 0) {
+                                        result.payload.forEach(data => {
+                                            $('#tbody-users-list')
+                                            .append(
+                                                $('<tr/>')
+                                                .attr({'id':data.id})
+                                                .append(
+                                                    $('<th/>')
+                                                    .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
+                                                )
+                                                .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.role+'</td><td class="eye-tab text-right" colspan="2"><a href="javascript:void(0)" class="view-users"><i class="fas fa-eye"></i> View</a> <a href="javascript:void(0)" class=" ml-4 text-success"><i class="fas fa-edit"></i> Edit </a></td>')
+                                            )
+                                        });
+                                    }else{
+                                        $('#tbody-users-list').empty()
+                                        .append('<tr><td colspan="6"><p class="text-center">Not users found !</p></td></tr>')
+                                    }
+                                    resolve(result.payload)
+                                }
+                            }).catch((err) => {
+                                console.log(err);
+                                $('#tbody-users-list')
+                                    .empty()
+                                    .append('<tr><td colspan="4"><p class="text-center">Not users found !</p></td></tr>')
+                            })
+                        
+                        });
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                })
             
             });
         }
@@ -808,8 +946,122 @@ export function facilityNetwork(token, url) {
                 
             })
         } else {
+            new Promise((resolve, reject) => {
+                this.client.medicalfacilities3(helper.getParameterByName('F'))
+                .then((res) => {
+                    if (res.errors.length > 0) {
+                        $('#tbody-network-list')
+                        .empty()
+                        .append('<tr><td colspan="7"><p class="text-center">No network found !</p></td></tr>')
+                        console.log(res.errors);
+                    } else {
+                        let id = res.payload.medicalNetworkID
+                        return new Promise((resolve, reject) => {
+                            this.client.medicalnetworks4(id)
+                            .then((result) => {
+                                if (result.errors.length > 0) {
+                                    $('#tbody-network-list')
+                                    .empty()
+                                    .append('<tr><td colspan="6"><p class="text-center">Not users found !</p></td></tr>')
+                                    reject(result.errors)
+                                } else {
+                                    $('#tbody-network-list')
+                                    .empty()
+                                    if (result.payload != null) {
+                                        let data = result.payload
+                                        $('#tbody-network-list')
+                                            .append(
+                                                $('<tr/>')
+                                                .attr({'id':data.id})
+                                                .append('<th scope="row" class="fs-small" rowspan="2" width="100"><div class="img-profile" style="border-radius: 50%; background-color: '+helper.getRandomColor()+'; width: 100px; height: 100px"><div class="w-100 h-100 d-flex align-items-center text-center"><div class="text-white text-center w-100 mh-25" style="font-size: 2.5rem;">'+data.name.substring(0, 2).toUpperCase()+'</div></div></div></th>')
+                                                .append('<th scope="row" class="fs-normal fw-normal" rowspan="2" style="width:150px;padding-top: 1.5rem !important">'+data.name+'<div class="text-color-gray pt-1">'+data.city+' /'+data.state+' </div></th>')
+                                                .append('<th scope="row" class="fs-small" style="width:150px;padding-top: 1.6rem !important">Emaill Address :</th><td class="fs-small text-color-graylight" style="padding-top: 1.6rem !important">'+data.emailAddress+'</td>')
+                                                .append('<td class="" width="280" style="vertical-align: middle!important" rowspan="2"><ul class="nav justify-content-end"><li class="nav-item p-3"> <a href="#" class="nav-link btn btn-outline-primary px-3" data-toggle="modal" data-target="#serviceModal" style="font-size: 0.75rem;"><i class="fas fa-plus"></i> More view</a></li></ul></td>')
+                                            )
+                                            .append(
+                                                $('<tr/>')
+                                                .append('<th scope="row" class="fs-small" style="padding-top: 0rem !important">Address Line :</th><td class="fs-small text-color-graylight" style="padding-top: 0rem !important">'+data.addressLine1+'</td>')
+                                            )
+                                    }else{
+                                    
+                                    }
+                                    
+                                    resolve(result.payload)
+                                }
+                            }).catch((err) => {
+                                
+                            })
+                            
+                        })
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                })
             
+            });
         }
+    }
+    
+    this.showModalDetailsUserInfo = function(name){
+        $('.'+name).click(function(){
+            let t = $(this)
+            let id = t.parent().parent().attr('id')
+            console.log(id);
+            new Promise((resolve, reject) => {
+                th.client.medicalnetworkusers2(id)
+                .then((res) => {
+                    if (res.errors.length > 0) {
+                        console.log(res.errors);
+                    } else {
+                        let data = res.payload
+                        console.log(data);
+                        let body = `
+                            <div class="px-4 pb-4">
+                                <div class="row pt-3 mx-auto">
+                                    <div class="col-lg-12 pl-0 mb-2">
+                                        <div class="px-0 border-0">
+                                            <div class="row">
+                                                <div class="col-lg-3">
+                                                    <img src="/images/avatar.png" class="d-none d-sm-block rounded-circle" alt="Image description">
+                                                    <img src="/images/avatar.png" class="d-block d-sm-none rounded-circle" alt="Image description">
+                                                </div>
+                                                <div class="col-lg-9">
+                                                    <div class="pt-4">
+                                                        <div class="card-title p-0 mb-1">
+                                                            <h2 class="font-weight-bold mb-1 ">Name : <small>${data.name}</small></h2> 
+                                                        </div>
+                                                        <div class="card-title p-0 mb-1">
+                                                            <h2 class="font-weight-bold mb-1 mr-1">Email : <small>${data.emailAddress}</small></h2> 
+                                                        </div>
+                                                        <div class="card-title p-0 mb-1">
+                                                            <h2 class="font-weight-bold mb-1 mr-1">Role : <small>${data.role}</small></h2> 
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        $('body').append(helper.createModal('view-user-modal', "Information user : "+data.name, body, "none" , 'lg'));
+                        $('#view-user-modal').modal('show');
+                        
+                        $('#view-user-modal').on('hide.bs.modal', function (e) {
+                            setTimeout(function(){
+                                $('#view-user-modal').remove()
+                            },500)
+                        })
+                        
+                    }
+                }).catch((err) => {
+                    
+                })
+            })
+        })
+        
+        
     }
     
 

@@ -348,7 +348,7 @@ export function providerNetwork(token, url) {
                 body += '</div>'
                 
                 body += '<div class="col-lg-6">'
-                body += '<label for="chooseFacilityAnswer" class="fs-small2 fw-medium w-100 font-weight-bold"><t class="text-danger">*</t>Do you want to associate it with a Facility ?'
+                body += '<label for="chooseFacilityAnswer" class="fs-small2 fw-medium w-100 font-weight-bold"><t class="text-danger">*</t>Associate to Facility ?'
                 body += '<select id="chooseFacilityAnswer" class="form-control required">'
                 body += '<option value="" selected>Choose</option>'
                 body += '<option value="Yes" >Yes</option>'
@@ -388,8 +388,8 @@ export function providerNetwork(token, url) {
             
             
             body += '<div class="col-lg-4">'
-            body += '<label for="providerEmail" class="fs-small2 fw-medium w-100"><t class="text-danger">*</t>Email Address :'
-            body += '<input type="text" id="providerEmail" class="form-control required" placeholder="Email Address">'
+            body += '<label for="providerEmail" class="fs-small2 fw-medium w-100">Email Address :'
+            body += '<input type="text" id="providerEmail" class="form-control" placeholder="Email Address">'
             body += '<small class="form-text"></small></label>'
             body += '</div>'
             
@@ -506,7 +506,7 @@ export function providerNetwork(token, url) {
             
             body += '<div class="d-flex"> '
             body += '<fieldset class="col-lg-12 mb-3"> '
-            body += '<legend class="px-2 py-2" >Associate To Network</legend>'
+            body += '<legend class="px-2 py-2" >Associate To Contract</legend>'
             body += '<div class="row">'
                 
             body += '<div class="col-lg-12">'
@@ -641,6 +641,46 @@ export function providerNetwork(token, url) {
                 $('#'+id).attr({'style':'border-color :red !important'}).parent().append('<p class="text-danger">We are unable to authenticate your network identifier. Please go back to the network list then try again</p>')
             })
             
+        }else if (helper.getParameterByName('F')) {
+            new Promise((resolve, reject) => {
+                this.client.medicalfacilities3(helper.getParameterByName('F'))
+                .then((res) => {
+                    console.log("polpioi");
+                    
+                    if (res.errors.length > 0) {
+                        $('#tbody-providers-list')
+                        .empty()
+                        .append('<tr><td colspan="7"><p class="text-center">No provider found !</p></td></tr>')
+                        console.log(res.errors);
+                    } else {
+                        let networkGuid = res.payload.medicalNetworkID
+                        network.getNetworkApi(networkGuid)
+                        .then((result) => {
+                            if (result.errors.length > 0) {
+                                $('#'+id).attr({'style':'border-color :red !important'}).parent().append('<small class="text-center text-danger">We are unable to authenticate your network identifier. Please go back to the network list then try again</small>')
+                            } else {
+                                $('#'+id).empty()
+                                $('#'+id).append('<option value="'+result.payload.id+'">'+result.payload.name+'</option>')
+                                $('#'+id).val(result.payload.id).change()
+                                if (helper.getParameterByName('F')) {
+                                    this.setAllFacility('providerFacilityGuid', helper.getParameterByName('F'))
+                                } /* else {
+                                    this.setAllFacility('providerFacilityGuid', result.payload.id)
+                                } */
+                                
+                            }
+                            $('#'+id).parent().find('.select-loader-network').remove()
+                        }).catch((err) => {
+                            console.log(err);
+                            $('#'+id).parent().find('.select-loader-network').remove()
+                            $('#'+id).attr({'style':'border-color :red !important'}).parent().append('<p class="text-danger">We are unable to authenticate your network identifier. Please go back to the network list then try again</p>')
+                        })
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                })
+            
+            });
         }else{
             network.getAllNetworkApi()
             .then((result) => {
@@ -763,46 +803,83 @@ export function providerNetwork(token, url) {
                     } else {
                         $('body').find('div#spinner-back').remove()
                         $('body').find('div#spinner-front').remove()
-                        console.log(result.payload);
+                        //console.log(result.payload);
                         if (result.payload != null ) {
                             let data = result.payload;
-                            let body = '<div class="card border-0">'
-                            body += '<div class="card-body">'
-                            
-                            body += '<div class="card-title mb-4"><div class="d-flex justify-content-start"><div class="image-container"> <img src="http://placehold.it/150x150" id="imgProfile" style="width: 80px; height: 80px" class="img-thumbnail" /><div class="middle"> <input type="button" class="btn btn-secondary" id="btnChangePicture" value="Change" /> <input type="file" style="display: none;" id="profilePicture" name="file" /></div></div><div class="userData ml-3 my-2"><h2 class="d-block" style="font-size: 1.5rem; font-weight: bold"><a href="javascript:void(0);">'+data.firstName+' '+data.lastName+'</a></h2><h6 class="d-block">Speciality : '+data.specialties+'</h6></div><div class="ml-auto"> <input type="button" class="btn btn-primary d-none" id="btnDiscard" value="Discard Changes" /></div></div></div>'
-                            
-                            body += '<div class="row">'
-                            body += '<div class="col-12">'
-                            
-                            body += '<ul class="nav nav-tabs mb-4" id="myTab" role="tablist">'
-                            body += '<li class="nav-item"> <a class="nav-link active" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Basic Info</a></li>'
-                            body += '</ul>'
-                            
-                            body += '<div class="tab-content ml-1" id="myTabContent">'
-                            
-                            body += '<div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">'
-                            body += '<div class="row">'
-                            body += '<div class="col-lg-6"><label style="font-weight:bold;">First Name : </label> '+data.firstName+'</div>'
-                            body += '<div class="col-lg-6"><label style="font-weight:bold;">Last Name : </label> '+data.lastName+'</div>'
-                            body += '<div class="col-lg-6"><label style="font-weight:bold;">NPI Number : </label> '+data.npi+'</div>'
-                            body += '<div class="col-lg-6"><label style="font-weight:bold;">TIN Number : </label> '+data.tin+'</div>'
-                            body += '<div class="col-lg-6"><label style="font-weight:bold;">Email Address : </label> '+data.emailAddress+'</div>'
-                            body += '<div class="col-lg-6"><label style="font-weight:bold;">Mobile Number : </label> '+data.mobileNumber+'</div>'
-                            body += '<div class="col-lg-6"><label style="font-weight:bold;">Work Number : </label> '+data.workNumber+'</div>'
-                            body += '<div class="col-lg-6"><label style="font-weight:bold;">Address Line 1 : </label> '+data.addressLine1+'</div>'
-                            body += '<div class="col-lg-6"><label style="font-weight:bold;">Address Line 2 : </label> '+data.addressLine2+'</div>'
-                            body += '<div class="col-lg-6"><label style="font-weight:bold;">City : </label> '+data.city+'</div>'
-                            body += '<div class="col-lg-6"><label style="font-weight:bold;">State : </label> '+data.state+'</div>'
-                            body += '</div>'
-                            body += '</div>'
-                            
-                            
-                            body += '</div>'
-                            
-                            body += '</div>'
-                            body += '</div>'
-                            body += '</div>'
-                            body += '</div>'
+                            let body = `
+                                <div class="px-4 pb-4">
+                                    <div class="row pt-3 mx-auto">
+                                        <div class="col-lg-6 pl-0 mb-2">
+                                            <div class="px-0 border-0">
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <img src="/images/avatar.png" class="d-none d-sm-block rounded-circle" alt="Image description">
+                                                        <img src="/images/avatar.png" class="d-block d-sm-none rounded-circle" alt="Image description">
+                                                    </div>
+                                                    <div class="col-lg-8">
+                                                        <div class="pt-4">
+                                                            <div class="card-title p-0 mb-1">
+                                                                <h2 class="font-weight-bold mb-1">${data.firstName} ${data.lastName}</h2>
+                                                            </div>
+                                                            <small>${data.city} <i class="fas fa-circle fa-sm text-sm text-success mx-2"></i> ${data.state}</small>
+                                                            <small>${data.emailAddress}</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 pr-lg-0 mb-2">
+                                            <div class="card border-0 pt-4 bg-white">
+                                                <div class="card-title p-0 mb-1">
+                                                    <span class="hi-text-blue-primary">Specialities :</span>
+                                                </div>
+                                                <small>
+                                                    ${data.specialties}
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6  pl-0 mt-2">
+                                            <div class="card border-0 pt-2">
+                                                <div class="card-title border-bottom mb-3">
+                                                    <span class="">Personal Informations</span>
+                                                </div>
+                                                <div class="d-flex justify-content-start mb-2">
+                                                    <span class="font-weight-bold hi-text-blue-primary mr-2">NPI :</span>
+                                                    <small class="font-weight-lighter pt-1">${data.npi}</small>
+                                                </div>
+                                                <div class="d-flex justify-content-start mb-2">
+                                                    <span class="font-weight-bold hi-text-blue-primary mr-2">TIN :</span>
+                                                    <small class="font-weight-lighter pt-1">${data.tin}</small>
+                                                </div>
+                                                <div class="d-flex justify-content-start mb-2">
+                                                    <span class="font-weight-bold hi-text-blue-primary mr-2">Medical Group Name :</span>
+                                                    <small class="font-weight-lighter pt-1">${data.medicalGroupName}</small>
+                                                </div>
+                                                <div class="d-flex justify-content-start mb-2">
+                                                    <span class="font-weight-bold hi-text-blue-primary mr-2">Work Number :</span>
+                                                    <small class="font-weight-lighter pt-1">${(data.workNumber != null ? data.workNumber : "")}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 pl-0 mt-2">
+                                            <div class="card border-0 pt-2">
+                                                <div class="card-title border-bottom mb-4">
+                                                    <span class="">Address</span>
+                                                </div>
+                                                
+                                                <div class="d-flex justify-content-start mb-2">
+                                                    <span class="font-weight-bold hi-text-blue-primary mr-2">Address Line 1 :</span>
+                                                    <small class="font-weight-lighter pt-1">${(data.addressLine1 != null ? data.addressLine1 : "")}</small>
+                                                </div>
+                                                <div class="d-flex justify-content-start mb-2">
+                                                    <span class="font-weight-bold hi-text-blue-primary mr-2">Address Line 2 :</span>
+                                                    <small class="font-weight-lighter pt-1">${(data.addressLine2 != null ? data.addressLine2 : "")}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
                             let footer = 'none';
                             
                             $('body').append(helper.createModal('modal-view-provider', "Provider Information : "+data.firstName+" "+data.lastName, body, footer , 'lg'));
@@ -923,6 +1000,7 @@ export function providerNetwork(token, url) {
         });
     
     }
+    
     
     
     

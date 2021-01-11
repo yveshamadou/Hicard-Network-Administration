@@ -12,6 +12,7 @@ export function userNetwork(token, url) {
     this.client = new Client(url)
     this.token = token;
     this.activatortoken = helper.parseJwt(this.token).activator_security_token;
+    let th = this;
     
     this.getState = function (id){
         return new Promise((resolve, reject) => {
@@ -714,7 +715,7 @@ export function userNetwork(token, url) {
                 let content = '<div class="col-md-2"><div class="img text-center"> <img src="./images/hospital2.png" class=" img-circle img-fluid" height="50px" alt="no-image"></div></div>'
         
                 content += '<div class="col-md-3 col-sm-6 flex-sm-column mt-2">'
-                content += '<div class="d-flex"><div class="col px-1 info-basic">Network Name :</div><div class="col px-1 info-data">'+data.name+'</div></div>'
+                content += '<div class="d-flex"><div class="col px-1 info-basic">Contract Name :</div><div class="col px-1 info-data">'+data.name+'</div></div>'
                 content += '<div class="d-flex"><div class="col px-1 info-basic">Contact Name :</div><div class="col px-1 info-data">'+data.contactName+'</div></div>'
                 content += '<div class="d-flex"><div class="col px-1 info-basic">Email :</div><div class="col px-1 info-data">'+data.emailAddress+'</div></div>'
                 content += '<div class="d-flex"><div class="col px-1 info-basic">Phone Number:</div><div class="col px-1 info-data">'+data.mainPhoneNumber+'</div></div>'
@@ -724,7 +725,7 @@ export function userNetwork(token, url) {
                 
                 content += '<div class="col-md-3 col-sm-6 flex-sm-column mt-2">'
                 content += '<div class="d-flex"><div class="col px-1 info-basic">City :</div><div class="col px-1 info-data">'+data.city+'</div></div>'
-                content += '<div class="d-flex"><div class="col px-1 info-basic">Postal Code :</div><div class="col px-1 info-data">'+data.postalCode+'</div></div>'
+                content += '<div class="d-flex"><div class="col px-1 info-basic">Zip Code :</div><div class="col px-1 info-data">'+data.postalCode+'</div></div>'
                 content += '<div class="d-flex"><div class="col px-1 info-basic">State :</div><div class="col px-1 info-data">'+data.state+'</div></div>'
                 content += '</div>'
                 
@@ -785,7 +786,7 @@ export function userNetwork(token, url) {
                                 .attr({})
                                 .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
                             )
-                            .append('<td class="name-tab">'+data.name+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'</div>'+data.state+'</div></div></td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="eye-tab text-right" colspan="2"><a href="/user_facility_details?N='+helper.getParameterByName('N')+'&F='+data.id+'" class="view-facility mr-4"><i class="fas fa-eye"></i> View</a></td>')
+                            .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'/'+data.state+'</div></div></td><td class="eye-tab text-right" colspan="2"><a href="/user_facility_details?N='+helper.getParameterByName('N')+'&F='+data.id+'" class="view-facility mr-4"><i class="fas fa-eye"></i> View</a></td>')
                         )
                     });
                 } else {
@@ -824,7 +825,7 @@ export function userNetwork(token, url) {
                                 .attr({})
                                 .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
                             )
-                            .append('<td class="name-tab name_provider">'+data.firstName+' '+data.lastName+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'</div>'+data.state+'</div></div></td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="eye-tab"><a href="javascript:void(0)" class="view-provider"><i class="fas fa-eye"></i> View</a></td><td class="act-tab"><a href="javascript:void(0)" class="diassociate-provider"><i class="fas fa-unlock-alt"></i> Diassociate</a></td>')
+                            .append('<td class="name-tab name_provider">'+data.firstName+' '+data.lastName+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'/'+data.state+'</div></div></td><td class="eye-tab"><a href="javascript:void(0)" class="view-provider"><i class="fas fa-eye"></i> View</a></td><td class="act-tab"><a href="javascript:void(0)" class="diassociate-provider"><i class="fas fa-unlock-alt"></i> Diassociate</a></td>')
                         )
                     });
                     let provider = new providerNetwork(token, url)
@@ -864,9 +865,11 @@ export function userNetwork(token, url) {
                                 $('<th/>')
                                 .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
                             )
-                            .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.role+'</td><td class="eye-tab text-right"><a href="javascript:void(0)" class="view-users"><i class="fas fa-eye"></i> View</a> <a href="javascript:void(0)" class="edit-users ml-4 text-success"><i class="fas fa-edit"></i> Edit </a></td><td class="act-tab"><i class="fas fa-trash-alt"></i> Lock</a></td>')
+                            .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.role+'</td><td class="eye-tab text-right"><a href="javascript:void(0)" class="view-user"><i class="fas fa-eye"></i> View</a> </td><td class="act-tab"></td>')
                         )
                     });
+                    //<a href="javascript:void(0)" class="edit-users ml-4 text-success"><i class="fas fa-edit"></i> Edit </a> || <a href="javascript:void(0)" class="lock-user"><i class="fas fa-trash-alt"></i> Lock</a>
+                    this.showModalDetailsUserInfo('view-user');
                 }else{
                     $('#tbody-users-list')
                     .append('<tr><td colspan="7"><p class="text-center">No user found !</p></td></tr>')
@@ -877,6 +880,130 @@ export function userNetwork(token, url) {
             $('#tbody-users-list').empty()
             .append('<tr><td colspan="7"><p class="text-center">Something Wrong!</p></td></tr>')
         })
+        
+    }
+    
+    this.showModalDetailsUserInfo = function(name){
+        $('.'+name).click(function(){
+            let t = $(this)
+            let id = t.parent().parent().attr('id')
+            console.log(id);
+            new Promise((resolve, reject) => {
+                th.client.medicalnetworkusers2(id)
+                .then((res) => {
+                    if (res.errors.length > 0) {
+                        console.log(res.errors);
+                    } else {
+                        let data = res.payload
+                        console.log(data);
+                        let body = `
+                            <div class="px-4 pb-4">
+                                <div class="row pt-3 mx-auto">
+                                    <div class="col-lg-12 pl-0 mb-2">
+                                        <div class="px-0 border-0">
+                                            <div class="row">
+                                                <div class="col-lg-3">
+                                                    <img src="/images/avatar.png" class="d-none d-sm-block rounded-circle" alt="Image description">
+                                                    <img src="/images/avatar.png" class="d-block d-sm-none rounded-circle" alt="Image description">
+                                                </div>
+                                                <div class="col-lg-9">
+                                                    <div class="pt-4">
+                                                        <div class="card-title p-0 mb-1">
+                                                            <h2 class="font-weight-bold mb-1 ">Name : <small>${data.name}</small></h2> 
+                                                        </div>
+                                                        <div class="card-title p-0 mb-1">
+                                                            <h2 class="font-weight-bold mb-1 mr-1">Email : <small>${data.emailAddress}</small></h2> 
+                                                        </div>
+                                                        <div class="card-title p-0 mb-1">
+                                                            <h2 class="font-weight-bold mb-1 mr-1">Role : <small>${data.role}</small></h2> 
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        $('body').append(helper.createModal('view-user-modal', "Information user : "+data.name, body, "none" , 'lg'));
+                        $('#view-user-modal').modal('show');
+                        
+                        $('#view-user-modal').on('hide.bs.modal', function (e) {
+                            setTimeout(function(){
+                                $('#view-user-modal').remove()
+                            },500)
+                        })
+                        
+                    }
+                }).catch((err) => {
+                    
+                })
+            })
+        })
+        
+        
+    }
+    
+    this.showModalDetailsUserInfo = function(name){
+        $('.'+name).click(function(){
+            let t = $(this)
+            let id = t.parent().parent().attr('id')
+            console.log(id);
+            new Promise((resolve, reject) => {
+                th.client.medicalnetworkusers2(id)
+                .then((res) => {
+                    if (res.errors.length > 0) {
+                        console.log(res.errors);
+                    } else {
+                        let data = res.payload
+                        console.log(data);
+                        let body = `
+                            <div class="px-4 pb-4">
+                                <div class="row pt-3 mx-auto">
+                                    <div class="col-lg-12 pl-0 mb-2">
+                                        <div class="px-0 border-0">
+                                            <div class="row">
+                                                <div class="col-lg-3">
+                                                    <img src="/images/avatar.png" class="d-none d-sm-block rounded-circle" alt="Image description">
+                                                    <img src="/images/avatar.png" class="d-block d-sm-none rounded-circle" alt="Image description">
+                                                </div>
+                                                <div class="col-lg-9">
+                                                    <div class="pt-4">
+                                                        <div class="card-title p-0 mb-1">
+                                                            <h2 class="font-weight-bold mb-1 ">Name : <small>${data.name}</small></h2> 
+                                                        </div>
+                                                        <div class="card-title p-0 mb-1">
+                                                            <h2 class="font-weight-bold mb-1 mr-1">Email : <small>${data.emailAddress}</small></h2> 
+                                                        </div>
+                                                        <div class="card-title p-0 mb-1">
+                                                            <h2 class="font-weight-bold mb-1 mr-1">Role : <small>${data.role}</small></h2> 
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        $('body').append(helper.createModal('view-user-modal', "Information user : "+data.name, body, "none" , 'lg'));
+                        $('#view-user-modal').modal('show');
+                        
+                        $('#view-user-modal').on('hide.bs.modal', function (e) {
+                            setTimeout(function(){
+                                $('#view-user-modal').remove()
+                            },500)
+                        })
+                        
+                    }
+                }).catch((err) => {
+                    
+                })
+            })
+        })
+        
         
     }
     

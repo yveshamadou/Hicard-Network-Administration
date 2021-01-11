@@ -27,6 +27,7 @@ const authenticationRoutes = require('./authentication.route')
 const mainRoutes = require('./main.route')
 const errorsRoutes = require('./errors.route')
 
+app.use(require('../middlewares/flash.mdlw'))
 app.use(authenticationRoutes)
 
 /* app.use(memberIsLogged)  *///Middleware : From here, the member must be logged in to access the app below

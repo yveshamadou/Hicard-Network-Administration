@@ -13,8 +13,8 @@ const m_cookies = new M_Cookies()
 app.get('/logout', function (req, res) {
     m_cookies.deleteCookie(res, 'securityToken')
     m_cookies.deleteCookie(res, 'ACCESS_TOKEN')
-    m_cookies.deleteCookie(res, 'facilityID')
-    m_cookies.deleteCookie(res, 'facilityId')
+    m_cookies.deleteCookie(res, 'facilityID');
+    m_cookies.deleteCookie(res, 'jwt');
     m_cookies.deleteCookie(res, 'currentUrl')
     res.redirect('/login')
 });

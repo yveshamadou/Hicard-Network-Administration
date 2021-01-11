@@ -177,30 +177,32 @@ export function usersNetwork(token, url, url2) {
                     let url = 'https://auth_eval.asmlogic.com/api/security/getUserId/'
                     let networkGuid = $('#usersNetworkGuid').val();
                     let facilityGuid = $('#usersFacilityGuid').val();
+                    console.log(networkGuid);
                     $.ajax({
                         url: url+$('#usersEmail').val(),
                         type: "GET",
                         beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer '+$.cookie("ACCESS_TOKEN"));},
-                     })
-                     .done(function(data) {
-                       console.log(data);
+                    })
+                    .done(function(data) {
                        if (data.payload != "00000000-0000-0000-0000-000000000000") {
                         $('#form-create-users').attr({'method':'POST', 'action':'/create_users'})
                         .append('<input type="hidden" id="currentUrl" name="currentUrl" value="'+window.location.href+'" class="form-control" >')
                         .append('<input type="hidden" id="usersGuid" name="usersGuid" value="'+data.payload+'" class="form-control" >')
+                        .append('<input type="hidden"  name="usersNetworkGuid" value="'+networkGuid+'" class="form-control" >')
                         .submit()
                        } else {
                         $('#form-create-users').attr({'method':'POST', 'action':'/create_users'})
                         .append('<input type="hidden" id="currentUrl" name="currentUrl" value="'+window.location.href+'" class="form-control" >')
+                        .append('<input type="hidden"  name="usersNetworkGuid" value="'+networkGuid+'" class="form-control" >')
                         .submit()
                        }
                     })
-                  .fail(function() {
-                    alert( "error" );
-                  })
-                  .always(function() {
+                    .fail(function() {
+                        alert( "error" );
+                    })
+                    .always(function() {
                     
-                  });
+                    });
                     
                     //helper.toastr('success','top-full-width',1000, "Create user "+datas.name+" with succesfull.")
                     /* $('#form-create-users').attr({'method':'POST', 'action':'/create_users'})
@@ -279,7 +281,7 @@ export function usersNetwork(token, url, url2) {
             
             body += '<div class="d-flex"> '
             body += '<fieldset class="col-lg-12 mb-3"> '
-            body += '<legend class="px-2 py-2">Generale Informations</legend>'
+            body += '<legend class="px-2 py-2">General Informations</legend>'
             body += '<div class="row">'
             
             body += '<div class="col-lg-12">'
@@ -329,7 +331,7 @@ export function usersNetwork(token, url, url2) {
             
             body += '<div class="col-lg-12">'
             body += '<label for="usersNetworkGuid" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>Contract :'
-            body += '<select id="usersNetworkGuid" name="usersNetworkGuid" class="custom-select required">'
+            body += '<select id="usersNetworkGuid"  class="custom-select required">'
             body += '</select>'
             body += '<small class="form-text"></small></label>'
             body += '</div>'
@@ -602,6 +604,82 @@ export function usersNetwork(token, url, url2) {
             $('#'+id).attr({'style':'border-color :red !important'}).parent().append('<p class="text-danger">We are unable to authenticate your network identifier. Please go back to the network list then try again</p>')
         })
         
+        
+    }
+    
+    this.showModalDetailsUserInfo = function(name){
+        new Promise((resolve, reject) => {
+            this.client.medicalnetworkusers2()
+        })
+        let body = `
+            <div class="px-4 pb-4">
+                <div class="row pt-3 mx-auto">
+                    <div class="col-lg-6 pl-0 mb-2">
+                        <div class="px-0 border-0">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <img src="/images/avatar.png" class="d-none d-sm-block rounded-circle" alt="Image description">
+                                    <img src="/images/avatar.png" class="d-block d-sm-none rounded-circle" alt="Image description">
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="pt-4">
+                                        <div class="card-title p-0 mb-1">
+                                            <h2 class="font-weight-bold mb-1">John Doe</h2>
+                                        </div>
+                                        <small>Burnville <i class="fas fa-circle fa-sm text-sm text-success mx-2"></i> MN</small>
+                                        <small>john.doe@gmail.com</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 pr-lg-0 mb-2">
+                        <div class="card border-0 pt-4 bg-white">
+                            <div class="card-title p-0 mb-1">
+                                <span class="hi-text-blue-primary">Roles :</span>
+                            </div>
+                            <small>
+                                Admin
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-lg-6  pl-0 mt-2">
+                        <div class="card border-0 pt-2">
+                            <div class="card-title border-bottom mb-3">
+                                <span class="">Personal Informations</span>
+                            </div>
+                            <div class="d-flex justify-content-start mb-2">
+                                <span class="font-weight-bold hi-text-blue-primary mr-2">NPI :</span>
+                                <small class="font-weight-lighter pt-1">HHHH</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 pl-0 mt-2">
+                        <div class="card border-0 pt-2">
+                            <div class="card-title border-bottom mb-4">
+                                <span class="">Address</span>
+                            </div>
+                            
+                            <div class="d-flex justify-content-start mb-2">
+                                <span class="font-weight-bold hi-text-blue-primary mr-2">Address Line 1 :</span>
+                                <small class="font-weight-lighter pt-1">1254 </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        //let footer = '<button id="btn-save-users-form"  class="btn btn-primary">Save</button>';
+            
+        //$('body').append(helper.createModal('dej', "Create a New User", body, "none" , 'lg'));
+        //$('#dej').modal('show');
+        
+        $('#dej').on('hide.bs.modal', function (e) {
+            setTimeout(function(){
+                $('#dej').remove()
+            },500)
+        })
         
     }
     

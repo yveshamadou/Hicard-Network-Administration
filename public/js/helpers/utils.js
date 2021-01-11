@@ -23,7 +23,7 @@ export  function utils(){
         
     }
     
-    this.createModal = function (id,title, body,footer = "", w= 'md'){
+    this.createModal = function (id,title, body,footer = "", w='md'){
     
         let modal = '<div class="modal fade bd-example-modal-lg" id="'+id+'" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">'
         modal += '<div class="modal-dialog modal-'+w+'">'

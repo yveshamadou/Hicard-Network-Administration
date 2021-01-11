@@ -2415,6 +2415,90 @@ export class Client {
         return Promise.resolve(null);
     }
     /**
+     * Gets a user record by id
+     * @return Success
+     */
+    medicalnetworkusers2(id) {
+        let url_ = this.baseUrl + "/api/medicalnetworkusers/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+        let options_ = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+        return this.http.fetch(url_, options_).then((_response) => {
+            return this.processMedicalnetworkusers2(_response);
+        });
+    }
+    processMedicalnetworkusers2(response) {
+        const status = response.status;
+        let _headers = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v, k) => _headers[k] = v);
+        }
+        ;
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200 = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = ApiMedicalNetworkUserModelControllerActionResult.fromJS(resultData200);
+                return resultData200;
+            });
+        }
+        else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve(null);
+    }
+    /**
+     * Get user infor by security module identifier
+     * @return Success
+     */
+    details(securityModuleId) {
+        let url_ = this.baseUrl + "/api/medicalnetworkusers/{securityModuleId}/details";
+        if (securityModuleId === undefined || securityModuleId === null)
+            throw new Error("The parameter 'securityModuleId' must be defined.");
+        url_ = url_.replace("{securityModuleId}", encodeURIComponent("" + securityModuleId));
+        url_ = url_.replace(/[?&]$/, "");
+        let options_ = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+        return this.http.fetch(url_, options_).then((_response) => {
+            return this.processDetails(_response);
+        });
+    }
+    processDetails(response) {
+        const status = response.status;
+        let _headers = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v, k) => _headers[k] = v);
+        }
+        ;
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200 = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = ApiMedicalNetworkUserModelControllerActionResult.fromJS(resultData200);
+                return resultData200;
+            });
+        }
+        else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve(null);
+    }
+    /**
      * Adds the user to the facility
      * @param body (optional)
      * @return Success
@@ -2676,49 +2760,6 @@ export class Client {
                 let result200 = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = BooleanControllerActionResult.fromJS(resultData200);
-                return resultData200;
-            });
-        }
-        else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve(null);
-    }
-    /**
-     * Register a newProvider
-     * @param body (optional)
-     * @return Success
-     */
-    enroll(body) {
-        let url_ = this.baseUrl + "/api/medicalproviders/enroll";
-        url_ = url_.replace(/[?&]$/, "");
-        const content_ = JSON.stringify(body);
-        let options_ = {
-            body: content_,
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "text/plain"
-            }
-        };
-        return this.http.fetch(url_, options_).then((_response) => {
-            return this.processEnroll(_response);
-        });
-    }
-    processEnroll(response) {
-        const status = response.status;
-        let _headers = {};
-        if (response.headers && response.headers.forEach) {
-            response.headers.forEach((v, k) => _headers[k] = v);
-        }
-        ;
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-                let result200 = null;
-                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = GuidControllerActionResult.fromJS(resultData200);
                 return resultData200;
             });
         }
@@ -3635,6 +3676,48 @@ export class Client {
         return Promise.resolve(null);
     }
     /**
+     * Gets base 64 encoded PDF representation of the card
+     * @return Success
+     */
+    pdf(id) {
+        let url_ = this.baseUrl + "/api/membercards/{id}/pdf";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+        let options_ = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+        return this.http.fetch(url_, options_).then((_response) => {
+            return this.processPdf(_response);
+        });
+    }
+    processPdf(response) {
+        const status = response.status;
+        let _headers = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v, k) => _headers[k] = v);
+        }
+        ;
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200 = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = StringControllerActionResult.fromJS(resultData200);
+                return resultData200;
+            });
+        }
+        else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve(null);
+    }
+    /**
      * Creates new cards for new eligibility records
      * @return Success
      */
@@ -4120,7 +4203,7 @@ export class Client {
      * Get  MedicalPlanDetail by MemberGuid
      * @return Success
      */
-    details(id, planId) {
+    details2(id, planId) {
         let url_ = this.baseUrl + "/api/members/{id}/plans/{planId}/details";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -4136,10 +4219,10 @@ export class Client {
             }
         };
         return this.http.fetch(url_, options_).then((_response) => {
-            return this.processDetails(_response);
+            return this.processDetails2(_response);
         });
     }
-    processDetails(response) {
+    processDetails2(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
@@ -4293,7 +4376,7 @@ export class Client {
      * @param claimNumber The claim number
      * @return Success
      */
-    details2(id, claimNumber) {
+    details3(id, claimNumber) {
         let url_ = this.baseUrl + "/api/members/{id}/claims/{claimNumber}/details";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -4309,10 +4392,10 @@ export class Client {
             }
         };
         return this.http.fetch(url_, options_).then((_response) => {
-            return this.processDetails2(_response);
+            return this.processDetails3(_response);
         });
     }
-    processDetails2(response) {
+    processDetails3(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
@@ -6370,6 +6453,7 @@ export class ApiMedicalFacilityModel {
             this.state = _data["state"];
             this.taxID = _data["taxID"];
             this.zipCode = _data["zipCode"];
+            this.medicalNetworkID = _data["medicalNetworkID"];
         }
     }
     static fromJS(data) {
@@ -6394,6 +6478,7 @@ export class ApiMedicalFacilityModel {
         data["state"] = this.state;
         data["taxID"] = this.taxID;
         data["zipCode"] = this.zipCode;
+        data["medicalNetworkID"] = this.medicalNetworkID;
         return data;
     }
 }
@@ -7281,6 +7366,42 @@ export class ApiMedicalProviderModelListControllerActionResult {
         return data;
     }
 }
+export class ApiMedicalNetworkUserModelControllerActionResult {
+    constructor(data) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    this[property] = data[property];
+            }
+        }
+    }
+    init(_data) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [];
+                for (let item of _data["errors"])
+                    this.errors.push(ControllerActionResultError.fromJS(item));
+            }
+            this.payload = _data["payload"] ? ApiMedicalNetworkUserModel.fromJS(_data["payload"]) : undefined;
+        }
+    }
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiMedicalNetworkUserModelControllerActionResult();
+        result.init(data);
+        return result;
+    }
+    toJSON(data) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item.toJSON());
+        }
+        data["payload"] = this.payload ? this.payload.toJSON() : undefined;
+        return data;
+    }
+}
 export class ApiUserFacilityAssociationModel {
     constructor(data) {
         if (data) {
@@ -7359,6 +7480,7 @@ export class ApiUserMedicalFacilityModel {
             this.state = _data["state"];
             this.taxID = _data["taxID"];
             this.zipCode = _data["zipCode"];
+            this.medicalNetworkID = _data["medicalNetworkID"];
         }
     }
     static fromJS(data) {
@@ -7384,6 +7506,7 @@ export class ApiUserMedicalFacilityModel {
         data["state"] = this.state;
         data["taxID"] = this.taxID;
         data["zipCode"] = this.zipCode;
+        data["medicalNetworkID"] = this.medicalNetworkID;
         return data;
     }
 }
@@ -7602,6 +7725,42 @@ export class ApiMedicalPlanDetailModelListControllerActionResult {
         return data;
     }
 }
+export class ApiMedicalProviderModelControllerActionResult {
+    constructor(data) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    this[property] = data[property];
+            }
+        }
+    }
+    init(_data) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                this.errors = [];
+                for (let item of _data["errors"])
+                    this.errors.push(ControllerActionResultError.fromJS(item));
+            }
+            this.payload = _data["payload"] ? ApiMedicalProviderModel.fromJS(_data["payload"]) : undefined;
+        }
+    }
+    static fromJS(data) {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiMedicalProviderModelControllerActionResult();
+        result.init(data);
+        return result;
+    }
+    toJSON(data) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item.toJSON());
+        }
+        data["payload"] = this.payload ? this.payload.toJSON() : undefined;
+        return data;
+    }
+}
 /** New provider registration model */
 export class NewProviderAPIModel {
     constructor(data) {
@@ -7672,42 +7831,6 @@ export class NewProviderAPIModel {
             for (let item of this.specialties)
                 data["specialties"].push(item);
         }
-        return data;
-    }
-}
-export class ApiMedicalProviderModelControllerActionResult {
-    constructor(data) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    this[property] = data[property];
-            }
-        }
-    }
-    init(_data) {
-        if (_data) {
-            if (Array.isArray(_data["errors"])) {
-                this.errors = [];
-                for (let item of _data["errors"])
-                    this.errors.push(ControllerActionResultError.fromJS(item));
-            }
-            this.payload = _data["payload"] ? ApiMedicalProviderModel.fromJS(_data["payload"]) : undefined;
-        }
-    }
-    static fromJS(data) {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiMedicalProviderModelControllerActionResult();
-        result.init(data);
-        return result;
-    }
-    toJSON(data) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.errors)) {
-            data["errors"] = [];
-            for (let item of this.errors)
-                data["errors"].push(item.toJSON());
-        }
-        data["payload"] = this.payload ? this.payload.toJSON() : undefined;
         return data;
     }
 }

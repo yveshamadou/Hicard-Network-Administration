@@ -22,10 +22,18 @@ app.use(session({
 
 //Middlewares
 const appAuthentication = require('../middlewares/authenticateApp.mdlw')
+const appCheckRoleAccess = require('../middlewares/memberRoleAccess.mdlw')
 
 app.get('/login', function (req, res) {
     res.render('login', {
         page: "login",
+        authenticationParams: config.authenticationParams
+    })
+})
+
+app.get('/test', function (req, res) {
+    res.render('test', {
+        page: "test",
         authenticationParams: config.authenticationParams
     })
 })
@@ -110,7 +118,7 @@ app.get('/authentication', function (req, res) {
     
 })
 
-
+//app.use(appCheckRoleAccess())
 app.use(appAuthentication)
 app.use(hasToBe(config.hc_na_role.facilityAdmin))
 
@@ -138,81 +146,6 @@ app.get('/user_facility_details', function (req, res) {
     })
 })
 
-/* app.get('/user_provider', function (req, res) {
-    let cookies = m_cookies.parseCookies(req)
-    role = jwt_decode(cookies.ACCESS_TOKEN).hc_na_role
-    
-    res.render('user_provider', {
-        page: "user_provider",
-        baseUrl : config.baseUrl2,
-        baseUrl2 : config.authenticationParams.baseUrl2,
-        roles : (role == "SystemAdministrator" ? "super" : "network")
-    })
-})
-
-app.get('/user_provider_details', function (req, res) {
-    let cookies = m_cookies.parseCookies(req)
-    role = jwt_decode(cookies.ACCESS_TOKEN).hc_na_role
-    
-    res.render('user_provider_details', {
-        page: "user_provider_details",
-        baseUrl : config.baseUrl2,
-        baseUrl2 : config.authenticationParams.baseUrl2,
-        roles : (role == "SystemAdministrator" ? "super" : "network")
-    })
-})
-
-
-app.get('/access', function (req, res) {
-    let cookies = m_cookies.parseCookies(req)
-    role = jwt_decode(cookies.ACCESS_TOKEN).hc_na_role
-    
-    res.render('access', {
-        page: "access",
-        baseUrl : config.baseUrl2,
-        baseUrl2 : config.authenticationParams.baseUrl2,
-        roles : (role == "SystemAdministrator" ? "super" : "network")
-    })
-}) */
-
-app.get('/settings', function (req, res) {
-    let cookies = m_cookies.parseCookies(req)
-    role = jwt_decode(cookies.ACCESS_TOKEN).hc_na_role
-    
-    res.render('settings', {
-        page: "settings",
-        baseUrl : config.baseUrl2,
-        baseUrl2 : config.authenticationParams.baseUrl2,
-        roles : (role == "SystemAdministrator" ? "super" : "network")
-    })
-})
-
-
-app.use(hasToBe([config.hc_na_role.networkAdmin, config.hc_na_role.systemAdmin]))
-app.get('/user_network', function (req, res) {
-    let cookies = m_cookies.parseCookies(req)
-    role = jwt_decode(cookies.ACCESS_TOKEN).hc_na_role
-    res.render('user_network', {
-        page: "user_network",
-        baseUrl : config.baseUrl2,
-        baseUrl2 : config.authenticationParams.baseUrl2,
-        roles : (role == "SystemAdministrator" ? "super" : "network")
-    })
-})
-
-app.get('/user_network_details', function (req, res) {
-    let cookies = m_cookies.parseCookies(req)
-    
-    role = jwt_decode(cookies.ACCESS_TOKEN).hc_na_role
-    res.render('user_network_details', {
-        page: "user_network_details",
-        baseUrl : config.baseUrl2,
-        baseUrl2 : config.authenticationParams.baseUrl2,
-        roles : (role == "SystemAdministrator" ? "super" : "network")
-    })
-})
-
-app.use(require('../middlewares/flash.mdlw'))
 app.post('/update_users', function (req, res) {
     let cookies = m_cookies.parseCookies(req)
     let body = req.body
@@ -248,10 +181,11 @@ app.post('/update_users', function (req, res) {
 });
 
 app.post('/create_users', function (req, res) {
-    console.log("=======");
+    console.log("=======body======");
     let security = new securityModel(req)
     let body = req.body
     console.log(body);
+    console.log("========body==========");
     
     if (body.usersGuid != undefined) {
         console.log(body.usersGuid);
@@ -286,7 +220,7 @@ app.post('/create_users', function (req, res) {
                             if (associate.data.errors.length > 0) {
                                 res.render('errors/errors', {
                                     page: "errors/errors",
-                                    errors : "assciate user error. Please try again later...",
+                                    errors : "associate user error. Please try again later...",
                                     previousUrl : body.currentUrl
                                 })
                             } else {
@@ -309,7 +243,7 @@ app.post('/create_users', function (req, res) {
                                             } else {
                                                 console.log('associate success');
                                                 console.log(associateF.data.payload);
-                                                req.flash('success', 'Successful created user')
+                                                req.flash("success", "Succesfully Add")
                                                 res.redirect(body.currentUrl)
                                             }
                                         
@@ -332,7 +266,7 @@ app.post('/create_users', function (req, res) {
                         
                     }).catch((err) => {
                         console.log('err.data');
-                        console.log(err);
+                        console.log(err.data);
                         res.render('errors/errors', {
                             page: "errors/errors",
                             errors : "Please enter another email address then try again...",
@@ -343,7 +277,7 @@ app.post('/create_users', function (req, res) {
             }
         }).catch((er) => {
             console.log("===========er+=====================");
-            console.log(er);
+            console.log(er.data);
             console.log("===========END-er+=====================");
         })
         
@@ -362,7 +296,7 @@ app.post('/create_users', function (req, res) {
             ]
         }
         console.log("Second Post");
-        /* security.postRequest('postUrl','security', 'newApplicationUser', requestData)
+        security.postRequest('postUrl','security', 'newApplicationUser', requestData)
         .then((result) => {
             console.log("newApplicationUser");
             console.log(result.data);
@@ -492,13 +426,85 @@ app.post('/create_users', function (req, res) {
                 page: "errors/404",
                 errors : err
             })
-        }) */
+        })
     }
     
 });
 
 
+/* app.get('/user_provider', function (req, res) {
+    let cookies = m_cookies.parseCookies(req)
+    role = jwt_decode(cookies.ACCESS_TOKEN).hc_na_role
+    
+    res.render('user_provider', {
+        page: "user_provider",
+        baseUrl : config.baseUrl2,
+        baseUrl2 : config.authenticationParams.baseUrl2,
+        roles : (role == "SystemAdministrator" ? "super" : "network")
+    })
+})
 
+app.get('/user_provider_details', function (req, res) {
+    let cookies = m_cookies.parseCookies(req)
+    role = jwt_decode(cookies.ACCESS_TOKEN).hc_na_role
+    
+    res.render('user_provider_details', {
+        page: "user_provider_details",
+        baseUrl : config.baseUrl2,
+        baseUrl2 : config.authenticationParams.baseUrl2,
+        roles : (role == "SystemAdministrator" ? "super" : "network")
+    })
+})
+
+
+app.get('/access', function (req, res) {
+    let cookies = m_cookies.parseCookies(req)
+    role = jwt_decode(cookies.ACCESS_TOKEN).hc_na_role
+    
+    res.render('access', {
+        page: "access",
+        baseUrl : config.baseUrl2,
+        baseUrl2 : config.authenticationParams.baseUrl2,
+        roles : (role == "SystemAdministrator" ? "super" : "network")
+    })
+}) */
+
+app.get('/settings', function (req, res) {
+    let cookies = m_cookies.parseCookies(req)
+    role = jwt_decode(cookies.ACCESS_TOKEN).hc_na_role
+    
+    res.render('settings', {
+        page: "settings",
+        baseUrl : config.baseUrl2,
+        baseUrl2 : config.authenticationParams.baseUrl2,
+        roles : (role == "SystemAdministrator" ? "super" : "network")
+    })
+})
+
+
+app.use(hasToBe([config.hc_na_role.networkAdmin, config.hc_na_role.systemAdmin]))
+app.get('/user_network', function (req, res) {
+    let cookies = m_cookies.parseCookies(req)
+    role = jwt_decode(cookies.ACCESS_TOKEN).hc_na_role
+    res.render('user_network', {
+        page: "user_network",
+        baseUrl : config.baseUrl2,
+        baseUrl2 : config.authenticationParams.baseUrl2,
+        roles : (role == "SystemAdministrator" ? "super" : "network")
+    })
+})
+
+app.get('/user_network_details', function (req, res) {
+    let cookies = m_cookies.parseCookies(req)
+    
+    role = jwt_decode(cookies.ACCESS_TOKEN).hc_na_role
+    res.render('user_network_details', {
+        page: "user_network_details",
+        baseUrl : config.baseUrl2,
+        baseUrl2 : config.authenticationParams.baseUrl2,
+        roles : (role == "SystemAdministrator" ? "super" : "network")
+    })
+})
 
 
 

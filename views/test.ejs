@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Page</title>
+    <link href="./images/fav/favicon.144x144.png" rel="apple-touch-icon" type="image/png" sizes="144x144"/>
+    <link href="./images/fav/favicon.114x114.png" rel="apple-touch-icon" type="image/png" sizes="114x114"/>
+    <link href="./images/fav/favicon.72x72.png" rel="apple-touch-icon" type="image/png" sizes="72x72"/>
+    <link href="./images/fav/favicon.57x57.png" rel="apple-touch-icon" type="image/png"/>
+    <link href="./images/fav/favicon.png" rel="icon" type="image/png"/>
+    <link href="./images/fav/favicon.ico" rel="shortcut icon"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!--<link rel="stylesheet" href="./css/debug.css"/>-->
+
+    <link rel="stylesheet" href="./css/hi.style.css"/>
+    <link rel="stylesheet" href="./css/fontawesome/css/all.min.css"/>
+    <link rel="stylesheet" href="./css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="./css/bootstrap-grid.min.css"/>
+    <link rel="stylesheet" href="./css/app.css"/>
+    <style>   
+        .bg-login{
+            background: url('/images/bg-login.jpg') no-repeat top;
+        	background-size: cover;
+        }
+        .login-content{
+            margin-top: 5% !important;
+        }
+        .user_card {
+            height: 500px;
+            width: 450px;
+            margin-top: auto;
+            margin-bottom: auto;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .brand_logo_container {
+            position: relative;
+            text-align: left;
+        }
+        .brand_logo {
+            height: 120px;
+        }
+        .login_btn {
+            width: 100%;
+            background: #007ad4 !important;
+            color: white !important;
+        }
+        .login_btn:focus {
+            box-shadow: none !important;
+            outline: 0px !important;
+        }
+        .login_container {
+            padding: 0 2rem;
+        }
+        .input-group-text {
+            background: #007ad4 !important;
+            color: white !important;
+            border: 0 !important;
+            border-radius: 0.25rem 0 0 0.25rem !important;
+        }
+        .input_user,
+        .input_pass:focus {
+            box-shadow: none !important;
+            outline: 0px !important;
+        }
+        .custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+            background-color: #007ad4 !important;
+        }
+    </style>
+</head>
+<body class="bg-light bg-login">
+    <section class="login-content">
+        <div class="container h-100">
+            <div class="d-flex justify-content-center h-100">
+                <div class="user_card shadow-sm bg-white">
+                    <div class="d-flex justify-content-center">
+                        <div class="brand_logo_container">
+                            <img src="./images/logo_hc_na.png" class="brand_logo img-fluid" alt="Logo">
+                        </div>
+                    </div>
+                    <div class="text-center loaders">
+                        <div class="spinner-border text-primary" style="height: 5rem; width: 5rem;" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <br>
+                        <span>Loading...</span>
+                    </div>
+                    <div id="auth_module_inputs">
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer class="footer bottom mt-5" style="background-color: transparent !important;">
+        <p class="h6 text-center">Terms / Conditions & Privacy Policy ©Copyright <span class="hi-text-red">HI</span><span class="hi-text-blue-primary">Card</span></p>
+    </footer>
+     <!--scripts js-->
+     <script src="./js/jquery-1.11.3.js"></script>
+     <script src="./js/fontawesome/js/all.min.js"></script>
+     <script src="./js/bootstrap.min.js"></script>
+     <script src="./js/xlsx.full.min.js"></script>
+     <!-- Latest compiled and minified JavaScript -->
+     <script type="text/javascript" src="./js/jquery-ui.js"></script>
+     <script type="text/javascript" src="./js/app.js"></script>
+     
+     <script>
+        /* set up XMLHttpRequest */
+        var url = "./js/test.xlsx";
+        var oReq = new XMLHttpRequest();
+        oReq.open("GET", url, true);
+        oReq.responseType = "arraybuffer";
+        
+        oReq.onload = function(e) {
+          var arraybuffer = oReq.response;
+        
+          /* convert data to binary string */
+          var data = new Uint8Array(arraybuffer);
+          var arr = new Array();
+          for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+          var bstr = arr.join("");
+        
+          /* Call XLSX */
+          var workbook = XLSX.read(bstr, {type:"binary"});
+        
+          /* DO SOMETHING WITH workbook HERE */
+          var first_sheet_name = workbook.SheetNames[0];
+          /* Get worksheet */
+          var worksheet = workbook.Sheets[first_sheet_name];
+          console.log(XLSX.utils.sheet_to_json(worksheet,{raw:true}));
+          let json = XLSX.utils.sheet_to_json(worksheet,{raw:true})
+          
+          console.log(json[0]["Entity Name"]);
+        }
+        
+        oReq.send();
+        </script>
+   
+</body>
+</html>
