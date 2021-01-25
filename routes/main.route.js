@@ -83,11 +83,14 @@ app.get('/authentication', function (req, res) {
                 if (result.data.errors == null) {
                     res.render('errors/404', {
                         page: "errors/404",
+                        errors : {code : "404", description : result.data.errors}
                     })
                 } else {
-                    m_cookies.deleteCookie(res, "securityToken")
+                    //console.log(result.data.payload.access_token);
                     m_cookies.setCookie(res, "ACCESS_TOKEN", result.data.payload.access_token, new Date(result.data.payload.expiration_date_time))
-                    if (jwt_decode(result.data.payload.access_token).hc_na_role != undefined || jwt_decode(result.data.payload.access_token).hc_na_role != null || jwt_decode(result.data.payload.access_token).hc_na_role != "") {
+                    m_cookies.deleteCookie(res, "securityToken");
+                    //console.log(jwt_decode(result.data.payload.access_token));
+                    if (jwt_decode(result.data.payload.access_token).hc_na_role != undefined && jwt_decode(result.data.payload.access_token).hc_na_role != null && jwt_decode(result.data.payload.access_token).hc_na_role != "") {
                         res.render('authenticate', {
                             page: "authenticate",
                             baseUrl : config.baseUrl2,
@@ -95,7 +98,10 @@ app.get('/authentication', function (req, res) {
                             roles : ""
                         })
                     } else {
-                        
+                        res.render('errors/404', {
+                            page: "errors/404",
+                            errors : {code : "405", description: 'You do not have access to this platform. Please contact a site administrator for more information. Thank you'}
+                        })
                     }
                     
                     
@@ -106,7 +112,7 @@ app.get('/authentication', function (req, res) {
                 console.log(err);
                 res.render('errors/404', {
                     page: "errors/404",
-                    errors : err
+                    errors : {code : "500", description : err.data.errors}
                 })
             })
         } else {
@@ -166,6 +172,7 @@ app.post('/update_users', function (req, res) {
         if (result.data.errors == null) {
             res.render('errors/404', {
                 page: "errors/404",
+                errors : {code : "404", description : result.data.errors}
             })
         } else {
             res.redirect(body.currentUrl)
@@ -175,7 +182,7 @@ app.post('/update_users', function (req, res) {
         console.log(err);
         res.render('errors/404', {
             page: "errors/404",
-            errors : err
+            errors : {code : "404", description : err.data.errors}
         })
     })
 });
@@ -304,6 +311,7 @@ app.post('/create_users', function (req, res) {
             if (result.data.errors == null) {
                 res.render('errors/404', {
                     page: "errors/404",
+                    errors : {code : "404", description : result.data.errors}
                 })
             } else {
                 if (result.data.payload == '00000000-0000-0000-0000-000000000000') {
@@ -352,7 +360,7 @@ app.post('/create_users', function (req, res) {
                                     if (associate.data.errors.length > 0) {
                                         res.render('errors/errors', {
                                             page: "errors/errors",
-                                            errors : "assciate user error. Please try again later...",
+                                            errors : "associate user error. Please try again later...",
                                             previousUrl : body.currentUrl
                                         })
                                     } else {
@@ -424,7 +432,7 @@ app.post('/create_users', function (req, res) {
             console.log(err);
             res.render('errors/404', {
                 page: "errors/404",
-                errors : err
+                errors : {code : "404", description : err.data.errors}
             })
         })
     }

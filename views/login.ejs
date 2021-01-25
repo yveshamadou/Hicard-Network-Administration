@@ -194,6 +194,8 @@
                         .addClass("col-md-11 mb-3")
                         .html(auth_password_confirm)
                     );
+                    
+                    
                 }
             }).then(() => {
                 $asm_identity.renderLogin().then(() => {
@@ -240,18 +242,56 @@
                     $(".auth_register_div").attr({'style':'position:relative;'}).addClass('text-center');
 
                     $("button#auth_submit_button")
-                        .addClass('btn btn-primary px-4 fitc offset-md-1 mt-0')
-                        .removeClass('btn-block btn-sm')
-                        .click(function(){
+                    .addClass('btn btn-primary px-4 fitc offset-md-1 mt-0')
+                    .removeClass('btn-block btn-sm')
+                    .click(function(){
                         $('div#auth_errors_inputs').empty()
+                        /* $(this)
+                        .attr('disabled', 'disabled')
+                        .prepend('<i class="fa fa-spinner fa-spin text-white next-btn-loader" style="margin-right: 5px"></i>') */
                     })
 
                     $('small.auth_register_msg').addClass('offset-md-1 text-center').before('<br>')
+                    
+                    $asm_identity.afterResetPasswordScreen = function(){
+                        $("#pwdreset_current_password_div").addClass("js-form-message form-group");
+                        $("#pwdreset_current_password_input").addClass("form-control m-b-1 form-control icon-left unlock");
+                        $("#pwdreset_current_password_div").prepend($(`<label class="input-label" for="signupSrEmail">Current Password</label>`));
+        
+                        $("#pwdreset_new_password_div").addClass("js-form-message form-group");
+                        $("#pwdreset_new_password_input").addClass("form-control m-b-1 form-control icon-left unlock");
+                        $("#pwdreset_new_password_div").prepend($(`<label class="input-label" for="signupSrEmail">New Password</label>`));
+                        $("#pwdreset_submit_button").addClass("btn btn-sm btn-block btn-primary");
+                    };
+                    $asm_identity.authenticationStarted = function(){
+                      //handle here ...loader
+                      $("button#auth_submit_button")
+                      .attr('disabled', 'disabled')
+                      .prepend('<i class="fa fa-spinner fa-spin text-white next-btn-loader" style="margin-right: 5px"></i>')
+                    }
+                    $asm_identity.authenticationEnded = function(){
+                      //handle here ...loader
+                      $("button#auth_submit_button")
+                        .removeAttr('disabled')
+                        .find('.next-btn-loader')
+                        .remove()
+                    }
+                    $asm_identity.passwordResetStarted = function(){
+                      //handle here ...loader
+                      $("#pwdreset_submit_button")
+                      .attr('disabled', 'disabled')
+                      .prepend('<i class="fa fa-spinner fa-spin text-white next-btn-loader" style="margin-right: 5px"></i>')
+                    }
+                    $asm_identity.passwordResetEnded = function(){
+                      //handle here ...loader
+                      $("#pwdreset_submit_button").removeAttr('disabled').find('.next-btn-loader').remove()
+                    }
                 });
                 
             }).catch(() => {
                 //process initialization error
             });
+            
             
         });
     </script>

@@ -631,10 +631,12 @@ export function facilityNetwork(token, url) {
        if (id != null && id != undefined && id != '') {
         $('#'+idName).empty().append('<div class="loader-network-info text-center col-lg-12"> <skeleton-box lines="5"></skeleton-box></div>')
         this.getFacility2(id).then((result) => {
+            console.log(result);
             if (result.errors.length > 0) {
                 $('#'+idName)
                 .find('.loader-network-info').remove()
                 .append('<p class="text-center text-danger"> eee </p>')
+                $('#main').empty().append('<div class="main container"><div class="text-center text-danger">the identifier of this facility is not correct. Please return to the previous page.<p><a href="/">Go Back</a></p></div></div>')
             } else {
                 let data = result.payload
                 $('.name-facility').empty().text(data.name)
@@ -680,9 +682,10 @@ export function facilityNetwork(token, url) {
             }
         }).catch((err) => {
             console.log(err);
+            $('#main').empty().append('<div class="main container"><div class="text-center text-danger">the identifier of this facility is not correct. Please return to the previous page.<p><a href="/">Go Back</a></p></div></div>')
         })
        } else {
-           $('#main').empty().append('<div class="main container"><div class="text-center text-danger">the identifier of this network is not correct. Please return to the previous page.<p><a href="/">Go Back</a></p></div></div>')
+           $('#main').empty().append('<div class="main container"><div class="text-center text-danger">the identifier of this facility is not correct. Please return to the previous page.<p><a href="/">Go Back</a></p></div></div>')
        }
     }
     
@@ -845,8 +848,6 @@ export function facilityNetwork(token, url) {
             new Promise((resolve, reject) => {
                 this.client.medicalfacilities3(helper.getParameterByName('F'))
                 .then((res) => {
-                    console.log("polpioi");
-                    
                     if (res.errors.length > 0) {
                         $('#tbody-users-list')
                         .empty()
@@ -878,6 +879,7 @@ export function facilityNetwork(token, url) {
                                                 .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.role+'</td><td class="eye-tab text-right" colspan="2"><a href="javascript:void(0)" class="view-users"><i class="fas fa-eye"></i> View</a> <a href="javascript:void(0)" class=" ml-4 text-success"><i class="fas fa-edit"></i> Edit </a></td>')
                                             )
                                         });
+                                        this.showModalDetailsUserInfo('view-users');
                                     }else{
                                         $('#tbody-users-list').empty()
                                         .append('<tr><td colspan="6"><p class="text-center">Not users found !</p></td></tr>')
@@ -976,7 +978,7 @@ export function facilityNetwork(token, url) {
                                                 .append('<th scope="row" class="fs-small" rowspan="2" width="100"><div class="img-profile" style="border-radius: 50%; background-color: '+helper.getRandomColor()+'; width: 100px; height: 100px"><div class="w-100 h-100 d-flex align-items-center text-center"><div class="text-white text-center w-100 mh-25" style="font-size: 2.5rem;">'+data.name.substring(0, 2).toUpperCase()+'</div></div></div></th>')
                                                 .append('<th scope="row" class="fs-normal fw-normal" rowspan="2" style="width:150px;padding-top: 1.5rem !important">'+data.name+'<div class="text-color-gray pt-1">'+data.city+' /'+data.state+' </div></th>')
                                                 .append('<th scope="row" class="fs-small" style="width:150px;padding-top: 1.6rem !important">Emaill Address :</th><td class="fs-small text-color-graylight" style="padding-top: 1.6rem !important">'+data.emailAddress+'</td>')
-                                                .append('<td class="" width="280" style="vertical-align: middle!important" rowspan="2"><ul class="nav justify-content-end"><li class="nav-item p-3"> <a href="#" class="nav-link btn btn-outline-primary px-3" data-toggle="modal" data-target="#serviceModal" style="font-size: 0.75rem;"><i class="fas fa-plus"></i> More view</a></li></ul></td>')
+                                                .append('<td class="" width="280" style="vertical-align: middle!important" rowspan="2"><ul class="nav justify-content-end"><li class="nav-item p-3"> </li></ul></td>')
                                             )
                                             .append(
                                                 $('<tr/>')
@@ -1035,6 +1037,9 @@ export function facilityNetwork(token, url) {
                                                         </div>
                                                         <div class="card-title p-0 mb-1">
                                                             <h2 class="font-weight-bold mb-1 mr-1">Role : <small>${data.role}</small></h2> 
+                                                        </div>
+                                                        <div class="card-title p-0 mb-1">
+                                                            <h2 class="font-weight-bold mb-1 mr-1">Statut : <small class="text-success">Active</small></h2> 
                                                         </div>
                                                         
                                                     </div>

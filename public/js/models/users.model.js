@@ -174,12 +174,12 @@ export function usersNetwork(token, url, url2) {
                         "role": $('#usersRoles').val(),
                         "name": $('#usersFirstName').val() + $('#usersLastName').val()
                     }
-                    let url = 'https://auth_eval.asmlogic.com/api/security/getUserId/'
+                    let url = url2+'/api/security/getUserId/'
                     let networkGuid = $('#usersNetworkGuid').val();
                     let facilityGuid = $('#usersFacilityGuid').val();
-                    console.log(networkGuid);
+                    //console.log(networkGuid);
                     $.ajax({
-                        url: url+$('#usersEmail').val(),
+                        url: url+helper.parseJwt($.cookie('ACCESS_TOKEN')).client_id+'/'+$('#usersEmail').val(),
                         type: "GET",
                         beforeSend: function(xhr){xhr.setRequestHeader('Authorization', 'Bearer '+$.cookie("ACCESS_TOKEN"));},
                     })
@@ -284,17 +284,41 @@ export function usersNetwork(token, url, url2) {
             body += '<legend class="px-2 py-2">General Informations</legend>'
             body += '<div class="row">'
             
-            body += '<div class="col-lg-12">'
-            body += '<label for="usersRoles" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>Role :'
-            body += '<select id="usersRoles" name="usersRoles" class="custom-select required">'
-            body += '<option value="" selected disabled>Choose a role</option>'
-            body += '<option value="SystemAdministrator" >HiCard System Administrator</option>'
-            body += '<option value="NetworkAdministrator" >Contract Administrator</option>'
-            body += '<option value="FacilityAdministrator" >Facility Administrator</option>'
-            body += '<option value="User" >User</option>'
-            body += '</select>'
-            body += '<small class="form-text"></small></label>'
-            body += '</div>'
+            if (helper.parseJwt($.cookie('ACCESS_TOKEN')).hc_na_role == "SystemAdministrator") {
+                body += '<div class="col-lg-12">'
+                body += '<label for="usersRoles" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>Role :'
+                body += '<select id="usersRoles" name="usersRoles" class="custom-select required">'
+                body += '<option value="" selected disabled>Choose a role</option>'
+                body += '<option value="SystemAdministrator" >HiCard System Administrator</option>'
+                body += '<option value="NetworkAdministrator" >Contract Administrator</option>'
+                body += '<option value="FacilityAdministrator" >Facility Administrator</option>'
+                body += '<option value="User" >User</option>'
+                body += '</select>'
+                body += '<small class="form-text"></small></label>'
+                body += '</div>'
+            }else if (helper.parseJwt($.cookie('ACCESS_TOKEN')).hc_na_role == "NetworkAdministrator"){
+                body += '<div class="col-lg-12">'
+                body += '<label for="usersRoles" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>Role :'
+                body += '<select id="usersRoles" name="usersRoles" class="custom-select required">'
+                body += '<option value="" selected disabled>Choose a role</option>' 
+                body += '<option value="NetworkAdministrator" >Contract Administrator</option>'
+                body += '<option value="FacilityAdministrator" >Facility Administrator</option>'
+                body += '<option value="User" >User</option>'
+                body += '</select>'
+                body += '<small class="form-text"></small></label>'
+                body += '</div>'
+            } else {
+                body += '<div class="col-lg-12">'
+                body += '<label for="usersRoles" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>Role :'
+                body += '<select id="usersRoles" name="usersRoles" class="custom-select required">'
+                body += '<option value="" selected disabled>Choose a role</option>'
+                body += '<option value="FacilityAdministrator" >Facility Administrator</option>'
+                body += '<option value="User" >User</option>'
+                body += '</select>'
+                body += '<small class="form-text"></small></label>'
+                body += '</div>'
+            }
+            
             
             body += '<div class="col-lg-6">'
             body += '<label for="usersFirstName" class="fs-small2 fw-medium w-100 font-weight-bold"><t class="text-danger">*</t>First Name : '
@@ -550,6 +574,45 @@ export function usersNetwork(token, url, url2) {
                 $('#'+id).attr({'style':'border-color :red !important'}).parent().append('<p class="text-danger">We are unable to authenticate your network identifier. Please go back to the network list then try again</p>')
             })
             
+        }
+        else if (helper.getParameterByName('F')){
+        
+            new Promise((resolve, reject) => {
+                this.client.medicalfacilities3(helper.getParameterByName('F'))
+                .then((res) => {
+                    if (res.errors.length > 0) {
+                        $('#tbody-providers-list')
+                        .empty()
+                        .append('<tr><td colspan="7"><p class="text-center">No provider found !</p></td></tr>')
+                        console.log(res.errors);
+                    } else {
+                        let networkGuid = res.payload.medicalNetworkID
+                        network.getNetworkApi(networkGuid)
+                        .then((result) => {
+                            if (result.errors.length > 0) {
+                                $('#'+id).attr({'style':'border-color :red !important'}).parent().append('<small class="text-center text-danger">We are unable to authenticate your network identifier. Please go back to the network list then try again</small>')
+                            } else {
+                                $('#'+id).empty()
+                                $('#'+id).append('<option value="'+result.payload.id+'">'+result.payload.name+'</option>')
+                                $('#'+id).val(result.payload.id).change() 
+                            }
+                            $('#'+id).parent().find('.select-loader-network').remove()
+                            $('#'+id).change(function(){
+                                let guid = $(this).val()
+                                let provider = new providerNetwork(token, url)
+                                provider.setAllFacility('usersFacilityGuid', guid)
+                            })
+                        }).catch((err) => {
+                            console.log(err);
+                            $('#'+id).parent().find('.select-loader-network').remove()
+                            $('#'+id).attr({'style':'border-color :red !important'}).parent().append('<p class="text-danger">We are unable to authenticate your network identifier. Please go back to the network list then try again</p>')
+                        })
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                })
+            
+            });
         }else{
             network.getAllNetworkApi()
             .then((result) => {

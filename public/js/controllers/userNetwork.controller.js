@@ -11,6 +11,7 @@ let users = new usersNetwork($.cookie("ACCESS_TOKEN"), baseUrl, url2)
 let load = function (){
     if (RX == "super") {
         network.showAllNetwork()
+        network.showModalCreateNetwork()
         facility.showModalCreateFacility('.add-facility-btn')
         provider.showModalCreateProvider('.add-provider-btn')
         provider.showModalAssociateProviderToNetwork('.associate-provider-btn')

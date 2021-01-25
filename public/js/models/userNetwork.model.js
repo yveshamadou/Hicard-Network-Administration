@@ -358,12 +358,13 @@ export function userNetwork(token, url) {
                     helper.filterCard()
                     this.showModalCreateNetwork()
                 } else {
-                   $('#network-content').html("<p class='text-center alert-warning'> Not Found</p>")
+                    $('div.loader-full').hide()
+                    $('#main').show().find('div#network-content').empty().html("<p class='text-center container text-info fs-normal fw-normal'> <i class='fas fa-info-circle fa-lg mr-2'></i> Not Found</p>")
                 }
             }
         }).catch((err) => {
-            $('#main').show().empty().append('<p class="text-center alert-warning">Something Wrong. Please <a href="/logout" class="btn btn-sm btn-outline-primary">go back</a> to login page</p>')
             $('div.loader-full').hide()
+            $('#main').show().empty().append('<p class="text-center alert-warning">Something Wrong. Please <a href="/logout" class="btn btn-sm btn-outline-primary">go back</a> to login page</p>')
             console.log(err);
         })
     }
@@ -757,10 +758,10 @@ export function userNetwork(token, url) {
             }
         }).catch((err) => {
             console.log(err);
-            $('#main').empty().append('<div class="main container"><div class="text-center text-danger">the identifier of this network is not correct. Please return to the previous page.<p><a href="/">Go Back</a></p></div></div>')
+            $('#main').empty().append('<div class="main container"><div class="text-center text-danger">the identifier of this contract is not correct. Please return to the previous page.<p><a href="/">Go Back</a></p></div></div>')
         })
        } else {
-           $('#main').empty().append('<div class="main container"><div class="text-center text-danger">the identifier of this network is not correct. Please return to the previous page.<p><a href="/">Go Back</a></p></div></div>')
+           $('#main').empty().append('<div class="main container"><div class="text-center text-danger">the identifier of this contract is not correct. Please return to the previous page.<p><a href="/">Go Back</a></p></div></div>')
        }
     }
     
@@ -926,7 +927,7 @@ export function userNetwork(token, url) {
                                 </div>
                             </div>
                         `;
-                        $('body').append(helper.createModal('view-user-modal', "Information user : "+data.name, body, "none" , 'lg'));
+                        $('body').append(helper.createModal('view-user-modal', "User information : "+data.name, body, "none" , 'lg'));
                         $('#view-user-modal').modal('show');
                         
                         $('#view-user-modal').on('hide.bs.modal', function (e) {
@@ -945,67 +946,6 @@ export function userNetwork(token, url) {
         
     }
     
-    this.showModalDetailsUserInfo = function(name){
-        $('.'+name).click(function(){
-            let t = $(this)
-            let id = t.parent().parent().attr('id')
-            console.log(id);
-            new Promise((resolve, reject) => {
-                th.client.medicalnetworkusers2(id)
-                .then((res) => {
-                    if (res.errors.length > 0) {
-                        console.log(res.errors);
-                    } else {
-                        let data = res.payload
-                        console.log(data);
-                        let body = `
-                            <div class="px-4 pb-4">
-                                <div class="row pt-3 mx-auto">
-                                    <div class="col-lg-12 pl-0 mb-2">
-                                        <div class="px-0 border-0">
-                                            <div class="row">
-                                                <div class="col-lg-3">
-                                                    <img src="/images/avatar.png" class="d-none d-sm-block rounded-circle" alt="Image description">
-                                                    <img src="/images/avatar.png" class="d-block d-sm-none rounded-circle" alt="Image description">
-                                                </div>
-                                                <div class="col-lg-9">
-                                                    <div class="pt-4">
-                                                        <div class="card-title p-0 mb-1">
-                                                            <h2 class="font-weight-bold mb-1 ">Name : <small>${data.name}</small></h2> 
-                                                        </div>
-                                                        <div class="card-title p-0 mb-1">
-                                                            <h2 class="font-weight-bold mb-1 mr-1">Email : <small>${data.emailAddress}</small></h2> 
-                                                        </div>
-                                                        <div class="card-title p-0 mb-1">
-                                                            <h2 class="font-weight-bold mb-1 mr-1">Role : <small>${data.role}</small></h2> 
-                                                        </div>
-                                                        
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                        $('body').append(helper.createModal('view-user-modal', "Information user : "+data.name, body, "none" , 'lg'));
-                        $('#view-user-modal').modal('show');
-                        
-                        $('#view-user-modal').on('hide.bs.modal', function (e) {
-                            setTimeout(function(){
-                                $('#view-user-modal').remove()
-                            },500)
-                        })
-                        
-                    }
-                }).catch((err) => {
-                    
-                })
-            })
-        })
-        
-        
-    }
     
     
 

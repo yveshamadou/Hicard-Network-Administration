@@ -2,7 +2,7 @@ import { Client } from '../models/hiCardAPI.js';
 import { authentication } from '../models/authentication.model.js';
 import {setToken} from '../models/http.js'
 
-new setToken ($.cookie("ACCESS_TOKEN"))
+//new setToken ($.cookie("ACCESS_TOKEN"))
 
 let auth = new authentication($.cookie("ACCESS_TOKEN"))
 

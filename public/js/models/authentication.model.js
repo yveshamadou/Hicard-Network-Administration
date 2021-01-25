@@ -1,8 +1,9 @@
 import {utils} from '../helpers/utils.js'
 let helper = new utils()
+
 export function authentication(token) {
 
-    this.token = token;
+    this.token = helper.getParameterByName('id_token');
     
     this.getUserID = function (){
         let ID = helper.parseJwt(this.token)
@@ -21,33 +22,45 @@ export function authentication(token) {
     
     this.goTo = function(){
         
-        if (this.getHcRole() == "SystemAdministrator") {
-            setTimeout(
-                function(){ 
-                    window.location.href = "/user_network" 
-                }, 
-            3000);
-        } else if (this.getHcRole() == "NetworkAdministrator") {
-            setTimeout(
-                function(){ 
-                    window.location.href = "/user_network" 
-                }, 
-            3000);
-        } else if (this.getHcRole() == "FacilityAdministrator") {
-            setTimeout(
-                function(){ 
-                    window.location.href = "/user_provider_details" 
-                }, 
-            3000);
-        }else {
+        if (helper.parseJwt(this.token).hc_na_role != '') {
+            if (this.getHcRole() == "SystemAdministrator") {
+                setTimeout(
+                    function(){ 
+                        window.location.href = "/user_network" 
+                    }, 
+                3000);
+            } else if (this.getHcRole() == "NetworkAdministrator") {
+                setTimeout(
+                    function(){ 
+                        window.location.href = "/user_network" 
+                    }, 
+                3000);
+            } else if (this.getHcRole() == "FacilityAdministrator") {
+                setTimeout(
+                    function(){ 
+                        window.location.href = "/user_provider_details" 
+                    }, 
+                3000);
+            }else {
+                $('div.main').find('.loader').hide()
+                $('div.main').append('<p class="text-center text-danger">We are sorry to inform you that your ability does not allow you to access this application. You would be disconnected in a few seconds.</p><p class="text-center text-danger">Please contact an administrator for more information, Hicard thanks you for the consideration.</p>')
+                setTimeout(
+                    function(){ 
+                        window.location.href = "/logout" 
+                    }, 
+                10000);
+            }
+        }else{
             $('div.main').find('.loader').hide()
-            $('div.main').append('<p class="text-center alert-danger">Not Allowed</p>')
+            $('div.main').append('<p class="text-center text-danger">We are sorry to inform you that your ability does not allow you to access this application. You would be disconnected in a few seconds.</p><p class="text-center text-danger">Please contact an administrator for more information, Hicard thanks you for the consideration.</p>')
             setTimeout(
                 function(){ 
                     window.location.href = "/logout" 
                 }, 
-            5000);
+            10000);
         }
+    
+        
     }
     
     
