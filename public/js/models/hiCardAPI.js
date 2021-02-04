@@ -7504,6 +7504,7 @@ export class ApiMedicalProviderModel {
             this.npi = _data["npi"];
             this.specialties = _data["specialties"];
             this.state = _data["state"];
+            this.zipCode = _data["zipCode"];
             this.subSpecialties = _data["subSpecialties"];
             this.tin = _data["tin"];
             this.contractStatus = _data["contractStatus"];
@@ -7532,6 +7533,7 @@ export class ApiMedicalProviderModel {
         data["npi"] = this.npi;
         data["specialties"] = this.specialties;
         data["state"] = this.state;
+        data["zipCode"] = this.zipCode;
         data["subSpecialties"] = this.subSpecialties;
         data["tin"] = this.tin;
         data["contractStatus"] = this.contractStatus;

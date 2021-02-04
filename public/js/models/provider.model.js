@@ -187,6 +187,7 @@ export function providerNetwork(token, url) {
                     "mobileNumber": $('#providerPhone').val(),
                     "workNumber": $('#providerPhone').val(),
                     "npi":$('#providerNpi').val(),
+                    "zipCode": $('#providerPostalCode').val(),
                     "specialties": $('#providerSpeciality').val().toString(),
                     "state": $('#providerState').val(),
                     "subSpecialties": $('#providerSpeciality').val().toString(),
@@ -304,6 +305,7 @@ export function providerNetwork(token, url) {
                     "ipaName":  $('#providerFirstName').val() + $('#providerLastName').val(),
                     "workNumber": $('#providerPhone').val(),
                     "npi":$('#providerNpi').val(),
+                    "zipCode": $('#providerPostalCode').val(),
                     "specialties": $('#providerSpeciality').val().toString(),
                     "state": $('#providerState').val(),
                     "subSpecialties": $('#providerFirstName').val(),
@@ -666,7 +668,7 @@ export function providerNetwork(token, url) {
                             
                             body += '<div class="col-lg-3">'
                             body += '<label for="providerPostalCode" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>Zip Code :'
-                            body += '<input type="text" id="providerPostalCode"  class="form-control required" placeholder="Zip Code">'
+                            body += '<input type="text" id="providerPostalCode"  value="'+data.zipCode+'" class="form-control required" placeholder="Zip Code">'
                             body += '<small class="form-text"></small></label>'
                             body += '</div>'
                             

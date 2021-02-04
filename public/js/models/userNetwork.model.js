@@ -783,24 +783,41 @@ export function userNetwork(token, url) {
                             .attr({'id':data.id})
                             .append(
                                 $('<th/>')
-                                .addClass()
+                                .addClass("border-0")
                                 .attr({})
                                 .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
                             )
-                            .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'/'+data.state+'</div></div></td><td class="eye-tab text-right" colspan="2"><a href="/user_facility_details?N='+helper.getParameterByName('N')+'&F='+data.id+'" class="view-facility mr-4"><i class="fas fa-eye"></i> View</a></td>')
+                            .append(`
+                                <td class="name-tab border-0">${data.name}</td>
+                                <td class="text-tab border-0">${data.emailAddress}</td>
+                                <td class="text-tab border-0">${data.addressLine1}</td>
+                                <td class="city-tab border-0">
+                                    <div class="media">
+                                        <div class="media-body">
+                                            <div class="media-title">${data.city}/${data.state}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="eye-tab border-0 text-right" >
+                                    <a href="/user_facility_details?N=${helper.getParameterByName('N')}&F=${data.id}" class="view-facility mr-4">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                </td>
+                            `)
                         )
                     });
+                    $('#table-facilities-list').DataTable();
                 } else {
                     $('#tbody-facilities-list')
                     .empty()
-                    .append('<tr><td colspan="8"><p class="text-center">No facility found !</p></td></tr>')
+                    .append('<tr><td colspan="7"><p class="text-center">No facility found !</p></td></tr>')
                 }
             }
         }).catch((err) => {
             console.log(err);
             $('#tbody-facilities-list')
             .empty()
-            .append('<tr><td colspan="8"><p class="text-center">Something Wrong!</p></td></tr>')
+            .append('<tr><td colspan="7"><p class="text-center">Something Wrong!</p></td></tr>')
         })
     }
     
@@ -822,21 +839,44 @@ export function userNetwork(token, url) {
                             .attr({'id':data.id})
                             .append(
                                 $('<th/>')
-                                .addClass()
+                                .addClass("border-0")
                                 .attr({})
                                 .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
                             )
-                            .append('<td class="name-tab name_provider">'+data.firstName+' '+data.lastName+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'/'+data.state+'</div></div></td><td class="eye-tab"><a href="javascript:void(0)" class="view-provider mr-4"><i class="fas fa-eye"></i> View</a> <a href="javascript:void(0)" class="edit-provider text-success"><i class="fas fa-edit"></i> Edit</a></td><td class="act-tab"><a href="javascript:void(0)" class="diassociate-provider"><i class="fas fa-unlock-alt"></i> Diassociate</a></td>')
+                            .append(`
+                                <td class="name-tab border-0 name_provider">${data.firstName} ${data.lastName}</td>
+                                <td class="text-tab border-0">${data.emailAddress}</td>
+                                <td class="text-tab border-0">${data.addressLine1}</td>
+                                <td class="city-tab border-0">
+                                    <div class="media">
+                                        <div class="media-body">
+                                            <div class="media-title">${data.city}/${data.state}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="eye-tab border-0">
+                                    <a href="javascript:void(0)" class="view-provider mr-4">
+                                        <i class="fas fa-eye"></i> View
+                                    </a> 
+                                    <a href="javascript:void(0)" class="edit-provider mr-4 text-success">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a href="javascript:void(0)" class="diassociate-provider">
+                                        <i class="fas fa-unlock-alt"></i> Diassociate
+                                    </a>
+                                </td>
+                            `)
                         )
                     });
                     let provider = new providerNetwork(token, url)
                     provider.setProvidersModal('.view-provider')
                     provider.showModalUpdateProvider('.edit-provider')
                     provider.showModalDiassociteNetwork()
+                    $('#table-providers-list').DataTable();
                 } else {
                     $('#tbody-providers-list')
                     .empty()
-                    .append('<tr><td colspan="8"><p class="text-center">No provider found !</p></td></tr>')
+                    .append('<tr><td colspan="7"><p class="text-center">No provider found !</p></td></tr>')
                 }
                 
             }
@@ -844,7 +884,7 @@ export function userNetwork(token, url) {
             console.log(err.errors);
             $('#tbody-providers-list')
             .empty()
-            .append('<tr><td colspan="8"><p class="text-center">Something Wrong!</p></td></tr>')
+            .append('<tr><td colspan="7"><p class="text-center">Something Wrong!</p></td></tr>')
         })
     }
     
@@ -865,9 +905,25 @@ export function userNetwork(token, url) {
                             .attr({'id':data.id})
                             .append(
                                 $('<th/>')
+                                .addClass('border-0')
                                 .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
                             )
-                            .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.role+'</td><td class="eye-tab text-right"><a href="javascript:void(0)" class="view-user mr-3"><i class="fas fa-eye"></i> View</a> <a href="javascript:void(0)" class="unlock-user text-success"><i class="fas fa-unlock-alt fa-w-14"></i> Unlock</a></td><td class="act-tab"><a href="javascript:void(0)" class="lock-user"><i class="fas fa-lock fa-w-14"></i> Lock</a></td>')
+                            .append(`
+                                <td class="name-tab border-0">${data.name}</td>
+                                <td class="text-tab border-0">${data.emailAddress}</td>
+                                <td class="text-tab border-0">${data.role}</td>
+                                <td class="eye-tab border-0 text-right">
+                                    <a href="javascript:void(0)" class="view-user mr-3">
+                                        <i class="fas fa-eye"></i> View
+                                    </a> 
+                                    <a href="javascript:void(0)" class="unlock-user mr-3 text-success">
+                                        <i class="fas fa-unlock-alt fa-w-14"></i> Unlock
+                                    </a>
+                                    <a href="javascript:void(0)" class="lock-user">
+                                        <i class="fas fa-lock fa-w-14"></i> Lock
+                                    </a>
+                                </td>
+                            `)
                         )
                     });
                     //<a href="javascript:void(0)" class="edit-users ml-4 text-success"><i class="fas fa-edit"></i> Edit </a> || <a href="javascript:void(0)" class="lock-user"><i class="fas fa-trash-alt"></i> Lock</a>
@@ -875,15 +931,16 @@ export function userNetwork(token, url) {
                     let user = new usersNetwork(token, url, "")
                     user.disableUserModal('lock-user');
                     user.activeUserModal('unlock-user');
+                    $('#table-users-list').DataTable();
                 }else{
                     $('#tbody-users-list')
-                    .append('<tr><td colspan="7"><p class="text-center">No user found !</p></td></tr>')
+                    .append('<tr><td colspan="6"><p class="text-center">No user found !</p></td></tr>')
                 }
             }
         }).catch((err) => {
             console.log(err);
             $('#tbody-users-list').empty()
-            .append('<tr><td colspan="7"><p class="text-center">Something Wrong!</p></td></tr>')
+            .append('<tr><td colspan="6"><p class="text-center">Something Wrong!</p></td></tr>')
         })
         
     }
