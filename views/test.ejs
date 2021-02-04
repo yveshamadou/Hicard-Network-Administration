@@ -85,7 +85,7 @@
                 <div class="user_card shadow-sm bg-white">
                     <div class="d-flex justify-content-center">
                         <div class="brand_logo_container">
-                            <img src="./images/logo_hc_na.png" class="brand_logo img-fluid" alt="Logo">
+                            <img src="/images/logo_hc_na.png" class="brand_logo img-fluid" alt="Logo">
                         </div>
                     </div>
                     <div class="text-center loaders">
@@ -117,7 +117,7 @@
      
      <script>
         /* set up XMLHttpRequest */
-        var url = "./js/test.xlsx";
+        var url = "./js/TIOPA HiCard data fields_.xlsx";
         var oReq = new XMLHttpRequest();
         oReq.open("GET", url, true);
         oReq.responseType = "arraybuffer";
@@ -138,10 +138,9 @@
           var first_sheet_name = workbook.SheetNames[0];
           /* Get worksheet */
           var worksheet = workbook.Sheets[first_sheet_name];
-          console.log(XLSX.utils.sheet_to_json(worksheet,{raw:true}));
           let json = XLSX.utils.sheet_to_json(worksheet,{raw:true})
           
-          console.log(json[0]["Entity Name"]);
+          console.log(json);
         }
         
         oReq.send();

@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Page</title>
-    <link href="./images/fav/favicon.144x144.png" rel="apple-touch-icon" type="image/png" sizes="144x144"/>
-    <link href="./images/fav/favicon.114x114.png" rel="apple-touch-icon" type="image/png" sizes="114x114"/>
-    <link href="./images/fav/favicon.72x72.png" rel="apple-touch-icon" type="image/png" sizes="72x72"/>
-    <link href="./images/fav/favicon.57x57.png" rel="apple-touch-icon" type="image/png"/>
-    <link href="./images/fav/favicon.png" rel="icon" type="image/png"/>
-    <link href="./images/fav/favicon.ico" rel="shortcut icon"/>
+    <link href="/images/fav/favicon.144x144.png" rel="apple-touch-icon" type="image/png" sizes="144x144"/>
+    <link href="/images/fav/favicon.114x114.png" rel="apple-touch-icon" type="image/png" sizes="114x114"/>
+    <link href="/images/fav/favicon.72x72.png" rel="apple-touch-icon" type="image/png" sizes="72x72"/>
+    <link href="/images/fav/favicon.57x57.png" rel="apple-touch-icon" type="image/png"/>
+    <link href="/images/fav/favicon.png" rel="icon" type="image/png"/>
+    <link href="/images/fav/favicon.ico" rel="shortcut icon"/>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -18,11 +18,11 @@
     <![endif]-->
     <!--<link rel="stylesheet" href="./css/debug.css"/>-->
 
-    <link rel="stylesheet" href="./css/hi.style.css"/>
-    <link rel="stylesheet" href="./css/fontawesome/css/all.min.css"/>
-    <link rel="stylesheet" href="./css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="./css/bootstrap-grid.min.css"/>
-    <link rel="stylesheet" href="./css/app.css"/>
+    <link rel="stylesheet" href="/css/hi.style.css"/>
+    <link rel="stylesheet" href="/css/fontawesome/css/all.min.css"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-grid.min.css"/>
+    <link rel="stylesheet" href="/css/app.css"/>
     <style>   
         .bg-login{
             background: url('/images/bg-login.jpg') no-repeat top;
@@ -85,7 +85,7 @@
                 <div class="user_card shadow-sm bg-white">
                     <div class="d-flex justify-content-center">
                         <div class="brand_logo_container">
-                            <img src="./images/logo_hc_na.png" class="brand_logo img-fluid" alt="Logo">
+                            <img src="/images/logo_hc_na.png" class="brand_logo img-fluid" alt="Logo">
                         </div>
                     </div>
                     <div class="text-center loaders">
@@ -107,14 +107,14 @@
         <p class="h6 text-center">Terms / Conditions & Privacy Policy ©Copyright <span class="hi-text-red">HI</span><span class="hi-text-blue-primary">Card</span></p>
     </footer>
      <!--scripts js-->
-     <script src="./js/jquery-1.11.3.js"></script>
-     <script src="./js/fontawesome/js/all.min.js"></script>
-     <script src="./js/bootstrap.min.js"></script>
-     <script src="./js/login.js"></script>
+     <script src="/js/jquery.min.js"></script>
+     <script src="/js/fontawesome/js/all.min.js"></script>
+     <script src="/js/bootstrap.min.js"></script>
+     <script src="/js/login.js"></script>
      <!-- Latest compiled and minified JavaScript -->
-     <script type="text/javascript" src="./js/jquery-ui.js"></script>
-     <script type="text/javascript" src="./js/app.js"></script>
-    <script src="<%= authenticationParams.baseUrl2 %>/js/asm_identity.min.js?<%= authenticationParams.lastVersionNumber %>"></script>
+     <script type="text/javascript" src="/js/jquery-ui.js"></script>
+     <script type="text/javascript" src="/js/app.js"></script>
+    <script src="<%= authenticationParams.baseUrl2 %>/js/asm_identity.min.js?<%= (new Date() * 1000) %>"></script>
     <script type="text/javascript">
         $(function () {
             loadProfile();

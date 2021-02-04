@@ -227,7 +227,7 @@ app.post('/create_users', function (req, res) {
                             if (associate.data.errors.length > 0) {
                                 res.render('errors/errors', {
                                     page: "errors/errors",
-                                    errors : "associate user error. Please try again later...",
+                                    errors : {code : "404", description : "associate user error. Please try again later..."},
                                     previousUrl : body.currentUrl
                                 })
                             } else {
@@ -244,7 +244,7 @@ app.post('/create_users', function (req, res) {
                                             if (associateF.data.errors.length > 0) {
                                                 res.render('errors/errors', {
                                                     page: "errors/errors",
-                                                    errors : "Assiociated failed. Please contact your system administrator.",
+                                                    errors : {code : "404", description : "Assiociated failed. Please contact your system administrator."},
                                                     previousUrl : body.currentUrl
                                                 })
                                             } else {
@@ -259,7 +259,7 @@ app.post('/create_users', function (req, res) {
                                         console.log(err2.data);
                                         res.render('errors/errors', {
                                             page: "errors/errors",
-                                            errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
+                                            errors : {code : "422", description : "This user already exists. it is impossible to create it again. Please enter another email address then try again..."},
                                             previousUrl : body.currentUrl
                                         })
                                     })
@@ -276,7 +276,7 @@ app.post('/create_users', function (req, res) {
                         console.log(err.data);
                         res.render('errors/errors', {
                             page: "errors/errors",
-                            errors : "Please enter another email address then try again...",
+                            errors : {code : "422", description : "Please enter another email address then try again..."},
                             previousUrl : body.currentUrl
                         })
                     })
@@ -317,7 +317,7 @@ app.post('/create_users', function (req, res) {
                 if (result.data.payload == '00000000-0000-0000-0000-000000000000') {
                     res.render('errors/errors', {
                         page: "errors/errors",
-                        errors : "This email address already exists. it is impossible to create it again. Please enter another email address then try again...",
+                        errors : {code : "422", description : "This email address already exists. it is impossible to create it again. Please enter another email address then try again..."},
                         previousUrl : body.currentUrl
                     })
                 } else {
@@ -341,7 +341,7 @@ app.post('/create_users', function (req, res) {
                         if (datas.data.errors.length > 0) {
                             res.render('errors/errors', {
                                 page: "errors/errors",
-                                errors : "We encounter an error while adding this user to the selected network, please try again later...",
+                                errors : {code : "422", description : "We encounter an error while adding this user to the selected network, please try again later..."},
                                 previousUrl : body.currentUrl
                             })
                         } else {
@@ -360,7 +360,7 @@ app.post('/create_users', function (req, res) {
                                     if (associate.data.errors.length > 0) {
                                         res.render('errors/errors', {
                                             page: "errors/errors",
-                                            errors : "associate user error. Please try again later...",
+                                            errors : {code : "422", description : "associate user error. Please try again later..."},
                                             previousUrl : body.currentUrl
                                         })
                                     } else {
@@ -377,7 +377,7 @@ app.post('/create_users', function (req, res) {
                                                     if (associateF.data.errors.length > 0) {
                                                         res.render('errors/errors', {
                                                             page: "errors/errors",
-                                                            errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
+                                                            errors : {code : "422", description : "This user already exists. it is impossible to create it again. Please enter another email address then try again..."},
                                                             previousUrl : body.currentUrl
                                                         })
                                                     } else {
@@ -392,7 +392,7 @@ app.post('/create_users', function (req, res) {
                                                 console.log(err.data.errors);
                                                 res.render('errors/errors', {
                                                     page: "errors/errors",
-                                                    errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
+                                                    errors : {code : "422", description : "This user already exists. it is impossible to create it again. Please enter another email address then try again..."},
                                                     previousUrl : body.currentUrl
                                                 })
                                             })
@@ -409,7 +409,7 @@ app.post('/create_users', function (req, res) {
                                 console.log(err.data.errors);
                                 res.render('errors/errors', {
                                     page: "errors/errors",
-                                    errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
+                                    errors : {code : "422", description : "This user already exists. it is impossible to create it again. Please enter another email address then try again..."},
                                     previousUrl : body.currentUrl
                                 })
                             })
@@ -419,7 +419,7 @@ app.post('/create_users', function (req, res) {
                         console.log(err.data);
                         res.render('errors/errors', {
                             page: "errors/errors",
-                            errors : "This user already exists. it is impossible to create it again. Please enter another email address then try again...",
+                            errors : {code : "422", description : "This user already exists. it is impossible to create it again. Please enter another email address then try again..."},
                             previousUrl : body.currentUrl
                         })
                     })

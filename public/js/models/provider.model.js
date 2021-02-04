@@ -54,19 +54,6 @@ export function providerNetwork(token, url) {
         })
     }
     
-    this.getAllProvider = function (id){
-        return new Promise((resolve, reject) => {
-            this.client.medicalproviders3().then((result) => {
-                resolve(result)
-            }).catch((err) => {
-                console.log(err);
-                reject(err)
-                
-                
-            })
-        
-        })
-    }
     
     this.createProviderApi = function (body){
         return new Promise((resolve, reject) => {
@@ -82,9 +69,9 @@ export function providerNetwork(token, url) {
         })
     }
     
-    this.updateProviderApi = function (id,body){
+    this.updateProviderApi = function (body){
         return new Promise((resolve, reject) => {
-            this.client.facilities2(id,body).then((result) => {
+            this.client.medicalproviders3(body).then((result) => {
                 resolve(result)
             }).catch((err) => {
                 console.log(err);
@@ -202,12 +189,13 @@ export function providerNetwork(token, url) {
                     "npi":$('#providerNpi').val(),
                     "specialties": $('#providerSpeciality').val().toString(),
                     "state": $('#providerState').val(),
-                    "subSpecialties": $('#providerFirstName').val(),
-                    "tin": $('#providerTin').val()
+                    "subSpecialties": $('#providerSpeciality').val().toString(),
+                    "tin": $('#providerTin').val(),
+                    "contractStatus": "Contracted"
                 }
                 
                 let user = new providerNetwork(token, url)
-                console.log(datas);
+                //console.log(datas);
                 user.createProviderApi(datas).then((result) => {
                     
                     if (result.errors.length > 0) {
@@ -218,21 +206,39 @@ export function providerNetwork(token, url) {
                     } else {
                         console.log(result.payload);
                         if (helper.getParameterByName('F') || facilityGuid != undefined) {
-                            user.associateProviderAndNetworkAndFacility(networkGuid,facilityGuid,result.payload)
-                            .then((associateF) => {
-                                console.log("========AssociateF===========");
-                                console.log(associateF);
-                                if (associateF.errors.length > 0) {
+                            user.associateProviderAndNetwork(networkGuid,result.payload)
+                            .then((associateN) => {
+                                console.log("========AssociateN===========");
+                                console.log(associateN);
+                                if (associateN.errors.length > 0) {
                                     $('#form-create-provider div.errors').empty()
-                                    associateF.errors.forEach((value) => {
+                                    associateN.errors.forEach((value) => {
                                         $('#form-create-provider div.errors').append('<p class="text-center text-danger">'+value.description+'</p>')
                                     })
                                 } else {
-                                    $('#modal-create-provider').modal('hide')
-                                    helper.toastr('success','top-full-width',1000, "Successfully Added.")
-                                    setTimeout(function(){window.location.href = ""},1200)
+                                    user.associateProviderAndNetworkAndFacility(networkGuid,facilityGuid,result.payload)
+                                    .then((associateF) => {
+                                        console.log("========AssociateF===========");
+                                        console.log(associateF);
+                                        if (associateF.errors.length > 0) {
+                                            $('#form-create-provider div.errors').empty()
+                                            associateF.errors.forEach((value) => {
+                                                $('#form-create-provider div.errors').append('<p class="text-center text-danger">'+value.description+'</p>')
+                                            })
+                                        } else {
+                                            $('#modal-create-provider').modal('hide')
+                                            helper.toastr('success','top-full-width',1000, "Successfully Added.")
+                                            setTimeout(function(){window.location.href = ""},1200)
+                                        }
+                                        helper.removeNextButtonLoader($(this))
+                                    }).catch((err3) => {
+                                        $('#form-create-provider div.errors').empty()
+                                        err3.errors.forEach((value) => {
+                                            $('#form-create-provider div.errors').append('<p class="text-center text-danger">'+value.description+'</p>')
+                                        })
+                                        helper.removeNextButtonLoader($(this))
+                                    })
                                 }
-                                helper.removeNextButtonLoader($(this))
                             }).catch((err3) => {
                                 $('#form-create-provider div.errors').empty()
                                 err3.errors.forEach((value) => {
@@ -271,6 +277,58 @@ export function providerNetwork(token, url) {
                 }).catch((err) => {
                     helper.removeNextButtonLoader($(this))
                     $('#form-create-provider').append('<p class="text-center alert-danger">erreur2</p>')
+                })
+                
+           }
+        })
+        
+    }
+    
+    this.updateProviderModal = function (){
+        $('#btn-update-provider-form').on('click', function(){
+            helper.setNextButtonLoader($(this))
+           if (helper.validateForm('form-update-provider').length > 0) {
+            helper.removeNextButtonLoader($(this))
+           } else {
+                let datas = {
+                    "id": $('#providerGuid').val(),
+                    "addressLine1": $('#providerAddLine1').val(),
+                    "addressLine2": $('#providerAddLine2').val(),
+                    "city": $('#providerCity').val(),
+                    "country": "USA",
+                    "emailAddress": $('#providerEmail').val(),
+                    "firstName": $('#providerFirstName').val(),
+                    "lastName": $('#providerLastName').val(),
+                    "medicalGroupName": $('#providerMedicalGroupName').val(),
+                    "mobileNumber": $('#providerPhone').val(),
+                    "ipaName":  $('#providerFirstName').val() + $('#providerLastName').val(),
+                    "workNumber": $('#providerPhone').val(),
+                    "npi":$('#providerNpi').val(),
+                    "specialties": $('#providerSpeciality').val().toString(),
+                    "state": $('#providerState').val(),
+                    "subSpecialties": $('#providerFirstName').val(),
+                    "tin": $('#providerTin').val(),
+                    "contractStatus": "Contracted"
+                }
+                
+                let user = new providerNetwork(token, url)
+                console.log(datas);
+                user.updateProviderApi(datas).then((result) => {
+                    
+                    if (result.errors.length > 0) {
+                        $('#form-update-provider div.errors').empty()
+                        result.errors.forEach((value) => {
+                            $('#form-update-provider div.errors').append('<p class="text-center text-danger">'+value.description+'</p>')
+                        })
+                    } else {
+                        console.log(result.payload);
+                        $('#modal-update-provider').modal('hide')
+                        helper.toastr('success','top-full-width',1000, "Successfully Updated.")
+                        setTimeout(function(){window.location.href = ""},1200)
+                    }
+                }).catch((err) => {
+                    helper.removeNextButtonLoader($(this))
+                    $('#form-update-provider').append('<p class="text-center alert-danger">erreur2</p>')
                 })
                 
            }
@@ -497,6 +555,176 @@ export function providerNetwork(token, url) {
         
     }
     
+    this.showModalUpdateProvider = function (name){
+        $(name).on('click', function(e){
+            e.preventDefault()
+            let t = $(this)
+            let id = t.parent().parent().attr('id');
+            let api = new Client(url)
+            $('body').append('<div id="spinner-back" class="show"></div> <div id="spinner-front" class="show"> </div>')
+            return new Promise((resolve, reject) => {
+                api.medicalproviders(id)
+                .then((result) => {
+                    if (result.errors.length > 0) {
+                        result.errors.forEach(er => {
+                            helper.toastr('danger','top-full-width',1000, er.description)
+                        });
+                        $('body').find('div#spinner-back').fadeOut()
+                        $('body').find('div#spinner-front').fadeOut()
+                    } else {
+                        $('body').find('div#spinner-back').fadeOut()
+                        $('body').find('div#spinner-front').fadeOut()
+                        //console.log(result.payload);
+                        if (result.payload != null ) {
+                            let data = result.payload;
+                            console.log(data);
+                            let body = '<form id="form-update-provider">';
+                            body += '<div class="errors w-100 text-center"> </div>'
+                            body += '<div class="d-flex"> '
+                            body += '<fieldset class="col-lg-12 mb-3"> '
+                            body += '<legend class="px-2 py-2" >General Information</legend>'
+                            body += '<div class="row">'
+                            
+                            body += '<div class="col-lg-6">'
+                            body += '<label for="providerFirstName" class="fs-small2 fw-medium w-100 font-weight-bold"><t class="text-danger">*</t>First Name : '
+                            body += '<input type="text" id="providerFirstName" value="'+data.firstName+'" class="form-control required" placeholder="First Name">  '
+                            body += '<input type="hidden" id="providerGuid" value="'+data.id+'" class="form-control required">  '
+                            body += '<input type="hidden" id="providerMedicalGroupName" value="'+data.medicalGroupName+'" class="form-control ">  '
+                            body += '<small class="form-text"></small></label>'
+                            body += '</div>'
+                            
+                            body += '<div class="col-lg-6">'
+                            body += '<label for="providerLastName" class="fs-small2 fw-medium w-100 font-weight-bold"><t class="text-danger">*</t>Last Name : '
+                            body += '<input type="text" id="providerLastName" value="'+data.lastName+'" class="form-control required" placeholder="Last Name">  '
+                            body += '<small class="form-text"></small></label>'
+                            body += '</div>'
+                            
+                            body += '<div class="col-lg-4">'
+                            body += '<label for="providerTin" class="fs-small2 fw-medium w-100"><t class="text-danger">*</t>TIN Number :'
+                            body += '<input type="text" id="providerTin" value="'+data.tin+'" class="form-control required" placeholder="TIN Number">'
+                            body += '<small class="form-text"></small></label>'
+                            body += '</div>'
+                            
+                            body += '<div class="col-lg-4">'
+                            body += '<label for="providerNpi" class="fs-small2 fw-medium w-100"><t class="text-danger">*</t>NPI Number :'
+                            body += '<input type="text" id="providerNpi" value="'+data.npi+'" class="form-control required" placeholder="NPI Number">'
+                            body += '<small class="form-text"></small></label>'
+                            body += '</div>'
+                            
+                            
+                            body += '<div class="col-lg-4">'
+                            body += '<label for="providerEmail" class="fs-small2 fw-medium w-100">Email Address :'
+                            body += '<input type="text" id="providerEmail" value="'+data.emailAddress+'" class="form-control" placeholder="Email Address">'
+                            body += '<small class="form-text"></small></label>'
+                            body += '</div>'
+                            
+                            body += '<div class="col-lg-12">'
+                            body += '<label for="providerSpeciality" class="fs-small2 fw-medium w-100"><t class="text-danger">*</t>Speciality :'
+                            body += '<select id="providerSpeciality" class="custom-select required"  name="states[]" multiple="multiple"></select>'
+                            body += '<small class="form-text"></small></label>'
+                            body += '</div>'
+                            
+                            body += '</div>'
+                            body += '</fieldset>'
+                            body += '</div>'
+                            
+                            
+                            body += '<div class="d-flex"> '
+                            body += '<fieldset class="col-lg-12"> '
+                            body += '<legend class="px-2 py-2">Contact & Address </legend>'
+                            body += '<div class="row">'
+                            
+                            body += '<div class="col-lg-3">'
+                            body += '<label for="providerPhone" class="fs-small2 fw-medium w-100 "><t class="text-danger">*</t>Phone Number :'
+                            body += '<input type="text" id="providerPhone" value="'+data.workNumber+'" class="form-control required" placeholder="Phone Number"> '
+                            body += '<small class="form-text"></small></label>'
+                            body += '</div>'
+                            
+                            body += '<div class="col-lg-3">'
+                            body += '<label for="providerFax" class="fs-small2 fw-medium w-100 ">Fax Number :'
+                            body += '<input type="text" id="providerFax"  class="form-control" placeholder="Fax Number"> '
+                            body += '<small class="form-text"></small></label>'
+                            body += '</div>'
+                            
+                            body += '<div class="col-lg-3">'
+                            body += '<label for="providerAddLine1" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>Address Line 1 :'
+                            body += '<input type="text" id="providerAddLine1" value="'+data.addressLine1+'" class="form-control required" placeholder="Address Line 1"> '
+                            body += '<small class="form-text"></small></label>'
+                            body += '</div>'
+                            
+                            body += '<div class="col-lg-3">'
+                            body += '<label for="providerAddLine2" class="fs-small2 w-100 fw-medium">Address Line 2 :'
+                            body += '<input type="text" id="providerAddLine2" value="'+data.addressLine2+'" class="form-control" placeholder="Address Line 2">'
+                            body += '<small class="form-text"></small></label>'
+                            body += '</div>'
+                            
+                            body += '<div class="col-lg-3">'
+                            body += '<label for="providerCity" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>City :'
+                            body += '<input type="text" id="providerCity" value="'+data.city+'" class="form-control required" placeholder="City">'
+                            body += '<small class="form-text"></small></label>'
+                            body += '</div>'
+                            
+                            body += '<div class="col-lg-3">'
+                            body += '<label for="providerPostalCode" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>Zip Code :'
+                            body += '<input type="text" id="providerPostalCode"  class="form-control required" placeholder="Zip Code">'
+                            body += '<small class="form-text"></small></label>'
+                            body += '</div>'
+                            
+                            body += '<div class="col-lg-3">'
+                            body += '<label for="providerState" class="fs-small2 w-100 fw-medium"><t class="text-danger">*</t>State :'
+                            body += '<select id="providerState" class="custom-select required">'
+                            body += '</select>'
+                            body += '<small class="form-text"></small></label>'
+                            body += '</div>'
+                            
+                            body += '</div>'
+                            body += '</fieldset>'
+                            body += '</div>'
+                            
+                            body += '</form>'
+                            
+                            body += '</form>'
+                            
+                            let footer = '<button id="btn-update-provider-form"  class="btn btn-primary">Save</button>';
+                            
+                            $('body').append(helper.createModal('modal-update-provider', "Update Provider", body, footer , 'lg'));
+                            $('#modal-update-provider').modal('show')
+                            $('#modal-update-provider').on('hide.bs.modal', function (e) {
+                                setTimeout(function(){$('#modal-update-provider').remove()},1500)
+                            })
+                            let save = new providerNetwork($.cookie("ACCESS_TOKEN"),url)
+                            
+                            save.updateProviderModal()
+                            save.setState("providerState",data.state)
+                            save.setSpecialities('providerSpeciality', (data.specialties.split(",")))
+                            
+                            resolve(result.payload)
+                        } else {
+                            helper.toastr('danger','top-full-width',1000, "Something Wrong !")
+                        }
+                    }
+                    
+                }).catch((err) => {
+                    err.errors.forEach(er => {
+                        helper.toastr('danger','top-full-width',1300, er.description)
+                    });
+                    $('body').find('div#spinner-back').remove()
+                    $('body').find('div#spinner-front').remove()
+                    reject(err)
+                })
+                
+            
+            })
+            
+            
+            
+        });
+        
+        
+        
+        
+    }
+    
     this.showModalAssociateProviderToNetwork = function (name){
         $(name).on('click', function(e){
             e.preventDefault()
@@ -580,8 +808,8 @@ export function providerNetwork(token, url) {
     
     }
     
-    this.setState = function(id){
-        $('#'+id).attr({'disabled':'disabled'})
+    this.setState = function(id, current = ""){
+        $('#'+id).attr({'disabled':'disabled'}).parent().prepend('<i class="fa fa-spinner fa-spin select-loader-state"></i>')
         this.getState(this.activatortoken)
         .then((result) => {
             $('#'+id).empty().append('<option value="" class="text-muted" disabled selected>State</option>')
@@ -590,17 +818,21 @@ export function providerNetwork(token, url) {
             });
             $('#'+id).val('').change()
             $('#'+id).removeAttr('disabled')
+            if (current != "" || current != null || current != undefined) {
+                $('#'+id).val(current).change()
+            }
+            $('#'+id).parent().find('.select-loader-state').remove()
         }).catch((err) => {
             console.log(err);
         })
     }
     
-    this.setSpecialities = function(id){
+    this.setSpecialities = function(id, data = []){
         $('#'+id).attr({'disabled':'disabled'})
         this.getSpecialities(this.activatortoken)
         .then((result) => {
             result.payload.forEach(data => {
-                $('#'+id).append('<option value="'+data.id+'">'+data.name+'</option>')
+                $('#'+id).append('<option value="'+data.name+'">'+data.name+'</option>')
             });
             $('#'+id).val('').change()
             $('#'+id).removeAttr('disabled')
@@ -608,6 +840,9 @@ export function providerNetwork(token, url) {
                 placeholder: 'Select a speciality',
                 multiple : true,
             });
+            if (data.length > 0) {
+                $('#'+id).val(data).trigger('change');
+            }
         }).catch((err) => {
             console.log(err);
         })

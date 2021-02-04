@@ -2415,18 +2415,19 @@ export class Client {
         return Promise.resolve(null);
     }
     /**
-     * Gets a user record by id
+     * Updates a user
+     * @param body (optional)
      * @return Success
      */
-    medicalnetworkusers2(id) {
-        let url_ = this.baseUrl + "/api/medicalnetworkusers/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    medicalnetworkusers2(body) {
+        let url_ = this.baseUrl + "/api/medicalnetworkusers";
         url_ = url_.replace(/[?&]$/, "");
+        const content_ = JSON.stringify(body);
         let options_ = {
-            method: "GET",
+            body: content_,
+            method: "POST",
             headers: {
+                "Content-Type": "application/json",
                 "Accept": "text/plain"
             }
         };
@@ -2445,7 +2446,133 @@ export class Client {
             return response.text().then((_responseText) => {
                 let result200 = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = GuidControllerActionResult.fromJS(resultData200);
+                return resultData200;
+            });
+        }
+        else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve(null);
+    }
+    /**
+     * Gets a user record by id
+     * @return Success
+     */
+    medicalnetworkusers3(id) {
+        let url_ = this.baseUrl + "/api/medicalnetworkusers/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+        let options_ = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+        return this.http.fetch(url_, options_).then((_response) => {
+            return this.processMedicalnetworkusers3(_response);
+        });
+    }
+    processMedicalnetworkusers3(response) {
+        const status = response.status;
+        let _headers = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v, k) => _headers[k] = v);
+        }
+        ;
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200 = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = ApiMedicalNetworkUserModelControllerActionResult.fromJS(resultData200);
+                return resultData200;
+            });
+        }
+        else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve(null);
+    }
+    /**
+     * Activates a user
+     * @return Success
+     */
+    activate(id) {
+        let url_ = this.baseUrl + "/api/medicalnetworkusers/{id}/activate";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+        let options_ = {
+            method: "POST",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+        return this.http.fetch(url_, options_).then((_response) => {
+            return this.processActivate(_response);
+        });
+    }
+    processActivate(response) {
+        const status = response.status;
+        let _headers = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v, k) => _headers[k] = v);
+        }
+        ;
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200 = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = BooleanControllerActionResult.fromJS(resultData200);
+                return resultData200;
+            });
+        }
+        else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve(null);
+    }
+    /**
+     * Deactivates a user
+     * @return Success
+     */
+    deactivate(id) {
+        let url_ = this.baseUrl + "/api/medicalnetworkusers/{id}/deactivate";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+        let options_ = {
+            method: "POST",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+        return this.http.fetch(url_, options_).then((_response) => {
+            return this.processDeactivate(_response);
+        });
+    }
+    processDeactivate(response) {
+        const status = response.status;
+        let _headers = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v, k) => _headers[k] = v);
+        }
+        ;
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200 = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = BooleanControllerActionResult.fromJS(resultData200);
                 return resultData200;
             });
         }
@@ -3654,6 +3781,91 @@ export class Client {
         });
     }
     processHtml2(response) {
+        const status = response.status;
+        let _headers = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v, k) => _headers[k] = v);
+        }
+        ;
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                let result200 = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = StringControllerActionResult.fromJS(resultData200);
+                return resultData200;
+            });
+        }
+        else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve(null);
+    }
+    /**
+     * Gets the cards cee xml
+     * @return Success
+     */
+    token(id, accessToken) {
+        let url_ = this.baseUrl + "/api/membercards/{id}/ceeXml/token/{accessToken}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (accessToken === undefined || accessToken === null)
+            throw new Error("The parameter 'accessToken' must be defined.");
+        url_ = url_.replace("{accessToken}", encodeURIComponent("" + accessToken));
+        url_ = url_.replace(/[?&]$/, "");
+        let options_ = {
+            method: "GET",
+            headers: {}
+        };
+        return this.http.fetch(url_, options_).then((_response) => {
+            return this.processToken(_response);
+        });
+    }
+    processToken(response) {
+        const status = response.status;
+        let _headers = {};
+        if (response.headers && response.headers.forEach) {
+            response.headers.forEach((v, k) => _headers[k] = v);
+        }
+        ;
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+                return;
+            });
+        }
+        else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve(null);
+    }
+    /**
+     * Gets the card's pdf letter invitation
+     * @return Success
+     */
+    token2(id, accessToken) {
+        let url_ = this.baseUrl + "/api/membercards/{id}/pdfLetter/token/{accessToken}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (accessToken === undefined || accessToken === null)
+            throw new Error("The parameter 'accessToken' must be defined.");
+        url_ = url_.replace("{accessToken}", encodeURIComponent("" + accessToken));
+        url_ = url_.replace(/[?&]$/, "");
+        let options_ = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+        return this.http.fetch(url_, options_).then((_response) => {
+            return this.processToken2(_response);
+        });
+    }
+    processToken2(response) {
         const status = response.status;
         let _headers = {};
         if (response.headers && response.headers.forEach) {
@@ -7198,6 +7410,7 @@ export class ApiMedicalNetworkUserModel {
             this.networkRecordGuid = _data["networkRecordGuid"];
             this.role = _data["role"];
             this.name = _data["name"];
+            this.isActive = _data["isActive"];
         }
     }
     static fromJS(data) {
@@ -7216,6 +7429,7 @@ export class ApiMedicalNetworkUserModel {
         data["networkRecordGuid"] = this.networkRecordGuid;
         data["role"] = this.role;
         data["name"] = this.name;
+        data["isActive"] = this.isActive;
         return data;
     }
 }
@@ -7292,6 +7506,7 @@ export class ApiMedicalProviderModel {
             this.state = _data["state"];
             this.subSpecialties = _data["subSpecialties"];
             this.tin = _data["tin"];
+            this.contractStatus = _data["contractStatus"];
         }
     }
     static fromJS(data) {
@@ -7319,6 +7534,7 @@ export class ApiMedicalProviderModel {
         data["state"] = this.state;
         data["subSpecialties"] = this.subSpecialties;
         data["tin"] = this.tin;
+        data["contractStatus"] = this.contractStatus;
         return data;
     }
 }

@@ -826,11 +826,12 @@ export function userNetwork(token, url) {
                                 .attr({})
                                 .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
                             )
-                            .append('<td class="name-tab name_provider">'+data.firstName+' '+data.lastName+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'/'+data.state+'</div></div></td><td class="eye-tab"><a href="javascript:void(0)" class="view-provider"><i class="fas fa-eye"></i> View</a></td><td class="act-tab"><a href="javascript:void(0)" class="diassociate-provider"><i class="fas fa-unlock-alt"></i> Diassociate</a></td>')
+                            .append('<td class="name-tab name_provider">'+data.firstName+' '+data.lastName+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.addressLine1+'</td><td class="city-tab"><div class="media"><div class="media-body"><div class="media-title">'+data.city+'/'+data.state+'</div></div></td><td class="eye-tab"><a href="javascript:void(0)" class="view-provider mr-4"><i class="fas fa-eye"></i> View</a> <a href="javascript:void(0)" class="edit-provider text-success"><i class="fas fa-edit"></i> Edit</a></td><td class="act-tab"><a href="javascript:void(0)" class="diassociate-provider"><i class="fas fa-unlock-alt"></i> Diassociate</a></td>')
                         )
                     });
                     let provider = new providerNetwork(token, url)
                     provider.setProvidersModal('.view-provider')
+                    provider.showModalUpdateProvider('.edit-provider')
                     provider.showModalDiassociteNetwork()
                 } else {
                     $('#tbody-providers-list')
@@ -866,11 +867,14 @@ export function userNetwork(token, url) {
                                 $('<th/>')
                                 .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
                             )
-                            .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.role+'</td><td class="eye-tab text-right"><a href="javascript:void(0)" class="view-user"><i class="fas fa-eye"></i> View</a> </td><td class="act-tab"></td>')
+                            .append('<td class="name-tab">'+data.name+'</td><td class="text-tab">'+data.emailAddress+'</td><td class="text-tab">'+data.role+'</td><td class="eye-tab text-right"><a href="javascript:void(0)" class="view-user mr-3"><i class="fas fa-eye"></i> View</a> <a href="javascript:void(0)" class="unlock-user text-success"><i class="fas fa-unlock-alt fa-w-14"></i> Unlock</a></td><td class="act-tab"><a href="javascript:void(0)" class="lock-user"><i class="fas fa-lock fa-w-14"></i> Lock</a></td>')
                         )
                     });
                     //<a href="javascript:void(0)" class="edit-users ml-4 text-success"><i class="fas fa-edit"></i> Edit </a> || <a href="javascript:void(0)" class="lock-user"><i class="fas fa-trash-alt"></i> Lock</a>
                     this.showModalDetailsUserInfo('view-user');
+                    let user = new usersNetwork(token, url, "")
+                    user.disableUserModal('lock-user');
+                    user.activeUserModal('unlock-user');
                 }else{
                     $('#tbody-users-list')
                     .append('<tr><td colspan="7"><p class="text-center">No user found !</p></td></tr>')
@@ -890,7 +894,7 @@ export function userNetwork(token, url) {
             let id = t.parent().parent().attr('id')
             console.log(id);
             new Promise((resolve, reject) => {
-                th.client.medicalnetworkusers2(id)
+                th.client.medicalnetworkusers3(id)
                 .then((res) => {
                     if (res.errors.length > 0) {
                         console.log(res.errors);
@@ -919,6 +923,10 @@ export function userNetwork(token, url) {
                                                             <h2 class="font-weight-bold mb-1 mr-1">Role : <small>${data.role}</small></h2> 
                                                         </div>
                                                         
+                                                        <div class="card-title p-0 mb-1">
+                                                            <h2 class="font-weight-bold mb-1 mr-1">Status : <small>${(data.isActive == true ? '<r class="text-success">Active</r>' : '<r class="text-danger">Inactive</r>')}</small></h2> 
+                                                        </div>
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
@@ -936,6 +944,21 @@ export function userNetwork(token, url) {
                             },500)
                         })
                         
+                        /* $('button.edit-user-modal').click(function(){
+                            
+                                    <div class="col-lg-12 pl-0 mb-2 float-right">
+                                        <button class="btn btn-sm float-right btn-outline-primary pr-2 edit-user-modal"><i class="fas fa-edit mr-1"></i> Edit</button>
+                                    </div>
+                            let thi = $(this);
+                            
+                            let body = "TEST";
+                            let footer = "Button";
+                            
+                            $('body').append(helper.createModal('edit-user-modal', "User information : ", body, footer , 'md'));
+                            $('#edit-user-modal').modal('show');
+                            $('#edit-user-modal').attr({'style':'background: #00000082; z-index: 9999999 !important'})
+                        }) */
+                        
                     }
                 }).catch((err) => {
                     
@@ -945,6 +968,7 @@ export function userNetwork(token, url) {
         
         
     }
+    
     
     
     

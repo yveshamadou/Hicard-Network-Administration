@@ -14,6 +14,7 @@ export function usersNetwork(token, url, url2) {
     this.security = new Client2(url2)
     this.token = token;
     this.activatortoken = helper.parseJwt(this.token).activator_security_token;
+    let th = this;
     
     this.getState = function (id){
         return new Promise((resolve, reject) => {
@@ -744,6 +745,107 @@ export function usersNetwork(token, url, url2) {
             },500)
         })
         
+    }
+    
+    this.activeUserModal = function(name){
+        $('.'+name).on('click', function(){
+            let t = $(this)
+            let id = t.parent().parent().attr('id')
+            let name = $('body tr#'+id).find('td.name_provider').text()
+            let body = '<div class="text-center errors-active-user"></div>'
+            body += '<div><p>Are you sure you want to unlock this user ?</p></div>'
+            
+            let footer = '<button type="button" class="btn btn-secondary mr-3" data-dismiss="modal" aria-label="Close">Non</button> <button id="btn-active-user-form" class="btn btn-primary">Yes</button>';
+            console.log(id);
+            $('body').append(helper.createModal('modal-active-user', "Unlock user : "+name, body, footer , 'md'));
+            $('#modal-active-user').modal('show')
+            
+            $('#modal-active-user').on('hide.bs.modal', function (e) {
+                setTimeout(function(){ $('#modal-active-user').remove()},1000)
+            })
+            
+            th.saveActiveUser("btn-active-user-form",id);
+            
+        })
+    }
+    
+    
+    this.disableUserModal = function(name){
+        $('.'+name).on('click', function(){
+            let t = $(this)
+            let id = t.parent().parent().attr('id')
+            let name = $('body tr#'+id).find('td.name_provider').text()
+            let body = '<div class="text-center errors-disable-user"></div>'
+            body += '<div><p>Are you sure you want to lock this user ?</p></div>'
+            
+            let footer = '<button type="button" class="btn btn-secondary mr-3" data-dismiss="modal" aria-label="Close">Non</button> <button id="btn-disactive-user-form" class="btn btn-primary">Yes</button>';
+            console.log(id);
+            $('body').append(helper.createModal('modal-diassociate-user', "Disactive user : "+name, body, footer , 'md'));
+            $('#modal-diassociate-user').modal('show')
+            
+            $('#modal-diassociate-user').on('hide.bs.modal', function (e) {
+                setTimeout(function(){ $('#modal-diassociate-user').remove()},1000)
+            })
+            
+            th.saveDisableUser("btn-disactive-user-form",id);
+            
+        })
+    }
+    
+    this.saveDisableUser = function(name,id){
+        $("#"+name).click(function(){
+            let t = $(this)
+            console.log(id);
+            helper.setNextButtonLoader(t)
+            new Promise((resolve, reject) => {
+                th.client.deactivate(id)
+                .then((result) => {
+                    if (result.errors.length > 0) {
+                        result.errors.forEach((e) => {
+                            $('div.errors-disable-user').append('<p class="text-center text-danger">'+value.description+'</p>')
+                        });
+                        reject(result.errors)
+                    } else {
+                        $('#modal-diassociate-user').modal('hide')
+                        helper.toastr('success','top-full-width',1000, "Successfully Disabled.")
+                        setTimeout(function(){window.location.href = ""},1200)
+                    }
+                    helper.removeNextButtonLoader(t)
+                }).catch((err) => {
+                    console.log();
+                    helper.removeNextButtonLoader(t)
+                })
+            })
+        })
+    
+    }
+    
+    this.saveActiveUser = function(name,id){
+        $("#"+name).click(function(){
+            let t = $(this)
+            console.log(id);
+            helper.setNextButtonLoader(t)
+            new Promise((resolve, reject) => {
+                th.client.activate(id)
+                .then((result) => {
+                    if (result.errors.length > 0) {
+                        result.errors.forEach((e) => {
+                            $('div.errors-active-user').append('<p class="text-center text-danger">'+value.description+'</p>')
+                        });
+                        reject(result.errors)
+                    } else {
+                        $('#modal-active-user').modal('hide')
+                        helper.toastr('success','top-full-width',1000, "Successfully Unlock.")
+                        setTimeout(function(){window.location.href = ""},1200)
+                    }
+                    helper.removeNextButtonLoader(t)
+                }).catch((err) => {
+                    console.log();
+                    helper.removeNextButtonLoader(t)
+                })
+            })
+        })
+    
     }
     
     
