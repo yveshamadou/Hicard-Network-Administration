@@ -80,7 +80,7 @@ export  function utils(){
         })
         
         $("#"+id+" select.required").each(function(){
-            if ($(this).val() == null) {
+            if ($(this).val() == null || $(this).val() == undefined || $(this).val() == "") {
                 errors.push('2')
                 $(this).attr({'style': 'border-color: #dc3545 !important'})
                 $(this).parent().find('small').addClass('text-danger').text('required')

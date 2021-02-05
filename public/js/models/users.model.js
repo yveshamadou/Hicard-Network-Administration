@@ -755,7 +755,7 @@ export function usersNetwork(token, url, url2) {
             let body = '<div class="text-center errors-active-user"></div>'
             body += '<div><p>Are you sure you want to unlock this user ?</p></div>'
             
-            let footer = '<button type="button" class="btn btn-secondary mr-3" data-dismiss="modal" aria-label="Close">Non</button> <button id="btn-active-user-form" class="btn btn-primary">Yes</button>';
+            let footer = '<button type="button" class="btn btn-secondary mr-3" data-dismiss="modal" aria-label="Close">No</button> <button id="btn-active-user-form" class="btn btn-primary">Yes</button>';
             console.log(id);
             $('body').append(helper.createModal('modal-active-user', "Unlock user : "+name, body, footer , 'md'));
             $('#modal-active-user').modal('show')
@@ -778,7 +778,7 @@ export function usersNetwork(token, url, url2) {
             let body = '<div class="text-center errors-disable-user"></div>'
             body += '<div><p>Are you sure you want to lock this user ?</p></div>'
             
-            let footer = '<button type="button" class="btn btn-secondary mr-3" data-dismiss="modal" aria-label="Close">Non</button> <button id="btn-disactive-user-form" class="btn btn-primary">Yes</button>';
+            let footer = '<button type="button" class="btn btn-secondary mr-3" data-dismiss="modal" aria-label="Close">No</button> <button id="btn-disactive-user-form" class="btn btn-primary">Yes</button>';
             console.log(id);
             $('body').append(helper.createModal('modal-diassociate-user', "Disactive user : "+name, body, footer , 'md'));
             $('#modal-diassociate-user').modal('show')

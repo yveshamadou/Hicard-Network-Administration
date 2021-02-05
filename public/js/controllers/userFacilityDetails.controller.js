@@ -12,6 +12,7 @@ let load = function (){
     if (RX == "super" || RX == "network" || RX == "facility") {
         provider.showModalCreateProvider('.add-provider-btn')
         users.showModalCreateUsers('.add-user-btn')
+        provider.saveMultipleProvider('.add-mult-provider-btn')
     }
     
     facility.setFacilityCard('info-facility-card')

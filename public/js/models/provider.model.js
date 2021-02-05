@@ -11,6 +11,7 @@ export function providerNetwork(token, url) {
     this.client = new Client(url)
     this.token = token;
     this.activatortoken = helper.parseJwt(this.token).activator_security_token;
+    var th = this
     
     this.getState = function (id){
         return new Promise((resolve, reject) => {
@@ -795,7 +796,7 @@ export function providerNetwork(token, url) {
             let body = '<div class="text-center errors-diassociate-provider"></div>'
             body += '<div><p>Are you sure you want to diassociate this provider ?</p></div>'
             
-            let footer = '<button type="button" class="btn btn-secondary mr-3" data-dismiss="modal" aria-label="Close">Non</button> <button id="btn-diassociate-provider-form" class="btn btn-primary">Yes</button>';
+            let footer = '<button type="button" class="btn btn-secondary mr-3" data-dismiss="modal" aria-label="Close">No</button> <button id="btn-diassociate-provider-form" class="btn btn-primary">Yes</button>';
             console.log(id);
             $('body').append(helper.createModal('modal-diassociate-provider', "Diassociate Provider : "+name, body, footer , 'md'));
             $('#modal-diassociate-provider').modal('show')
@@ -959,7 +960,7 @@ export function providerNetwork(token, url) {
                     $('#'+id).parent().find('.select-loader-provider').remove()
                 } else {
                     let data = result.payload
-                    $('#'+id).append('<option value="'+data.id+'">'+data.name+'</option>')
+                    $('#'+id).append('<option value="'+data.id+'">'+data.name+' ('+data.city+'-'+data.state+'/'+data.addressLine1+')</option>')
                     $('#'+id).val(data.id).change()
                     $('#'+id).parent().find('.select-loader-provider').remove()
                 }
@@ -972,7 +973,7 @@ export function providerNetwork(token, url) {
             .then((result) => {
                 $('#'+id).empty().append('<option value="" class="text-muted" disabled selected>Choose a facility</option>')
                 result.payload.forEach(data => {
-                    $('#'+id).append('<option value="'+data.id+'">'+data.name+'</option>')
+                    $('#'+id).append('<option value="'+data.id+'">'+data.name+' ('+data.city+'-'+data.state+'/'+data.addressLine1+')</option>')
                 });
                 $('#'+id).val('').change()
                 $('#'+id).removeAttr('disabled')
@@ -1237,6 +1238,156 @@ export function providerNetwork(token, url) {
         });
     
     }
+    
+    this.saveMultipleProvider = function(name){
+    
+        $(name).click(function(){
+            let hn = $(this);
+            /* set up XMLHttpRequest */
+            var url = "/js/HiCard_NetworkAdministration_Providers.xlsx";
+            var oReq = new XMLHttpRequest();
+            oReq.open("GET", url, true);
+            oReq.responseType = "arraybuffer";
+            
+            oReq.onload = function(e) {
+              var arraybuffer = oReq.response;
+            
+              /* convert data to binary string */
+              var data = new Uint8Array(arraybuffer);
+              var arr = new Array();
+              for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+              var bstr = arr.join("");
+            
+              /* Call XLSX */
+              var workbook = XLSX.read(bstr, {type:"binary"});
+            
+              /* DO SOMETHING WITH workbook HERE */
+              var first_sheet_name = workbook.SheetNames[0];
+              /* Get worksheet */
+              var worksheet = workbook.Sheets[first_sheet_name];
+              let json = XLSX.utils.sheet_to_json(worksheet,{raw:true})
+              let providers = []
+              json.forEach((d) => {
+                providers.push({
+                    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                    "addressLine1": d.Address1,
+                    "addressLine2": d.Address2,
+                    "city": d.City,
+                    "country": "USA",
+                    "emailAddress": d.EmailAddress,
+                    "firstName":d.FirstName,
+                    "ipaName":  "",
+                    "lastName": d.LastName,
+                    "medicalGroupName": "Integrated Physician Network",
+                    "mobileNumber": d.PhoneNumber.toString(),
+                    "workNumber": d.PhoneNumber.toString(),
+                    "npi":d.NPI.toString(),
+                    "zipCode": d.ZipCode.toString(),
+                    "specialties": d.Specialities,
+                    "state": d.State,
+                    "subSpecialties": d.Specialities,
+                    "tin": d.TIN.toString(),
+                    "contractStatus": "Contracted"
+                })
+              })
+              
+              console.log(providers);
+              console.log("========================providers=====================");
+              console.log(" ");
+              th.postMultipleProviders(providers.length, providers)
+              .then((r) => {
+                  console.log(r);
+              }).catch((e) => {
+                  console.log(e);
+              })
+            }
+            
+            oReq.send();
+        
+        })
+    
+    }
+    
+    this.postMultipleProviders = function (size,providers) {
+        return new Promise((resolve, reject) => {
+            let handle = function (size) {
+                if (size == 0) {
+                    resolve('done')
+                } else {
+                    
+                    th.createProviderApi(providers[size - 1]).then((result) => {
+                        if (result.errors.length > 0) {
+                            $('#form-create-provider div.errors').empty()
+                            result.errors.forEach((value) => {
+                                console.log(value.description);
+                            })
+                            reject(new Error('Something went wrong'))
+                        } else {
+                            console.log(result.payload);
+                            if (helper.getParameterByName('F') && helper.getParameterByName('N')) {
+                                th.associateProviderAndNetwork(helper.getParameterByName('N'),result.payload)
+                                .then((associateN) => {
+                                    console.log("========AssociateN===========");
+                                    console.log(associateN);
+                                    if (associateN.errors.length > 0) {
+                                        $('#form-create-provider div.errors').empty()
+                                        associateN.errors.forEach((value) => {
+                                            console.log(value.description);
+                                        })
+                                        reject(new Error('Something went wrong'))
+                                    } else {
+                                        th.associateProviderAndNetworkAndFacility(helper.getParameterByName('N'),helper.getParameterByName('F'),result.payload)
+                                        .then((associateF) => {
+                                            console.log("========AssociateF===========");
+                                            console.log(associateF);
+                                            if (associateF.errors.length > 0) {
+                                                $('#form-create-provider div.errors').empty()
+                                                associateF.errors.forEach((value) => {
+                                                    console.log(value.description);
+                                                })
+                                                reject(new Error('Something went wrong'))
+                                            } else {
+                                                helper.toastr('success','top-full-width',1000, "Successfully Added.")
+                                                handle(size - 1)
+                                            }
+                                            helper.removeNextButtonLoader($(this))
+                                        }).catch((err3) => {
+                                            reject(err3)
+                                            helper.removeNextButtonLoader($(this))
+                                        })
+                                    }
+                                }).catch((err3) => {
+                                    reject(err3)
+                                    helper.removeNextButtonLoader($(this))
+                                })
+                                
+                            } 
+                        }
+                    }).catch((err) => {
+                        helper.removeNextButtonLoader($(this))
+                        reject(err)
+                    })
+                }
+            }
+            handle(size)
+        })
+    }
+
+
+    /* addUsers(t.currentRoleUsersToAdd.length).then(res => {
+        // Empting of the currents arrays of users role
+        t.currentRoleUsers = []
+        t.currentRoleUsersToAdd = []
+
+        context.container.find('#users-list-modal').modal('hide')
+        toastr.success('The adding operation has been done succesfully')
+        t.showRoleDetails(context, roleID)
+    }).catch(error => {
+        console.log(error);
+        context.container.find('#users-list-modal .error-request').fadeIn()
+    }).finally(() => {
+        context.container.find('#users-list-modal #saveRoleUsers').removeAttr('disabled').find('span').remove()
+    }) */
     
     
     

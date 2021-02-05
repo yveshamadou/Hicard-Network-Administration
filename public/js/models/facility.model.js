@@ -719,8 +719,6 @@ export function facilityNetwork(token, url) {
                                     )
                                     .append(`
                                         <td class="name-tab border-0 name_provider">${data.firstName} ${data.lastName}</td>
-                                        <td class="text-tab border-0">${data.emailAddress}</td>
-                                        <td class="text-tab border-0">${data.addressLine1}</td>
                                         <td class="city-tab border-0">
                                             <div class="media">
                                                 <div class="media-body">
@@ -728,6 +726,8 @@ export function facilityNetwork(token, url) {
                                                 </div>
                                             </div>
                                         </td>
+                                        <td class="text-tab border-0">${data.emailAddress}</td>
+                                        <td class="text-tab border-0">${data.addressLine1}</td>
                                         <td class="eye-tab border-0">
                                             <a href="javascript:void(0)" class="view-provider mr-4">
                                                 <i class="fas fa-eye"></i> View

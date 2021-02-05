@@ -902,17 +902,17 @@ export function userNetwork(token, url) {
                         $('#tbody-users-list')
                         .append(
                             $('<tr/>')
-                            .attr({'id':data.id})
+                            .attr({'id':data.id, 'style':(data.isActive == true ? "" : "color : #dc3545!important")})
                             .append(
                                 $('<th/>')
                                 .addClass('border-0')
                                 .html('<div class="m-auto img-rounded"> <img src="./images/experience.png" class="img-fluid" alt="no-image"></div>')
                             )
                             .append(`
-                                <td class="name-tab border-0">${data.name}</td>
-                                <td class="text-tab border-0">${data.emailAddress}</td>
-                                <td class="text-tab border-0">${data.role}</td>
-                                <td class="eye-tab border-0 text-right">
+                                <td class=" border-0 ${(data.isActive == true ? "name-tab" : "")}">${data.name}  ${(data.isActive == true ? '<i class="far fa-check-circle fa-lg text-success"></i>':'<i class="fas fa-user-lock text-danger"></i>')}</td>
+                                <td class="${(data.isActive == true ? "text-tab" : "")} border-0">${data.emailAddress}</td>
+                                <td class="${(data.isActive == true ? "text-tab" : "")} border-0">${data.role}</td>
+                                <td class="${(data.isActive == true ? "eye-tab" : "")} border-0 text-right">
                                     <a href="javascript:void(0)" class="view-user mr-3">
                                         <i class="fas fa-eye"></i> View
                                     </a> 
