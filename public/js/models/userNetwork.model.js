@@ -293,7 +293,6 @@ export function userNetwork(token, url) {
                     $('div.loader-full').remove()
                     $('#main').show()
                     helper.filterCard()
-                    this.showModalCreateNetwork()
                 } else {
                     $('div.loader-full').hide()
                     $('#main').show().find('div#network-content').empty().html("<p class='text-center container text-info fs-normal fw-normal'> <i class='fas fa-info-circle fa-lg mr-2'></i> Not Found</p>")
@@ -356,7 +355,6 @@ export function userNetwork(token, url) {
                     $('div.loader-full').hide()
                     $('#main').show()
                     helper.filterCard()
-                    this.showModalCreateNetwork()
                 } else {
                     $('div.loader-full').hide()
                     $('#main').show().find('div#network-content').empty().html("<p class='text-center container text-info fs-normal fw-normal'> <i class='fas fa-info-circle fa-lg mr-2'></i> Not Found</p>")
@@ -373,7 +371,6 @@ export function userNetwork(token, url) {
     this.showModalCreateNetwork = function (){
         $('.create-network').on('click', function(e){
             e.preventDefault()
-            let t = $(this)
             let body = '<form id="form-create-network">';
             body += '<div class="errors w-100 text-center"> </div>'
             
@@ -480,10 +477,9 @@ export function userNetwork(token, url) {
             $('#modal-create-network').on('hide.bs.modal', function (e) {
                 setTimeout(function(){$('#modal-create-network').remove()},1000)
             })
-            let save = new userNetwork($.cookie("ACCESS_TOKEN"),url)
             
-            save.saveNetworkModal('create')
-            save.setState("networkState")
+            th.saveNetworkModal('create')
+            th.setState("networkState", "")
         });
         
         
@@ -496,9 +492,8 @@ export function userNetwork(token, url) {
             e.preventDefault()
             let t = $(this)
             let id = t.parent().parent().attr('data-id')
-            let save = new userNetwork($.cookie("ACCESS_TOKEN"),url)
             helper.setNextButtonLoader(t)
-            save.getNetworkApi(id).then((result) => {
+            th.getNetworkApi(id).then((result) => {
                 if (result.errors.length > 0) {
                     
                 } else {
@@ -611,8 +606,8 @@ export function userNetwork(token, url) {
                     })
                     
                     
-                    save.saveNetworkModal('update')
-                    save.setState("networkState", data.state)
+                    th.saveNetworkModal('update')
+                    th.setState("networkState", data.state)
                     
                 }
                 helper.removeNextButtonLoader(t)
@@ -684,7 +679,7 @@ export function userNetwork(token, url) {
     
     this.setState = function(id, current = ""){
         $('#'+id).attr({'disabled':'disabled'}).parent().prepend('<i class="fa fa-spinner fa-spin select-loader-state"></i>')
-        this.getState(this.activatortoken)
+        th.getState(this.activatortoken)
         .then((result) => {
             $('#'+id).empty().append('<option value="" class="text-muted" disabled selected>State</option>')
             result.payload.forEach(data => {
@@ -750,7 +745,6 @@ export function userNetwork(token, url) {
                 
                 $('#'+idName).empty().append(content)
                 this.showModalUpdateNetwork()
-                this.showModalCreateNetwork()
                 this.showModalDeleteNetwork()
                 this.setAllFacilityByNetworkID(data.id)
                 this.setUsersByNetworkID(data.id)
@@ -888,7 +882,8 @@ export function userNetwork(token, url) {
         })
     }
     
-    this.setUsersByNetworkID = function(id){
+    this.setUsersByNetworkID = function(id){    
+    
         $('#tbody-users-list').empty().prepend('<tr class="loader-users-tbody"><td colspan="8" class="text-center"><skeleton-box lines="1"></skeleton-box></i></td></tr>')
         this.getUsersByNetworkGuid(id).then((result) => {
             if (result.errors.length > 0) {

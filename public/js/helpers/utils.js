@@ -53,7 +53,7 @@ export  function utils(){
     
     this.setNextButtonLoader = function (t) {
         $(t)
-        .attr('disabled', 'disabled')
+        .attr({'disabled': 'disabled'})
         .prepend('<i class="fa fa-spinner fa-spin text-white next-btn-loader" style="margin-right: 5px"></i>')
     }
     
@@ -70,7 +70,7 @@ export  function utils(){
         
         $("#"+id+" input.required").each(function(){
             if ($(this).val() == "" || $(this).val() == undefined || $(this).val() == null) {
-                errors.push('1')
+                errors.push($(this).attr('id'))
                 $(this).attr({'style': 'border-color: #dc3545 !important'})
                 $(this).parent().find('small').addClass('text-danger').text('required')
             }else{
@@ -80,8 +80,8 @@ export  function utils(){
         })
         
         $("#"+id+" select.required").each(function(){
-            if ($(this).val() == null || $(this).val() == undefined || $(this).val() == "") {
-                errors.push('2')
+            if ($(this).val() == null && $(this).val() == undefined && $(this).val() == "") {
+                errors.push($(this).attr('id'))
                 $(this).attr({'style': 'border-color: #dc3545 !important'})
                 $(this).parent().find('small').addClass('text-danger').text('required')
             }else {
@@ -92,7 +92,7 @@ export  function utils(){
         
         $("#"+id+" textarea.required").each(function(){
             if ($(this).val() == "" || $(this).val() == undefined || $(this).val() == null) {
-                errors.push('2')
+                errors.push($(this).attr('id'))
                 $(this).attr({'style': 'border-color: #dc3545 !important'})
                 $(this).parent().find('small').addClass('text-danger').text('required')
             }else {
@@ -100,6 +100,93 @@ export  function utils(){
                 $(this).parent().find('small').empty()
             }
         })
+        
+        console.log(errors);
+        
+        return errors;
+    
+    }
+    
+    this.validateForm2 = function (id){
+        
+        var errors = []
+        
+        if ($("#networkName").val() == "") {
+            errors.push($("#networkName").attr('id'))
+            $("#networkName").attr({'style': 'border-color: #dc3545 !important'})
+            $("#networkName").parent().find('small').addClass('text-danger').text('required')
+        } else {
+            $("#networkName").removeAttr('style')
+            $("#networkName").parent().find('small').empty()
+        }
+        
+        if ($("#networkContactName").val() == "") {
+            errors.push($("#networkContactName").attr('id'))
+            $("#networkContactName").attr({'style': 'border-color: #dc3545 !important'})
+            $("#networkContactName").parent().find('small').addClass('text-danger').text('required')
+        } else {
+            $("#networkContactName").removeAttr('style')
+            $("#networkContactName").parent().find('small').empty()
+        }
+        
+        if ($("#networkEmail").val() == "") {
+            errors.push($("#networkEmail").attr('id'))
+            $("#networkEmail").attr({'style': 'border-color: #dc3545 !important'})
+            $("#networkEmail").parent().find('small').addClass('text-danger').text('required')
+        } else {
+            $("#networkEmail").removeAttr('style')
+            $("#networkEmail").parent().find('small').empty()
+        }
+        
+        if ($("#networkPhone").val() == "") {
+            errors.push($("#networkPhone").attr('id'))
+            $("#networkPhone").attr({'style': 'border-color: #dc3545 !important'})
+            $("#networkPhone").parent().find('small').addClass('text-danger').text('required')
+        } else {
+            $("#networkPhone").removeAttr('style')
+            $("#networkPhone").parent().find('small').empty()
+        }
+        
+        if ($("#networkAddLine1").val() == "") {
+            errors.push($("#networkAddLine1").attr('id'))
+            $("#networkAddLine1").attr({'style': 'border-color: #dc3545 !important'})
+            $("#networkAddLine1").parent().find('small').addClass('text-danger').text('required')
+        } else {
+            $("#networkAddLine1").removeAttr('style')
+            $("#networkAddLine1").parent().find('small').empty()
+        }
+        
+        if ($("#networkCity").val() == "") {
+            errors.push($("#networkCity").attr('id'))
+            $("#networkCity").attr({'style': 'border-color: #dc3545 !important'})
+            $("#networkCity").parent().find('small').addClass('text-danger').text('required')
+        } else {
+            $("#networkCity").removeAttr('style')
+            $("#networkCity").parent().find('small').empty()
+        }
+        
+        if ($("#networkPostalCode").val() == "") {
+            errors.push($("#networkPostalCode").attr('id'))
+            $("#networkPostalCode").attr({'style': 'border-color: #dc3545 !important'})
+            $("#networkPostalCode").parent().find('small').addClass('text-danger').text('required')
+        } else {
+            $("#networkPostalCode").removeAttr('style')
+            $("#networkPostalCode").parent().find('small').empty()
+        }
+        
+        if ($("#networkState").val() == null &&  $("#networkState").val() == undefined && $("#networkState").val() == "") {
+            errors.push($("#networkState").attr('id'))
+            $("#networkState").attr({'style': 'border-color: #dc3545 !important'})
+            $("#networkState").parent().find('small').addClass('text-danger').text('required')
+        } else {
+            $("#networkState").removeAttr('style')
+            $("#networkState").parent().find('small').empty()
+        }
+        
+        if (errors.length == 0) {
+           errors = [] 
+        }
+        
         console.log(errors);
         
         return errors;

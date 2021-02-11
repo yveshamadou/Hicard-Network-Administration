@@ -5,8 +5,8 @@
         <div class="container">
             <div class="p-3 container">
                 <div class="alert alert-danger pb-5" role="alert">
-                    <h4 class="alert-heading"><i class="fas fa-exclamation-triangle fa-lg "></i> WARNING</h4>
-                    <p><%= errors  %> </p>
+                    <h4 class="alert-heading"><i class="fas fa-exclamation-triangle fa-lg "></i> WARNING <%= errors.code  %></h4>
+                    <p><%= errors.description  %> </p>
                     <hr>
                     <p class="pb-3 float-right"><a href="<%= previousUrl %> ">Go Back</a></p>
                 </div>

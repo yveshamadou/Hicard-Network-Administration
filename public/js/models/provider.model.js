@@ -1244,7 +1244,7 @@ export function providerNetwork(token, url) {
         $(name).click(function(){
             let hn = $(this);
             /* set up XMLHttpRequest */
-            var url = "/js/HiCard_NetworkAdministration_Providers.xlsx";
+            var url = "/js/excel/3.xlsx";
             var oReq = new XMLHttpRequest();
             oReq.open("GET", url, true);
             oReq.responseType = "arraybuffer";
@@ -1270,23 +1270,23 @@ export function providerNetwork(token, url) {
               json.forEach((d) => {
                 providers.push({
                     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-                    "addressLine1": d.Address1,
-                    "addressLine2": d.Address2,
-                    "city": d.City,
+                    "addressLine1": (d.Address1.toString() == undefined ? "" : (d.Address1.toString() == null ? "" : d.Address1.toString() )),
+                    "addressLine2": (d.Address2 == undefined ? "" : (d.Address2 == null ? "" : d.Address2.toString() )),
+                    "city": (d.City.toString() == undefined ? "" : (d.City.toString() == null ? "" : d.City.toString() )),
                     "country": "USA",
-                    "emailAddress": d.EmailAddress,
-                    "firstName":d.FirstName,
+                    "emailAddress": (d.EmailAddress == undefined ? "" : (d.EmailAddress == null ? "" : d.EmailAddress.toString() )),
+                    "firstName":(d.FirstName == undefined ? "" : (d.FirstName == null ? "" : d.FirstName.toString() )),
                     "ipaName":  "",
-                    "lastName": d.LastName,
+                    "lastName": (d.LastName == undefined ? "" : (d.LastName == null ? "" : d.LastName.toString() )),
                     "medicalGroupName": "Integrated Physician Network",
-                    "mobileNumber": d.PhoneNumber.toString(),
-                    "workNumber": d.PhoneNumber.toString(),
-                    "npi":d.NPI.toString(),
-                    "zipCode": d.ZipCode.toString(),
-                    "specialties": d.Specialities,
-                    "state": d.State,
-                    "subSpecialties": d.Specialities,
-                    "tin": d.TIN.toString(),
+                    "mobileNumber": (d.PhoneNumber == undefined ? "" : (d.PhoneNumber == null ? "" : d.PhoneNumber.toString() )),
+                    "workNumber": (d.PhoneNumber == undefined ? "" : (d.PhoneNumber == null ? "" : d.PhoneNumber.toString() )),
+                    "npi":(d.NPI == undefined ? "" : (d.NPI == null ? "" : d.NPI.toString() )),
+                    "zipCode": (d.ZipCode == undefined ? "" : (d.ZipCode == null ? "" : d.ZipCode.toString() )),
+                    "specialties": (d.Specialities == undefined ? "" : (d.Specialities == null ? "" : d.Specialities.toString() )),
+                    "state": (d.State == undefined ? "" : (d.State == null ? "" : d.State.toString() )),
+                    "subSpecialties": (d.Specialities == undefined ? "" : (d.Specialities == null ? "" : d.Specialities.toString() )),
+                    "tin": (d.TIN == undefined ? "" : (d.TIN == null ? "" : d.TIN.toString() )),
                     "contractStatus": "Contracted"
                 })
               })

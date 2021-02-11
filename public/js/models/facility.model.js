@@ -113,7 +113,6 @@ export function facilityNetwork(token, url) {
     }
     
     this.saveFacilityModal = function (value){
-        
         if (value == "update") {
             $('#btn-update-facility-form').on('click', function(){
                 helper.setNextButtonLoader($(this))

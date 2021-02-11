@@ -65,60 +65,79 @@ app.get('/authentication', function (req, res) {
     let datas = {
         id_token : (query[0].split('=')[1])
     };
-    
-    Application.getToken(function (response) {
-        if (response.isAuthenticated) {
-            jwtTokenDecode = jwt_decode(datas.id_token);
-            let requestData = {
-                "claims": [],
-                "client_id": config.authenticationParams.client_Id,
-                "client_secret": config.authenticationParams.secret,
-                "id_token": datas.id_token,
-                "activator_security_token": response.securityToken,
-                "state": config.authenticationParams.state
-            }
-            let security = new securityModel(req)
-            security.postRequest('postUrl','security', 'encodeActivatorV1AccessToken', requestData)
-            .then((result) => {
-                if (result.data.errors == null) {
-                    res.render('errors/404', {
-                        page: "errors/404",
-                        errors : {code : "404", description : result.data.errors}
-                    })
-                } else {
-                    //console.log(result.data.payload.access_token);
-                    m_cookies.setCookie(res, "ACCESS_TOKEN", result.data.payload.access_token, new Date(result.data.payload.expiration_date_time))
-                    m_cookies.deleteCookie(res, "securityToken");
-                    //console.log(jwt_decode(result.data.payload.access_token));
-                    if (jwt_decode(result.data.payload.access_token).hc_na_role != undefined && jwt_decode(result.data.payload.access_token).hc_na_role != null && jwt_decode(result.data.payload.access_token).hc_na_role != "") {
-                        res.render('authenticate', {
-                            page: "authenticate",
-                            baseUrl : config.baseUrl2,
-                            baseUrl2 : config.authenticationParams.baseUrl2,
-                            roles : ""
-                        })
-                    } else {
-                        res.render('errors/404', {
-                            page: "errors/404",
-                            errors : {code : "405", description: 'You do not have access to this platform. Please contact a site administrator for more information. Thank you'}
-                        })
-                    }
-                    
-                    
-                    
-                }
-                
-            }).catch((err) => {
-                console.log(err);
-                res.render('errors/404', {
-                    page: "errors/404",
-                    errors : {code : "500", description : err.data.errors}
-                })
+    if (jwt_decode(datas.id_token).activator_security_token) {
+        m_cookies.setCookie(res, "ACCESS_TOKEN", datas.id_token)
+        m_cookies.deleteCookie(res, "securityToken");
+        //console.log(jwt_decode(result.data.payload.access_token));
+        if (jwt_decode(datas.id_token).hc_na_role != undefined && jwt_decode(datas.id_token).hc_na_role != null && jwt_decode(datas.id_token).hc_na_role != "") {
+            res.render('authenticate', {
+                page: "authenticate",
+                baseUrl : config.baseUrl2,
+                baseUrl2 : config.authenticationParams.baseUrl2,
+                roles : ""
             })
         } else {
-            res.send('Application not found. Sorry something happend')
+            res.render('errors/404', {
+                page: "errors/404",
+                errors : {code : "405", description: 'You do not have access to this platform. Please contact a site administrator for more information. Thank you'}
+            })
         }
-    })
+    } else {
+        Application.getToken(function (response) {
+            if (response.isAuthenticated) {
+                jwtTokenDecode = jwt_decode(datas.id_token);
+                let requestData = {
+                    "claims": [],
+                    "client_id": config.authenticationParams.client_Id,
+                    "client_secret": config.authenticationParams.secret,
+                    "id_token": datas.id_token,
+                    "activator_security_token": response.securityToken,
+                    "state": config.authenticationParams.state
+                }
+                let security = new securityModel(req)
+                security.postRequest('postUrl','security', 'encodeActivatorV1AccessToken', requestData)
+                .then((result) => {
+                    if (result.data.errors == null) {
+                        res.render('errors/404', {
+                            page: "errors/404",
+                            errors : {code : "404", description : result.data.errors}
+                        })
+                    } else {
+                        //console.log(result.data.payload.access_token);
+                        m_cookies.setCookie(res, "ACCESS_TOKEN", result.data.payload.access_token, new Date(result.data.payload.expiration_date_time))
+                        m_cookies.deleteCookie(res, "securityToken");
+                        //console.log(jwt_decode(result.data.payload.access_token));
+                        if (jwt_decode(result.data.payload.access_token).hc_na_role != undefined && jwt_decode(result.data.payload.access_token).hc_na_role != null && jwt_decode(result.data.payload.access_token).hc_na_role != "") {
+                            res.render('authenticate', {
+                                page: "authenticate",
+                                baseUrl : config.baseUrl2,
+                                baseUrl2 : config.authenticationParams.baseUrl2,
+                                roles : ""
+                            })
+                        } else {
+                            res.render('errors/404', {
+                                page: "errors/404",
+                                errors : {code : "405", description: 'You do not have access to this platform. Please contact a site administrator for more information. Thank you'}
+                            })
+                        }
+                        
+                        
+                        
+                    }
+                    
+                }).catch((err) => {
+                    console.log(err);
+                    res.render('errors/404', {
+                        page: "errors/404",
+                        errors : {code : "500", description : err.data.errors}
+                    })
+                })
+            } else {
+                res.send('Application not found. Sorry something happend')
+            }
+        })
+    }
+    
     
     
     
@@ -206,7 +225,7 @@ app.post('/create_users', function (req, res) {
             if (resp.data.errors.length > 0) {
                 res.render('errors/errors', {
                     page: "errors/errors",
-                    errors : "Contact your Administation",
+                    errors : {code : "404", description : "Contact your Administation"},
                     previousUrl : body.currentUrl
                 })
             } else {
